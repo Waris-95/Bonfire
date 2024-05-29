@@ -17,7 +17,9 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, nullable=True)
     updated_at = db.Column(db.DateTime, nullable=True)
-    profile_images = db.relationship('ProfileImage', backref='user', cascade="all, delete", lazy=True)
+
+    profile_images = db.relationship('ProfileImage', back_populates='user', cascade="all, delete-orphan", lazy=True)
+
     channel_messages = db.relationship('ChannelMessage', backref='user', lazy=True)
     chat_room_messages = db.relationship('ChatRoomMessage', backref='user', lazy=True)
     reactions = db.relationship('UserReaction', backref='user', lazy=True)
@@ -46,7 +48,7 @@ class ProfileImage(db.Model):
     __tablename__ = 'profile_images'
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(2048), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 class ServerImage(db.Model):
     __tablename__ = 'server_images'
@@ -73,6 +75,7 @@ class ServerUser(db.Model):
     server_id = db.Column(db.Integer, db.ForeignKey('servers.id'), nullable=False)
     created_at = db.Column(db.DateTime)
     updated_at = db.Column(db.DateTime)
+    #role column
 
 class Channel(db.Model):
     __tablename__ = 'channels'
@@ -104,7 +107,8 @@ class MessageImage(db.Model):
     __tablename__ = 'message_images'
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(2048), nullable=False)
-    resource_type = db.Column(db.Integer, nullable=False)
+    resource_type = db.Column(db.String, nullable=False)
+    # resource_id instead of two separate ids?
     channel_message_id = db.Column(db.Integer, db.ForeignKey('channel_messages.id'))
     chat_room_message_id = db.Column(db.Integer, db.ForeignKey('chat_room_messages.id'))
 

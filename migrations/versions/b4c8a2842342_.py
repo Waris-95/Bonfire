@@ -1,8 +1,8 @@
-"""added_cascades
+"""empty message
 
-Revision ID: 82a41a9e7caa
+Revision ID: b4c8a2842342
 Revises: 
-Create Date: 2024-05-28 19:54:31.453171
+Create Date: 2024-05-28 21:17:22.826790
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '82a41a9e7caa'
+revision = 'b4c8a2842342'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -56,7 +56,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(length=2048), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('servers',
@@ -107,7 +107,7 @@ def upgrade():
     op.create_table('message_images',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(length=2048), nullable=False),
-    sa.Column('resource_type', sa.Integer(), nullable=False),
+    sa.Column('resource_type', sa.String(), nullable=False),
     sa.Column('channel_message_id', sa.Integer(), nullable=True),
     sa.Column('chat_room_message_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['channel_message_id'], ['channel_messages.id'], ),
