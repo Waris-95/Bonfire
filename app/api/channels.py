@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_login import current_user, login_required
 from app.models import Channel, db, ChannelMessage, Reaction, UserReaction, ChatRoomMessage
+from app.forms import NewChannelForm
 
 channels_bp = Blueprint("channels", __name__)
 
@@ -155,3 +156,32 @@ def delete_reaction(reaction_id):
     db.session.commit()  # Commit the session to save changes
     
     return jsonify({'message': 'Reaction removed'}), 200  # Return success message
+
+
+@channels_bp.route('/<int:channel_id>', methods=["PUT", "DELETE"])
+@login_required
+def update_channel(channel_id):
+    form = NewChannelForm()
+    if request.method == "PUT":
+        print("HELLO CHANNELS PUT")
+        if form.validate_on_submit():
+            channel_name = form.name.data
+            
+            channel = Channel.query.get_or_404(channel_id)
+
+            channel.name = channel_name
+
+            db.session.commit()
+
+            return jsonify(channel.to_dict()), 200
+    elif request.method == "DELETE":
+        print("HELLO CHANNELS DELETE")
+        channel = Channel.query.get_or_404(channel_id)
+
+        if channel.owner_id != current_user.id:
+            return jsonify({"error": "Unauthorized"}), 403
+        
+        db.session.delete(channel)
+        db.session.commit()
+
+        return jsonify({"message": "Successfully Deleted"}), 200

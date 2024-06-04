@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import Server, db, Channel, ServerImage
 from app.forms import NewServerForm, NewChannelForm
@@ -54,27 +54,41 @@ def create_new_server():
     else:
         return form.errors, 401
 
-@server.route("/<int:server_id>", methods=["PUT"])
+@server.route("/<int:server_id>", methods=["PUT", "DELETE"])
 @login_required
 def update_server(server_id):
     form = NewServerForm()
-    if form.validate_on_submit():
-        server_name = form.name.data
-        server_description = form.description.data
-        server_image = form.server_image.data
+    if request.method == "PUT":
+        print("HELLO SERVERS PUT")
+        if form.validate_on_submit():
+            server_name = form.name.data
+            server_description = form.description.data
+            server_image = form.server_image.data
 
-        server = Sever.query.get_or_404(server_id)
+            server = Server.query.get_or_404(server_id)
+
+            if server.owner_id != current_user.id:
+                return jsonify({"error": "Unauthorized"}), 403
+        
+            server.name = server_name
+            server.description = server_description
+            server.server_image = server_image
+
+            db.session.commit()
+
+            return jsonify(server.to_dict()), 200
+    elif request.method == "DELETE":
+        print("HELLO SERVERS DELETE")
+        server = Server.query.get_or_404(server_id, description="Server not found")
+        print(server)
 
         if server.owner_id != current_user.id:
             return jsonify({"error": "Unauthorized"}), 403
         
-        server.name = server_name
-        server.description = server_description
-        server.server_image = server_image
-
+        db.session.delete(server)
         db.session.commit()
 
-        return jsonify(server.to_dict()), 200
+        return jsonify({"message": "Successfully Deleted"})
 
 @server.route("/<int:server_id>/channels")
 @login_required
