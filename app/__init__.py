@@ -12,6 +12,7 @@ from .seeds import seed_commands
 from .config import Config
 from .api.channels import channels_bp
 from .api.server import server
+from .socket import socketio
 
 app = Flask(__name__, static_folder='../react-vite/dist', static_url_path='/')
 
@@ -37,9 +38,10 @@ app.register_blueprint(server, url_prefix="/api/servers")
 db.init_app(app)
 Migrate(app, db)
 
+socketio.init_app(app)
+
 # Application Security
 CORS(app)
-
 
 # Since we are deploying with Docker and Flask,
 # we won't be using a buildpack when we deploy to Heroku.
@@ -95,3 +97,6 @@ def react_root(path):
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
+
+if __name__ == '__main__':
+    socketio.run(app)
