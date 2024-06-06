@@ -26,6 +26,7 @@ export const fetchAllServersThunk = () => async (dispatch) => {
 }
 
 export const addNewServer = (server) => async (dispatch) => {
+    console.log(server)
     const res = await addServer(server);
     dispatch(loadOneServer(res))
 }
