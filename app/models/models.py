@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy.sql import func
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -86,6 +87,7 @@ class Server(db.Model):
             'name': self.name,
             'description': self.description,
             'owner_id': self.owner_id,
+            'channels': [channel.to_dict() for channel in self.channels],
             'server_images': [server_image.to_dict() for server_image in self.server_images]
         }
 
@@ -126,6 +128,8 @@ class ChannelMessage(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'), nullable=False)
     text_field = db.Column(db.String(240))
+    created_at = db.Column(db.DateTime, server_default=func.now(), nullable=False)
+    updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     reactions = db.relationship('Reaction', cascade="all,delete", backref='channel_message', lazy=True)
     message_images = db.relationship('MessageImage', cascade="all,delete", backref='channel_message', lazy=True)
 
@@ -134,7 +138,7 @@ class ChannelMessage(db.Model):
             'id': self.id,
             'user_id': self.user_id,
             'channel_id': self.channel_id,
-            'text_field': self.text_field
+            'text_field': self.text_field,
         }
 
 class ChatRoomMessage(db.Model):

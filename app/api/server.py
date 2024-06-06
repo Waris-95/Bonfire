@@ -19,7 +19,6 @@ def create_new_server():
     form['csrf_token'].data = request.cookies['csrf_token']
     print(form)
     if form.validate_on_submit():
-        print("HELLO SERVERS POST")
         server_name = form.name.data
         server_description = form.description.data
         server_image = form.server_image.data
@@ -88,7 +87,6 @@ def get_all_server_channels(server_id):
 @server.route("/<int:server_id>/channels", methods=["POST"])
 @login_required
 def create_new_channel(server_id):
-    print("HELLO CHANNELS POST")
     form = NewChannelForm()
     if form.validate_on_submit():
         channel_name = form.name.data
