@@ -1,0 +1,51 @@
+/* MessageInput.module.css */
+
+.wrapper {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat_room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.messages {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+.messages p {
+  margin: 5px 0;
+}
+
+.chat_room input {
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.chat_room button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.chat_room button:hover {
+  background-color: #0056b3;
+}
