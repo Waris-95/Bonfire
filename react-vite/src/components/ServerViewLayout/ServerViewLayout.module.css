@@ -1,16 +1,57 @@
+/* ServerViewLayout.module.css */
 .body {
-    display: flex;
-    height: 100vh;
-    /* padding-top: 0; */
-    background-color: lightblue;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .main {
-    padding: 0;
-    width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .channel_view {
-    height: 100%;
-    display: flex;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.chatContainer {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatRoomContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* UserList.module.css */
+.userList {
+  width: 250px;
+  background-color: #2f3136;
+  overflow-y: auto;
+}
+
+.userRoleName {
+  color: #99aab5;
+  font-size: 12px;
+  margin: 10px 0 0 10px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+.user__name {
+  margin-left: 10px;
+  color: #fff;
+  font-size: 14px;
 }

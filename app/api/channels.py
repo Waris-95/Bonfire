@@ -13,15 +13,15 @@ channels_bp = Blueprint("channels", __name__)
 @login_required
 def get_channel_messages(channel_id):
     channel = Channel.query.get_or_404(channel_id)  # Get the channel or return 404 if not found
-    messages = ChannelMessage.query.filter_by(channel_id=channel_id).all()  # Get all messages in the channel
+    messages = ChannelMessage.query.filter_by(channel_id=channel_id).all()  
     return jsonify([message.to_dict() for message in messages])  # Return messages as JSON
 
 # Create a new message in a channel
 @login_required
 @channels_bp.route('/<int:channel_id>/messages', methods=['POST'])
 def create_channel_message(channel_id):
-    channel = Channel.query.get_or_404(channel_id)  # Get the channel or return 404 if not found
-    data = request.get_json()  # Get the JSON data from the request
+    channel = Channel.query.get_or_404(channel_id) 
+    data = request.get_json() 
     text = data.get('text_field')  # Get the text field from the data
     
     if not text:
@@ -32,9 +32,9 @@ def create_channel_message(channel_id):
         channel_id=channel_id,
         text_field=text
     )
-    db.session.add(new_message)  # Add the new message to the session
-    db.session.commit()  # Commit the session to save the message
-    return jsonify(new_message.to_dict()), 201  # Return the new message as JSON
+    db.session.add(new_message)  
+    db.session.commit() 
+    return jsonify(new_message.to_dict()), 201 
 
 # Update a message by its ID
 @channels_bp.route('/channel_messages/<int:message_id>', methods=['PUT'])

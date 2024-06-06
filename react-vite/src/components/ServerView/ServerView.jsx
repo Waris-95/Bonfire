@@ -13,8 +13,8 @@ import HeaderInfo from "../HeaderInfo/HeaderInfo"
 import UserList from "../UserList/UserList"
 
 export default function ServerView({ activeServerId, activeChannelId, messages }) {
-    const dispatch = useDispatch()
-    const channels = Object.values(useSelector((state) => state.channels))
+    const dispatch = useDispatch();
+    const channels = Object.values(useSelector((state) => state.channels));
     // console.log("Channels: ", channels)
 
     useEffect(() => {
@@ -28,5 +28,5 @@ export default function ServerView({ activeServerId, activeChannelId, messages }
             <MessageLayout />
             <UserList />
         </section>
-    )
+    );
 }
