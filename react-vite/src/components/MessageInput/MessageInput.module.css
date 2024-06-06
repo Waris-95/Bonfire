@@ -1,0 +1,19 @@
+.wrapper {
+  /* Ensure the wrapper is visible and has proper dimensions */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat_room {
+  /* Ensure the chat room is visible */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.messages {
+  /* Ensure the messages container is visible */
+  flex: 1;
+  overflow-y: auto;
+}
