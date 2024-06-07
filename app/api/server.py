@@ -101,6 +101,7 @@ def get_all_server_channels(server_id):
 @login_required
 def create_new_channel(server_id):
     form = NewChannelForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         channel_name = form.name.data
         user_id = current_user.id
@@ -119,8 +120,8 @@ def create_new_channel(server_id):
         for channel in results:
             channel_dict = channel.to_dict()
             channel_data.append(channel_dict)
-
-        return channel_data
+            
+        return channel_data[0]
     else:
         return form.errors, 401
     

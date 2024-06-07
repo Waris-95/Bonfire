@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { addNewServer, fetchAllServersThunk, updateOldServer, deleteAServer } from "../../redux/server";
 import { useModal } from "../../context/Modal";
 import styles from "./NewServerModal.module.css"
@@ -74,7 +74,7 @@ function NewServerModal({ server, formType }) {
                         required
                     />
                 </label>
-                {errors.serverName && <p>{errors.email}</p>}
+                {errors.serverName && <p>{errors.serverName}</p>}
                 <label>
                     Description
                     <input

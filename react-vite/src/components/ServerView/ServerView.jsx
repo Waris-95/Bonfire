@@ -31,9 +31,11 @@ export default function ServerView({ activeServerId }) {
         setActiveChannelId(channels[0]?.id)
     }, [activeServerId, channels])
 
+    console.log("ALL CHANNELS (SERVERVIEW):", channels)
+
     return (
         <section className={styles.serverView}>
-            <ChannelNav channels={channels} setActiveChannel={setActiveChannelId} />
+            <ChannelNav channels={channels} setActiveChannel={setActiveChannelId} activeServerId={activeServerId}/>
             <HeaderInfo activeServerId={activeServerId}/>
             <MessageLayout messages={messages} />
             <UserList users={serverUsers} />
