@@ -1,38 +1,40 @@
 .message {
-    padding: 0.8em 1em;
-    display: flex;
-    gap: 1em;
+  display: flex;
+  align-items: center;
+  padding: 10px;
 }
 
-.icon {
-    align-self: flex-start;
-    height: fit-content;
+.avatar {
+  margin-right: 10px;
 }
 
-.message:hover,
-.message:focus {
-    background: #2c2d32;
+.content {
+  flex: 1;
 }
 
-.textBody {
-    color: #DBDEE1;
-    line-height: 130%;
-    font-weight: 300;
-    font-size: 0.8rem;
+.username {
+  font-weight: bold;
+  margin-right: 10px;
 }
 
-.userDetails {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
+.timestamp {
+  color: gray;
+  margin-right: 10px;
 }
 
-.userName {
-    color: #9B59B6;
-    font-size: 0.85rem;
+.text {
+  margin-top: 5px;
 }
 
-.date {
-    font-size: 0.65rem;
-    color: #949BA4;
+.edit_button {
+  margin-left: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.edit_input {
+  width: 100%;
+  margin-top: 5px;
+  padding: 5px;
+  font-size: 14px;
 }

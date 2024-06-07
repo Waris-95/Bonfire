@@ -1,19 +1,103 @@
+/* Wrapper for the chat room */
 .wrapper {
-  /* Ensure the wrapper is visible and has proper dimensions */
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: #36393f; /* Discord-like background color */
+  color: #000000; /* Discord-like text color */
 }
 
+/* Container for the chat room */
 .chat_room {
-  /* Ensure the chat room is visible */
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  flex: 1;
+  overflow: hidden;
 }
 
+/* Container for messages */
 .messages {
-  /* Ensure the messages container is visible */
   flex: 1;
   overflow-y: auto;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between messages */
+}
+
+/* Individual message bubble */
+.message {
+  display: flex;
+  align-items: flex-start;
+  background-color: #40444b;
+  border-radius: 8px;
+  padding: 10px;
+  color: #000000;
+  max-width: 80%;
+}
+
+/* Avatar next to message */
+.message .avatar {
+  margin-right: 10px;
+}
+
+.message .avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Message content */
+.message .content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Username and timestamp */
+.message .content .username {
+  font-weight: bold;
+  color: #7289da; /* Discord-like username color */
+}
+
+.message .content .timestamp {
+  font-size: 0.75em;
+  color: #72767d;
+  margin-left: 5px;
+}
+
+/* Message text */
+.message .content .text {
+  margin-top: 5px;
+  white-space: pre-wrap; /* Preserve whitespace */
+}
+
+/* Message input container */
+.message_input_container {
+  display: flex;
+  padding: 10px;
+  background-color: #40444b;
+  border-top: 1px solid #2f3136;
+}
+
+/* Message input field */
+.message_input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #303338;
+  color: #ffffff;
+}
+
+/* Send button */
+.send_button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #7289da;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
 }

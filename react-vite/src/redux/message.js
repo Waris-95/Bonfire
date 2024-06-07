@@ -3,6 +3,7 @@ import { getChannelMessages, createChannelMessage } from '../utils/api';
 // Action Types
 export const LOAD_MESSAGES = 'messages/LOAD_MESSAGES';
 export const ADD_MESSAGE = 'messages/ADD_MESSAGE';
+export const UPDATE_MESSAGE = 'messages/UPDATE_MESSAGE'
 
 // Action Creators
 export const loadMessages = (messages) => ({
@@ -12,6 +13,11 @@ export const loadMessages = (messages) => ({
 
 export const addMessage = (message) => ({
     type: ADD_MESSAGE,
+    message,
+});
+
+export const updateMessage = (message) => ({
+    type: UPDATE_MESSAGE,
     message,
 });
 
@@ -27,6 +33,13 @@ export const createMessageThunk = (channelId, message) => async (dispatch) => {
     dispatch(addMessage(newMessage));
 }
 
+export const updateMessageThunk = (messageId, updatedMessage) => async (dispatch) => {
+    const message = await updateChannelMessage(messageId, updatedMessage);
+    dispatch(updateMessage(message))
+}
+
+
+// Reducer
 const initialState = {};
 
 const messageReducer = (state = initialState, action) => {
@@ -47,6 +60,16 @@ const messageReducer = (state = initialState, action) => {
             channelMessages.push(action.message);
             newState[action.message.channel_id] = channelMessages;
             return newState;
+        }
+        case UPDATE_MESSAGE: {
+          const newState = { ...state };
+          const channelMessages = newState[action.message.channel_id] || [];
+          const messageIndex = channelMessages.findIndex((msg) => msg.id === action.message.id);
+          if (messageIndex !== -1) {
+              channelMessages[messageIndex] = action.message;
+          }
+          newState[action.message.channel_id] = channelMessages;
+          return newState;
         }
         default:
             return state;

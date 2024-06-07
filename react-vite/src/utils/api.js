@@ -58,3 +58,19 @@ export const createChannelMessage = async (channelId, message) => {
     }
     throw new Error('Failed to create message');
 };
+
+export const updateChannelMessage = async (messageId, updatedMessage) => {
+    const res = await fetch(`/api/channel_messages/${messageId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedMessage),
+    });
+    if (res.ok) {
+        const data = await res.json();
+        return data;
+    }
+    throw new Error('Failed to update message');
+};
+

@@ -1,52 +1,58 @@
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { createMessageThunk, fetchChannelMessagesThunk } from '../../redux/message';
-import styles from './MessageInput.module.css';
 import Message from '../Message/Message';
+import styles from './MessageInput.module.css';
 
-const ChatRoom = ({ channelId = 1, messages = [], handleSendMessage, handleLeave }) => {
+const ChatRoom = ({ channelId }) => {
   const dispatch = useDispatch();
+  const messages = useSelector(state => state.messages[channelId] || []);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    console.log('Channel ID:', channelId);
     if (channelId) {
       dispatch(fetchChannelMessagesThunk(channelId));
     }
   }, [dispatch, channelId]);
 
-  const handleOnChange = (e) => {
-    setMessage(e.target.value);
-  };
-
-  const handleSendOnClick = () => {
-    console.log('Sending message:', message);
+  const handleSendMessage = () => {
     if (channelId && message.trim()) {
-      handleSendMessage(message);
+      dispatch(createMessageThunk(channelId, { text_field: message }));
       setMessage('');
     }
   };
 
-  const handleLeaveOnClick = () => {
-    handleLeave();
+  const handleEditMessage = (messageId, newText) => {
+    // Dispatch an action to edit the message
   };
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.chat_room}>
-        <input type='text' value={message} onChange={handleOnChange} />
-        <button type='button' onClick={handleSendOnClick}>Send</button>
-        <button type='button' onClick={handleLeaveOnClick}>Leave</button>
-      </div>
       <div className={styles.messages}>
         {messages.map((m, index) => (
           <Message
             key={`${m.id}-${index}`}
-            username={m.username}
-            date={new Date(m.created).toLocaleTimeString()}
-            textBody={m.text_field}
+            message={{
+              id: m.id,
+              username: m.username || 'Unknown User',
+              date: m.created ? new Date(m.created).toLocaleString() : 'Unknown Date',
+              textBody: m.text_field || '',
+            }}
+            onEdit={handleEditMessage}
           />
         ))}
+      </div>
+      <div className={styles.message_input_container}>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className={styles.message_input}
+          placeholder="Type a message..."
+        />
+        <button onClick={handleSendMessage} className={styles.send_button}>
+          Send
+        </button>
       </div>
     </div>
   );
