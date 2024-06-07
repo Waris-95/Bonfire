@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useDispatch} from "react-redux";
-import { addNewServer, fetchAllServersThunk } from "../../redux/server";
+import { addNewServer, fetchAllServersThunk, updateOldServer } from "../../redux/server";
 import { useModal } from "../../context/Modal";
 
-function NewServerModal() {
+function NewServerModal({ server, formType }) {
     const dispatch = useDispatch();
-    const [serverName, setServerName] = useState("");
-    const [serverDescription, setServerDescription] = useState("");
-    const [serverImage, setServerImage] = useState("");
+    const [serverName, setServerName] = useState(server?.name);
+    const [serverDescription, setServerDescription] = useState(server?.description);
+    const [serverImage, setServerImage] = useState(server?.server_images[0].url);
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
 
@@ -15,21 +15,42 @@ function NewServerModal() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const serverResponse = await dispatch(
-            addNewServer({
-                name: serverName,
-                description: serverDescription,
-                server_image: serverImage,
-            })
-        );
+        if (formType === "Update Server") {
+            console.log("Updating a Server")
+            const serverResponse = await dispatch(
+                updateOldServer({
+                    id: server.id,
+                    name: serverName,
+                    description: serverDescription,
+                    server_image: serverImage,
+                })
+            );
 
-        if (serverResponse) {
-            setErrors(serverResponse);
+            if (serverResponse) {
+                setErrors(serverResponse);
+            } else {
+                closeModal()
+            }
+    
+            await dispatch(fetchAllServersThunk());
         } else {
-            closeModal()
+            console.log("Creating a server")
+            const serverResponse = await dispatch(
+                addNewServer({
+                    name: serverName,
+                    description: serverDescription,
+                    server_image: serverImage,
+                })
+            );
+    
+            if (serverResponse) {
+                setErrors(serverResponse);
+            } else {
+                closeModal()
+            }
+    
+            await dispatch(fetchAllServersThunk());
         }
-
-        await dispatch(fetchAllServersThunk());
     };
 
     return (

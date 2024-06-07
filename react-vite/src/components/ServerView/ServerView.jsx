@@ -34,7 +34,7 @@ export default function ServerView({ activeServerId }) {
     return (
         <section className={styles.serverView}>
             <ChannelNav channels={channels} setActiveChannel={setActiveChannelId} />
-            <HeaderInfo />
+            <HeaderInfo activeServerId={activeServerId}/>
             <MessageLayout messages={messages} />
             <UserList users={serverUsers} />
         </section>

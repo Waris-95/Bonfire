@@ -58,6 +58,7 @@ def create_new_server():
 @login_required
 def update_server(server_id):
     form = NewServerForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         server_name = form.name.data
         server_description = form.description.data

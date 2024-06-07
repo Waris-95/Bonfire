@@ -36,3 +36,14 @@ export const addServer = async (server) => {
         .catch(e => console.error(e))
     return res;
 }
+
+export const updateServer = async (server) => {
+    const res = await fetch(`/api/servers/${server.id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(server)
+    })
+        .then(res => res.json())
+        .catch(e => console.error(e))
+    return res;
+}

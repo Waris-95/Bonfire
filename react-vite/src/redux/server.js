@@ -1,4 +1,4 @@
-import { getAllServers, addServer } from "../utils/api"
+import { getAllServers, addServer, updateServer } from "../utils/api"
 
 export const LOAD_SERVERS = 'servers/LOAD_SERVERS'
 export const LOAD_ONE_SERVER = 'servers/LOAD_ONE_SERVER'
@@ -28,6 +28,12 @@ export const fetchAllServersThunk = () => async (dispatch) => {
 export const addNewServer = (server) => async (dispatch) => {
     console.log(server)
     const res = await addServer(server);
+    dispatch(loadOneServer(res))
+}
+
+export const updateOldServer = (server) => async (dispatch) => {
+    console.log("REDUX UPDATE SERVER", server)
+    const res = await updateServer(server);
     dispatch(loadOneServer(res))
 }
 
