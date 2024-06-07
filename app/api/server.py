@@ -77,6 +77,18 @@ def update_server(server_id):
 
         return jsonify(server.to_dict()), 200
 
+@server.route("/<int:server_id>", methods=["DELETE"])
+@login_required
+def delete_server(server_id):
+    server = Server.query.get_or_404(server_id)
+
+    if server.owner_id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    db.session.delete(server)
+    db.session.commit()
+    return jsonify({'message': 'Server deleted'}), 200
+
 @server.route("/<int:server_id>/channels")
 @login_required
 def get_all_server_channels(server_id):

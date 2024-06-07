@@ -47,3 +47,13 @@ export const updateServer = async (server) => {
         .catch(e => console.error(e))
     return res;
 }
+
+export const deleteServer = async (serverId) => {
+    const res = await fetch(`/api/servers/${serverId}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+    })
+        .then(res => res.json())
+        .catch(e => console.error(e))
+    return res;
+}

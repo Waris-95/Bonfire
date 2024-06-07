@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useDispatch} from "react-redux";
-import { addNewServer, fetchAllServersThunk, updateOldServer } from "../../redux/server";
+import { addNewServer, fetchAllServersThunk, updateOldServer, deleteAServer } from "../../redux/server";
 import { useModal } from "../../context/Modal";
+import styles from "./NewServerModal.module.css"
 
 function NewServerModal({ server, formType }) {
     const dispatch = useDispatch();
@@ -53,6 +54,13 @@ function NewServerModal({ server, formType }) {
         }
     };
 
+    const deleteServer = async (e) => {
+        e.preventDefault();
+        await dispatch(deleteAServer(server.id));
+        closeModal();
+        await dispatch(fetchAllServersThunk());
+    }
+
     return (
         <>
             <h1>Create a Server</h1>
@@ -85,7 +93,10 @@ function NewServerModal({ server, formType }) {
                     />
                 </label>
                 {errors.serverImage && <p>{errors.serverImage}</p>}
-                <button type="submit">Create Server</button>
+                <button type="submit">{formType === "Update Server" ? "Update Server" : "Create Server"}</button>
+            </form>
+            <form onSubmit={deleteServer}>
+                <button type="submit" className={formType !== "Update Server" ? styles.hidden : ""}>Delete Server</button> 
             </form>
         </>
     )
