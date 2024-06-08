@@ -34,12 +34,21 @@ export const addNewChannel = (channel, serverId) => async (dispatch) => {
 
 export const updateOldChannel = (channel) => async (dispatch) => {
     const res = await updateChannel(channel)
-    dispatch(loadOneChannel(res))
+    console.log("UPDATE CHANNEL RESPONSE", res)
+    if (res.error) {
+        return res
+    } else {
+        dispatch(loadOneChannel(res))
+    }
 }
 
 export const deleteAChannel = (channelId) => async (dispatch) => {
     const res = await deleteChannel(channelId)
-    dispatch(removeChannel(res))
+    if (res.error) {
+        return res
+    } else {
+        dispatch(removeChannel(res))
+    }
 }
 
 // ================= REDUCER ================= 

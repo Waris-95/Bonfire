@@ -191,6 +191,7 @@ def delete_reaction(reaction_id):
 @channels_bp.route('/<int:channel_id>', methods=["PUT"])
 @login_required
 def update_channel(channel_id):
+    print("HELLO UPDATE CHANNEL")
     form = NewChannelForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
@@ -198,7 +199,7 @@ def update_channel(channel_id):
         user_id = current_user.id
 
         channel = Channel.query.get_or_404(channel_id)
-
+        print("PUT CHANNEL(FLASK BACKEND):", channel)
         if channel.owner_id != current_user.id:
             return jsonify({"error": "Unauthorized"}), 403
 
@@ -207,6 +208,9 @@ def update_channel(channel_id):
         db.session.commit()
 
         return jsonify(channel.to_dict()), 200
+    else:
+        print(form.errors)
+        return form.errors, 401
 
 @channels_bp.route('/<int:channel_id>', methods=["DELETE"])
 @login_required

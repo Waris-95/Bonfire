@@ -59,6 +59,13 @@ export const getUsersForServerId = async (serverId) => {
     return res;
 }
 
+export const getCurrentUser = async () => {
+    const res = await fetch(`/api/users/current`)
+        .then(res => res.json())
+        .catch(e => console.error(e))
+    return res;
+}
+
 export const addServer = async (server) => {
     const res = await fetch('/api/servers/', {
         method: 'POST',

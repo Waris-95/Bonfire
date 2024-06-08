@@ -5,6 +5,7 @@ from app.forms import NewServerForm, NewChannelForm
 
 server = Blueprint("servers", __name__, url_prefix="")
 
+#GET ALL SERVERS
 @server.route("/")
 @login_required
 def get_all_servers():
@@ -12,6 +13,14 @@ def get_all_servers():
     print([server.to_dict() for server in servers])
     return [server.to_dict() for server in servers]
 
+#GET A SERVER BY IT'S ID
+@server.route("/<int:server_id>")
+@login_required
+def get_server_by_id(server_id):
+    server = Server.query.get_or_404(server_id)
+    return server.to_dict()
+
+#CREATE NEW SERVER
 @server.route("/", methods=["POST"])
 @login_required
 def create_new_server():
@@ -54,6 +63,7 @@ def create_new_server():
         print("FORM ERRORS", form.errors)
         return form.errors, 401
 
+#UPDATE A SERVER
 @server.route("/<int:server_id>", methods=["PUT"])
 @login_required
 def update_server(server_id):
@@ -77,6 +87,7 @@ def update_server(server_id):
 
         return jsonify(server.to_dict()), 200
 
+#DELETE A SERVER
 @server.route("/<int:server_id>", methods=["DELETE"])
 @login_required
 def delete_server(server_id):
@@ -89,14 +100,17 @@ def delete_server(server_id):
     db.session.commit()
     return jsonify({'message': 'Server deleted'}), 200
 
+#GET ALL CHANNELS IN A SERVER
 @server.route("/<int:server_id>/channels")
 @login_required
 def get_all_server_channels(server_id):
     print("HELLO CHANNELS")
     channels = Channel.query.filter_by(server_id=server_id).all()
+    print("ALL CHANNELS", channels)
     print([channel.to_dict() for channel in channels])
     return [channel.to_dict() for channel in channels]
 
+#CREATE A CHANNEL IN A SERVER
 @server.route("/<int:server_id>/channels", methods=["POST"])
 @login_required
 def create_new_channel(server_id):

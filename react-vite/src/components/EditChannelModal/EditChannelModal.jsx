@@ -19,6 +19,8 @@ function EditChannelModal({ channel, activeServerId }) {
             updateOldChannel(channel)
         );
 
+        console.log("CHANNEL RESPONSE", channelResponse)
+
         if (channelResponse) {
             setErrors(channelResponse);
         } else {
@@ -31,8 +33,15 @@ function EditChannelModal({ channel, activeServerId }) {
 
     const deleteChannel = async (e) => {
         e.preventDefault();
-        await dispatch(deleteAChannel(channel.id));
-        closeModal();
+
+        const channelResponse = await dispatch(deleteAChannel(channel.id));
+        
+        if (channelResponse) {
+            setErrors(channelResponse);
+        } else {
+            closeModal();
+        }
+
         await dispatch(fetchChannelsForServerIdThunk(activeServerId))
     }
 
@@ -49,12 +58,12 @@ function EditChannelModal({ channel, activeServerId }) {
                         required
                     />
                 </label>
-                {errors.channelName && <p>{errors.channelName}</p>}
                 <button type="submit">Create Channel</button>
             </form>
             <form onSubmit={deleteChannel}>
                 <button type="submit">Delete Channel</button>
             </form>
+            {errors.error && <p>Only the channel owner may update or delete the channel.</p>}
         </>
     )
 }
