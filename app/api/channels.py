@@ -137,12 +137,12 @@ def get_chat_room_message_reactions(message_id):
 @channels_bp.route('/channel_messages/<int:message_id>/reactions', methods=['POST'])
 @login_required
 def add_channel_message_reaction(message_id):
-    message = ChannelMessage.query.get_or_404(message_id)  # Get the channel message or return 404 if not found
-    data = request.get_json()  # Get the JSON data from the request
-    emoji = data.get('emoji')  # Get the emoji from the data
+    message = ChannelMessage.query.get_or_404(message_id)
+    data = request.get_json()
+    emoji = data.get('emoji')
     
     if not emoji:
-        return jsonify({'error': 'Emoji is required'}), 400  # Return error if emoji is missing
+        return jsonify({'error': 'Emoji is required'}), 400
     
     new_reaction = Reaction(
         channel_message_id=message_id,
@@ -150,17 +150,17 @@ def add_channel_message_reaction(message_id):
         emoji=emoji,
         count=1
     )
-    db.session.add(new_reaction)  # Add the new reaction to the session
-    db.session.commit()  # Commit the session to save the reaction
+    db.session.add(new_reaction)
+    db.session.commit()
     
     user_reaction = UserReaction(
-        user_id=current_user.id,  # Use the current user's ID
+        user_id=current_user.id,
         reaction_id=new_reaction.id
     )
-    db.session.add(user_reaction)  # Add the user's reaction to the session
-    db.session.commit()  # Commit the session to save the user's reaction
+    db.session.add(user_reaction)
+    db.session.commit()
     
-    return jsonify(new_reaction.to_dict()), 201  # Return the new reaction as JSON
+    return jsonify(new_reaction.to_dict()), 201
 
 # Add a reaction to a chat room message
 @channels_bp.route('/chat_room_messages/<int:message_id>/reactions', methods=['POST'])
@@ -195,18 +195,18 @@ def add_chat_room_message_reaction(message_id):
 @channels_bp.route('/reactions/<int:reaction_id>', methods=['DELETE'])
 @login_required
 def delete_reaction(reaction_id):
-    reaction = Reaction.query.get_or_404(reaction_id)  # Get the reaction or return 404 if not found
-    user_reaction = UserReaction.query.filter_by(user_id=current_user.id, reaction_id=reaction_id).first()  # Use the current user's ID
+    reaction = Reaction.query.get_or_404(reaction_id)
+    user_reaction = UserReaction.query.filter_by(user_id=current_user.id, reaction_id=reaction_id).first()
     
     if not user_reaction:
-        return jsonify({'error': 'Unauthorized or reaction not found'}), 403  # Return error if unauthorized or reaction not found
+        return jsonify({'error': 'Unauthorized or reaction not found'}), 403
     
-    db.session.delete(user_reaction)  # Delete the user's reaction from the session
-    db.session.commit()  # Commit the session to save changes
+    db.session.delete(user_reaction)
+    db.session.commit()
     
-    reaction.count -= 1  # Decrease the reaction count
+    reaction.count -= 1
     if reaction.count == 0:
-        db.session.delete(reaction)  # Delete the reaction if count is zero
-    db.session.commit()  # Commit the session to save changes
+        db.session.delete(reaction)
+    db.session.commit()
     
-    return jsonify({'message': 'Reaction removed'}), 200  # Return success message
+    return jsonify({'message': 'Reaction removed'}), 200

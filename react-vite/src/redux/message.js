@@ -51,32 +51,31 @@ export const removeReaction = (messageId, reactionId) => ({
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
     const res = await getChannelMessages(channelId);
+    console.log(res, 'IM THE RES')
     dispatch(loadMessages(res));
 };
 
 export const createMessageThunk = (channelId, message) => async (dispatch) => {
     const newMessage = await createChannelMessage(channelId, message);
     dispatch(addMessage(newMessage));
-    // Fetch the latest messages after creating a new message
-    dispatch(fetchChannelMessagesThunk(channelId));
+    dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after creating a new message
 };
 
 export const updateMessageThunk = (messageId, newText, channelId) => async (dispatch) => {
     const updatedMessage = await updateChannelMessage(messageId, newText);
     dispatch(updateMessage(updatedMessage));
-    // Fetch the latest messages after updating a message
-    dispatch(fetchChannelMessagesThunk(channelId));
+    dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after updating a message
 };
 
 export const deleteMessageThunk = (messageId, channelId) => async (dispatch) => {
     await deleteChannelMessage(messageId);
     dispatch(deleteMessage(messageId, channelId));
-    // Fetch the latest messages after deleting a message
-    dispatch(fetchChannelMessagesThunk(channelId));
+    dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after deleting a message
 };
 
 export const fetchMessageReactionsThunk = (messageId) => async (dispatch) => {
     const reactions = await getMessageReactions(messageId);
+    console.log(reactions, 'THIS IS THE REACTIONS')
     dispatch(loadReactions(messageId, reactions));
 };
 
@@ -91,6 +90,7 @@ export const deleteMessageReactionThunk = (messageId, reactionId) => async (disp
     dispatch(removeReaction(messageId, reactionId));
     dispatch(fetchMessageReactionsThunk(messageId)); // Fetch reactions after deleting a reaction
 };
+
 
 // ================= REDUCER ================= 
 const initialState = {};
@@ -141,29 +141,40 @@ const messageReducer = (state = initialState, action) => {
         }
         case LOAD_REACTIONS: {
             const newState = { ...state };
-            if (newState[action.messageId]) {
-                newState[action.messageId].reactions = action.reactions;
-            } else {
-                newState[action.messageId] = { reactions: action.reactions };
-            }
+            Object.keys(newState).forEach(channelId => {
+                newState[channelId] = newState[channelId].map(message => 
+                    message.message_id === action.messageId ? {
+                        ...message,
+                        reactions: action.reactions
+                    } : message
+                );
+            });
             return newState;
         }
         case ADD_REACTION: {
             const newState = { ...state };
-            if (newState[action.messageId] && newState[action.messageId].reactions) {
-                newState[action.messageId].reactions.push(action.reaction);
-            } else {
-                newState[action.messageId] = { reactions: [action.reaction] };
-            }
+            Object.keys(newState).forEach(channelId => {
+                newState[channelId] = newState[channelId].map(message => 
+                    message.message_id === action.messageId ? {
+                        ...message,
+                        reactions: [...message.reactions, action.reaction]
+                    } : message
+                );
+            });
             return newState;
         }
         case DELETE_REACTION: {
             const newState = { ...state };
-            if (newState[action.messageId] && newState[action.messageId].reactions) {
-                newState[action.messageId].reactions = newState[action.messageId].reactions.filter(
-                    reaction => reaction.id !== action.reactionId
+            Object.keys(newState).forEach(channelId => {
+                newState[channelId] = newState[channelId].map(message => 
+                    message.message_id === action.messageId ? {
+                        ...message,
+                        reactions: message.reactions.filter(
+                            reaction => reaction.id !== action.reactionId
+                        )
+                    } : message
                 );
-            }
+            });
             return newState;
         }
         default:

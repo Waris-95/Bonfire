@@ -96,13 +96,13 @@ export const getUsersForServerId = async (serverId) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ emoji, resource_type: resourceType }),
+            body: JSON.stringify({ emoji }),
         });
         if (res.ok) {
             return await res.json();
         }
         throw new Error('Failed to add reaction');
-    };    
+    };      
     
     export const deleteReaction = async (reactionId) => {
         const res = await fetch(`/api/channels/reactions/${reactionId}`, {
