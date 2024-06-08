@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchChannelsForServerIdThunk } from "../../redux/channel"
 import { fetchChannelMessagesThunk } from "../../redux/message"
-import { fetchServerUsersThunk } from "../../redux/serverUser"
+import { fetchServerUsersThunk, fetchCurrentUser } from "../../redux/serverUser"
 
 // Components
 import MessageLayout from "../MessageLayout/MessageLayout"
@@ -19,24 +19,48 @@ export default function ServerView({ activeServerId, activeServer }) {
     const channels = Object.values(useSelector((state) => state.channels))
     const messages = Object.values(useSelector((state) => state.messages));
     const serverUsers = Object.values(useSelector((state) => state.serverUsers));
-    const activeChannel = useMemo(() => channels.filter(channel => channel.id === activeChannelId)[0], [activeChannelId, channels]);
+
+    const currentUser = Object.values(useSelector((state) => state.currentUser));
+    const currentServer = useSelector((state) => state.servers[`${activeServerId}`]);
+    const activeChannel = useSelector((state) => state.channels[`${activeChannelId}`]);
+
 
     useEffect(() => {
         dispatch(fetchChannelsForServerIdThunk(activeServerId));
         dispatch(fetchChannelMessagesThunk(activeChannelId))
         dispatch(fetchServerUsersThunk(activeServerId))
+        dispatch(fetchCurrentUser())
     }, [dispatch, activeServerId, activeChannelId])
 
-    useEffect(() => {
-        // This is responsible for changing the active channel when the server changes
-        setActiveChannelId(channels[0]?.id)
-    }, [activeServerId, channels])
-    
+    // useEffect(() => {
+    //     // This is responsible for changing the active channel when the server changes
+    //     setActiveChannelId(channels[0]?.id)
+    // }, [activeServerId, channels])
+
+    const currUserId = currentUser[0]?.id
+    const currServerOwnerId = currentServer?.owner_id
+    const currChannelOwnerId = activeChannel?.owner_id
+
+    const isUserServerOwner = (currUserId, currServerOwnerId) => {
+        return currUserId === currServerOwnerId
+    }
+
+    const isUserChannelOwner = (currUserId, currChannelOwnerId) => {
+        return currUserId === currChannelOwnerId
+    }
+
+
     return (
         <section className={styles.serverView}>
-            <ChannelNav channels={channels} activeChannel={activeChannel} setActiveChannel={setActiveChannelId} activeServer={activeServer} />
-            <HeaderInfo activeChannel={activeChannel} />
-            <MessageLayout messages={messages} channelId={activeChannelId}/>
+            <ChannelNav 
+                channels={channels} 
+                setActiveChannel={setActiveChannelId} 
+                activeServerId={activeServerId}
+                currentUser={currentUser}
+                currentServerOwner={currentServer?.owner_id}
+            />
+            <HeaderInfo activeServerId={activeServerId}/>
+            <MessageLayout messages={messages} />
             <UserList users={serverUsers} />
         </section>
     )
