@@ -23,7 +23,7 @@ const MessageInput = ({ channelId }) => {
   };
 
   const handleEditMessage = (messageId, newText) => {
-    dispatch(updateMessageThunk(messageId, { text_field: newText }, channelId));
+    dispatch(updateMessageThunk(messageId, newText, channelId));
   };
 
   const handleDeleteMessage = (messageId) => {

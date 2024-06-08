@@ -63,7 +63,7 @@ export const getUsersForServerId = async (serverId) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(message),
+            body: JSON.stringify(message),  // Ensure this is a plain object
         });
         if (res.ok) {
             const data = await res.json();
@@ -96,13 +96,13 @@ export const getUsersForServerId = async (serverId) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ emoji }),
+            body: JSON.stringify({ emoji, resource_type: resourceType }),
         });
         if (res.ok) {
             return await res.json();
         }
         throw new Error('Failed to add reaction');
-    };      
+    };
     
     export const deleteReaction = async (reactionId) => {
         const res = await fetch(`/api/channels/reactions/${reactionId}`, {

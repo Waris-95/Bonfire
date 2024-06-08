@@ -62,15 +62,19 @@ export const createMessageThunk = (channelId, message) => async (dispatch) => {
 };
 
 export const updateMessageThunk = (messageId, newText, channelId) => async (dispatch) => {
-    const updatedMessage = await updateChannelMessage(messageId, newText);
-    dispatch(updateMessage(updatedMessage));
-    dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after updating a message
+    try {
+        const updatedMessage = await updateChannelMessage(messageId, { text_field: newText });
+        dispatch(updateMessage(updatedMessage));
+        dispatch(fetchChannelMessagesThunk(channelId));
+    } catch (error) {
+        console.error('Failed to update message:', error);
+    }
 };
 
 export const deleteMessageThunk = (messageId, channelId) => async (dispatch) => {
     await deleteChannelMessage(messageId);
     dispatch(deleteMessage(messageId, channelId));
-    dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after deleting a message
+    dispatch(fetchChannelMessagesThunk(channelId));
 };
 
 export const fetchMessageReactionsThunk = (messageId) => async (dispatch) => {
@@ -82,7 +86,7 @@ export const fetchMessageReactionsThunk = (messageId) => async (dispatch) => {
 export const addMessageReactionThunk = (messageId, resourceType, emoji) => async (dispatch) => {
     const newReaction = await addMessageReaction(messageId, resourceType, emoji);
     dispatch(addReaction(messageId, newReaction));
-    dispatch(fetchMessageReactionsThunk(messageId)); // Fetch reactions after adding a new reaction
+    dispatch(fetchMessageReactionsThunk(messageId));
 };
 
 export const deleteMessageReactionThunk = (messageId, reactionId) => async (dispatch) => {
@@ -123,7 +127,8 @@ const messageReducer = (state = initialState, action) => {
         case UPDATE_MESSAGE: {
             const newState = { ...state };
             const channelMessages = newState[action.message.channel_id].map(msg =>
-                msg.message_id === action.message.message_id ? {
+                msg.id === action.message.id ? {
+                    ...msg,
                     ...action.message,
                     reactions: action.message.reactions || msg.reactions || []  // Ensure reactions is initialized
                 } : msg
@@ -134,7 +139,7 @@ const messageReducer = (state = initialState, action) => {
         case DELETE_MESSAGE: {
             const newState = { ...state };
             const channelMessages = newState[action.channelId].filter(msg =>
-                msg.message_id !== action.messageId
+                msg.id !== action.messageId
             );
             newState[action.channelId] = channelMessages;
             return newState;
@@ -143,7 +148,7 @@ const messageReducer = (state = initialState, action) => {
             const newState = { ...state };
             Object.keys(newState).forEach(channelId => {
                 newState[channelId] = newState[channelId].map(message => 
-                    message.message_id === action.messageId ? {
+                    message.id === action.messageId ? {
                         ...message,
                         reactions: action.reactions
                     } : message
@@ -155,9 +160,9 @@ const messageReducer = (state = initialState, action) => {
             const newState = { ...state };
             Object.keys(newState).forEach(channelId => {
                 newState[channelId] = newState[channelId].map(message => 
-                    message.message_id === action.messageId ? {
+                    message.id === action.messageId ? {
                         ...message,
-                        reactions: [...message.reactions, action.reaction]
+                        reactions: [...(message.reactions || []), action.reaction]
                     } : message
                 );
             });
@@ -167,9 +172,9 @@ const messageReducer = (state = initialState, action) => {
             const newState = { ...state };
             Object.keys(newState).forEach(channelId => {
                 newState[channelId] = newState[channelId].map(message => 
-                    message.message_id === action.messageId ? {
+                    message.id === action.messageId ? {
                         ...message,
-                        reactions: message.reactions.filter(
+                        reactions: (message.reactions || []).filter(
                             reaction => reaction.id !== action.reactionId
                         )
                     } : message

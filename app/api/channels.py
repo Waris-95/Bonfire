@@ -87,16 +87,26 @@ def create_channel_message(channel_id):
 
     return jsonify(message_dict), 201  # Return the new message as JSON
 
-
 # Update a message by its ID
 @channels_bp.route('/channel_messages/<int:message_id>', methods=['PUT'])
 @login_required
 def update_channel_message(message_id):
-    message = ChannelMessage.query.get_or_404(message_id)  # Get the message or return 404 if not found
-    data = request.get_json()  # Get the JSON data from the request
-    message.text_field = data.get('text_field', message.text_field)  # Update the text field
-    db.session.commit()  # Commit the session to save changes
-    return jsonify(message.to_dict())  # Return the updated message as JSON
+    try:
+        message = ChannelMessage.query.get_or_404(message_id)  # Get the message or return 404 if not found
+        data = request.get_json()  # Get the JSON data from the request
+        
+        text_field = data.get('text_field')
+        if text_field is None:
+            return jsonify({'error': 'Text field is required'}), 400  # Return error if text field is missing
+
+        message.text_field = text_field  # Update the text field
+        db.session.commit()  # Commit the session to save changes
+
+        return jsonify(message.to_dict())  # Return the updated message as JSON
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error updating message: {e}")  # Log the error
+        return jsonify({'error': 'Internal Server Error'}), 500  # Return a 500 error
 
 # Delete a message by its ID
 @channels_bp.route('/channel_messages/<int:message_id>', methods=['DELETE'])
@@ -106,11 +116,6 @@ def delete_channel_message(message_id):
     db.session.delete(message)  # Delete the message from the session
     db.session.commit()  # Commit the session to save changes
     return jsonify({'message': 'Message deleted'}), 200  # Return success message
-
-
-"""
-----------------------> REACTION ROUTES <----------------------
-"""
 
 
 """

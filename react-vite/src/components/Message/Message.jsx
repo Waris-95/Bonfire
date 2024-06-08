@@ -6,32 +6,38 @@ import styles from './Message.module.css';
 const Message = ({ message, onEdit, onDelete }) => {
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
-    const [editedText, setEditedText] = useState(message.text_field);
+    const [editedText, setEditedText] = useState(message?.text_field || '');
 
     const handleEdit = () => {
         if (isEditing) {
-            onEdit(message.id, editedText);
+            onEdit(message.message_id, editedText);
         }
         setIsEditing(!isEditing);
     };
 
     const handleDelete = () => {
-        onDelete(message.id);
+        onDelete(message.message_id);
     };
 
     const handleAddReaction = (e) => {
         if (e.key === 'Enter') {
-            dispatch(addMessageReactionThunk(message.id, 'channel_message', e.target.value));
+            dispatch(addMessageReactionThunk(message.message_id, 'channel_message', e.target.value));
             e.target.value = '';
         }
     };
 
+    const profileImage = message?.user?.profile_images?.[0]?.url || 'default-profile-pic-url';
+
+    if (!message) {
+        return null;
+    }
+
     return (
         <div className={styles.message}>
-            <img className={styles.profile_picture} src={message.user.profile_images[0]?.url || 'default-profile-pic-url'} alt="Profile" />
+            <img className={styles.profile_picture} src={profileImage} alt="Profile" />
             <div>
                 <div className={styles.userDetails}>
-                    <h5 className={styles.userName}>{message.user.username}</h5>
+                    <h5 className={styles.userName}>{message.user ? message.user.username : 'Unknown User'}</h5>
                     <p className={styles.date}>{new Date(message.created_at).toLocaleString()}</p>
                     <button onClick={handleEdit} className={styles.edit_button}>
                         {isEditing ? 'Save' : 'Edit'}
@@ -51,7 +57,7 @@ const Message = ({ message, onEdit, onDelete }) => {
                     <p className={styles.textBody}>{message.text_field}</p>
                 )}
                 <div className={styles.reactions}>
-                    {message.reactions.map((reaction) => (
+                    {message.reactions && message.reactions.map((reaction) => (
                         <span key={reaction.id}>{reaction.emoji} ({reaction.count})</span>
                     ))}
                 </div>
