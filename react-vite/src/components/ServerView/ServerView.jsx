@@ -37,18 +37,6 @@ export default function ServerView({ activeServerId, activeServer }) {
     //     setActiveChannelId(channels[0]?.id)
     // }, [activeServerId, channels])
 
-    const currUserId = currentUser[0]?.id
-    const currServerOwnerId = currentServer?.owner_id
-    const currChannelOwnerId = activeChannel?.owner_id
-
-    const isUserServerOwner = (currUserId, currServerOwnerId) => {
-        return currUserId === currServerOwnerId
-    }
-
-    const isUserChannelOwner = (currUserId, currChannelOwnerId) => {
-        return currUserId === currChannelOwnerId
-    }
-
 
     return (
         <section className={styles.serverView}>
@@ -58,9 +46,10 @@ export default function ServerView({ activeServerId, activeServer }) {
                 activeServerId={activeServerId}
                 currentUser={currentUser}
                 currentServerOwner={currentServer?.owner_id}
+                activeServer={activeServer}
             />
             <HeaderInfo activeServerId={activeServerId}/>
-            <MessageLayout messages={messages} />
+            <MessageLayout messages={messages} channelId={activeChannel?.id} />
             <UserList users={serverUsers} />
         </section>
     )

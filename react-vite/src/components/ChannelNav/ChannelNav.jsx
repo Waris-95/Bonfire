@@ -10,11 +10,11 @@ import EditChannelModal from "../EditChannelModal/EditChannelModal";
 import { GoPlus } from "react-icons/go";
 import { FaGear } from "react-icons/fa6";
 
-export default function ChannelNav({ channels, setActiveChannel, activeServerId, currentUser, currentServerOwner }){
+export default function ChannelNav({ channels, setActiveChannel, activeServerId, currentUser, currentServerOwner, activeServer }){
     const channelElements = useMemo(() => channels.map(channel => (
         <>
             <ChannelOption id={channel.id} key={channel.id} name={channel.name} setActiveChannel={setActiveChannel} />
-            {(channel.owner_id === currentUser[0].id || currentServerOwner === currentUser[0].id) && <OpenModalButton
+            {(channel.owner_id === currentUser[0]?.id || currentServerOwner === currentUser[0]?.id) && <OpenModalButton
                         buttonText={<FaGear />}
                         modalComponent={<EditChannelModal activeServerId={activeServerId} channel={channel}/>}
                     />}
