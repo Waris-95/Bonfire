@@ -1,13 +1,13 @@
 .container {
-    border-radius: 100%;
-    transition-property: all;
-    transition-duration: 300ms;
-    width: 40px;
-    height: 40px;
+    border-radius: 50%;
+    transition: border-radius 0.3s, transform 0.3s;
+    width: 48px; /* Slightly larger for better visibility */
+    height: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    background-color: #36393f; /* Discord-like background color */
 }
 
 .image {
@@ -20,4 +20,6 @@
 .container:focus {
     border-radius: 35%;
     cursor: pointer;
+    transform: scale(1.1); /* Slightly scale up on hover */
+    background-color: #7289da; /* Discord-like hover color */
 }

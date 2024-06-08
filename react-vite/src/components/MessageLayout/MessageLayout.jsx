@@ -13,7 +13,7 @@ export default function MessageLayout({ messages, channelId }){
     return (
         <div className={styles.main}>
             {messageElements}
-            <MessageInput channelId={channelId}/>
+            <MessageInput key={channelId} channelId={channelId}/>
         </div>
     )
 }

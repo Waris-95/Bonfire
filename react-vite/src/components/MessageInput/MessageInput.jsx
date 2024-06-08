@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createMessageThunk, fetchChannelMessagesThunk, updateMessageThunk, deleteMessageThunk } from '../../redux/message';
+import { createMessageThunk, fetchChannelMessagesThunk, updateMessageThunk, deleteMessageThunk, addMessageReactionThunk } from '../../redux/message';
 import Message from '../Message/Message';
 import styles from './MessageInput.module.css';
 
@@ -30,6 +30,10 @@ const MessageInput = ({ channelId }) => {
     dispatch(deleteMessageThunk(messageId, channelId));
   };
 
+  const handleAddReaction = (messageId, reaction) => {
+    dispatch(addMessageReactionThunk(messageId, 'channel_message', reaction));
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.messages}>
@@ -39,6 +43,7 @@ const MessageInput = ({ channelId }) => {
             message={m}
             onEdit={handleEditMessage}
             onDelete={handleDeleteMessage}
+            onAddReaction={handleAddReaction}
           />
         ))}
       </div>

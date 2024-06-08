@@ -113,6 +113,10 @@ def delete_channel_message(message_id):
 """
 
 
+"""
+----------------------> REACTION ROUTES <----------------------
+"""
+
 # Get all reactions on a channel message
 @channels_bp.route('/channel_messages/<int:message_id>/reactions', methods=['GET'])
 @login_required
@@ -150,7 +154,7 @@ def add_channel_message_reaction(message_id):
     db.session.commit()  # Commit the session to save the reaction
     
     user_reaction = UserReaction(
-        user_id=1,  # Use a hardcoded user ID for testing
+        user_id=current_user.id,  # Use the current user's ID
         reaction_id=new_reaction.id
     )
     db.session.add(user_reaction)  # Add the user's reaction to the session
@@ -179,7 +183,7 @@ def add_chat_room_message_reaction(message_id):
     db.session.commit()  # Commit the session to save the reaction
     
     user_reaction = UserReaction(
-        user_id=1,  # Use a hardcoded user ID for testing
+        user_id=current_user.id,  # Use the current user's ID
         reaction_id=new_reaction.id
     )
     db.session.add(user_reaction)  # Add the user's reaction to the session
@@ -192,7 +196,7 @@ def add_chat_room_message_reaction(message_id):
 @login_required
 def delete_reaction(reaction_id):
     reaction = Reaction.query.get_or_404(reaction_id)  # Get the reaction or return 404 if not found
-    user_reaction = UserReaction.query.filter_by(user_id=1, reaction_id=reaction_id).first()  # Use a hardcoded user ID for testing
+    user_reaction = UserReaction.query.filter_by(user_id=current_user.id, reaction_id=reaction_id).first()  # Use the current user's ID
     
     if not user_reaction:
         return jsonify({'error': 'Unauthorized or reaction not found'}), 403  # Return error if unauthorized or reaction not found

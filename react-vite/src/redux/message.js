@@ -1,9 +1,12 @@
-import { getChannelMessages, createChannelMessage, updateChannelMessage, deleteChannelMessage } from "../utils/api";
+import { getChannelMessages, createChannelMessage, updateChannelMessage, deleteChannelMessage, getMessageReactions, addMessageReaction, deleteReaction } from "../utils/api";
 
 export const LOAD_MESSAGES = 'messages/LOAD_MESSAGES';
 export const ADD_MESSAGE = 'messages/ADD_MESSAGE';
 export const UPDATE_MESSAGE = 'messages/UPDATE_MESSAGE';
 export const DELETE_MESSAGE = 'messages/DELETE_MESSAGE';
+export const LOAD_REACTIONS = 'messages/LOAD_REACTIONS';
+export const ADD_REACTION = 'messages/ADD_REACTION';
+export const DELETE_REACTION = 'messages/DELETE_REACTION';
 
 // ================= ACTION CREATORS ================= 
 export const loadMessages = (messages) => ({
@@ -25,6 +28,24 @@ export const deleteMessage = (messageId, channelId) => ({
     type: DELETE_MESSAGE,
     messageId,
     channelId
+});
+
+export const loadReactions = (messageId, reactions) => ({
+    type: LOAD_REACTIONS,
+    messageId,
+    reactions,
+});
+
+export const addReaction = (messageId, reaction) => ({
+    type: ADD_REACTION,
+    messageId,
+    reaction,
+});
+
+export const removeReaction = (messageId, reactionId) => ({
+    type: DELETE_REACTION,
+    messageId,
+    reactionId,
 });
 
 // ================= THUNKS ================= 
@@ -54,6 +75,22 @@ export const deleteMessageThunk = (messageId, channelId) => async (dispatch) => 
     dispatch(fetchChannelMessagesThunk(channelId));
 };
 
+export const fetchMessageReactionsThunk = (messageId) => async (dispatch) => {
+    const reactions = await getMessageReactions(messageId);
+    dispatch(loadReactions(messageId, reactions));
+};
+
+export const addMessageReactionThunk = (messageId, resourceType, emoji) => async (dispatch) => {
+    const newReaction = await addMessageReaction(messageId, resourceType, emoji);
+    dispatch(addReaction(messageId, newReaction));
+    dispatch(fetchMessageReactionsThunk(messageId)); // Fetch reactions after adding a new reaction
+};
+
+export const deleteMessageReactionThunk = (messageId, reactionId) => async (dispatch) => {
+    await deleteReaction(reactionId);
+    dispatch(removeReaction(messageId, reactionId));
+    dispatch(fetchMessageReactionsThunk(messageId)); // Fetch reactions after deleting a reaction
+};
 
 // ================= REDUCER ================= 
 const initialState = {};
@@ -66,21 +103,30 @@ const messageReducer = (state = initialState, action) => {
                 if (!newState[message.channel_id]) {
                     newState[message.channel_id] = [];
                 }
-                newState[message.channel_id].push(message);
+                newState[message.channel_id].push({
+                    ...message,
+                    reactions: message.reactions || []  // Ensure reactions is initialized
+                });
             });
             return newState;
         }
         case ADD_MESSAGE: {
             const newState = { ...state };
             const channelMessages = newState[action.message.channel_id] || [];
-            channelMessages.push(action.message);
+            channelMessages.push({
+                ...action.message,
+                reactions: action.message.reactions || []  // Ensure reactions is initialized
+            });
             newState[action.message.channel_id] = channelMessages;
             return newState;
         }
         case UPDATE_MESSAGE: {
             const newState = { ...state };
             const channelMessages = newState[action.message.channel_id].map(msg =>
-                msg.message_id === action.message.message_id ? action.message : msg
+                msg.message_id === action.message.message_id ? {
+                    ...action.message,
+                    reactions: action.message.reactions || msg.reactions || []  // Ensure reactions is initialized
+                } : msg
             );
             newState[action.message.channel_id] = channelMessages;
             return newState;
@@ -91,6 +137,33 @@ const messageReducer = (state = initialState, action) => {
                 msg.message_id !== action.messageId
             );
             newState[action.channelId] = channelMessages;
+            return newState;
+        }
+        case LOAD_REACTIONS: {
+            const newState = { ...state };
+            if (newState[action.messageId]) {
+                newState[action.messageId].reactions = action.reactions;
+            } else {
+                newState[action.messageId] = { reactions: action.reactions };
+            }
+            return newState;
+        }
+        case ADD_REACTION: {
+            const newState = { ...state };
+            if (newState[action.messageId] && newState[action.messageId].reactions) {
+                newState[action.messageId].reactions.push(action.reaction);
+            } else {
+                newState[action.messageId] = { reactions: [action.reaction] };
+            }
+            return newState;
+        }
+        case DELETE_REACTION: {
+            const newState = { ...state };
+            if (newState[action.messageId] && newState[action.messageId].reactions) {
+                newState[action.messageId].reactions = newState[action.messageId].reactions.filter(
+                    reaction => reaction.id !== action.reactionId
+                );
+            }
             return newState;
         }
         default:
