@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { createMessageThunk, fetchChannelMessagesThunk } from '../../redux/message';
+import { useDispatch, useSelector } from 'react-redux';
+import { createMessageThunk, fetchChannelMessagesThunk, updateMessageThunk, deleteMessageThunk } from '../../redux/message';
+import Message from '../Message/Message';
 import styles from './MessageInput.module.css';
 
 const MessageInput = ({ channelId }) => {
   const dispatch = useDispatch();
+  const messages = useSelector(state => Object.values(state.messages[channelId] || {}));
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -18,15 +20,28 @@ const MessageInput = ({ channelId }) => {
       dispatch(createMessageThunk(channelId, { text_field: message }));
       setMessage('');
     }
-    dispatch(fetchChannelMessagesThunk(channelId))
   };
 
   const handleEditMessage = (messageId, newText) => {
-    // Dispatch an action to edit the message
+    dispatch(updateMessageThunk(messageId, { text_field: newText }, channelId));
+  };
+
+  const handleDeleteMessage = (messageId) => {
+    dispatch(deleteMessageThunk(messageId, channelId));
   };
 
   return (
     <div className={styles.wrapper}>
+      <div className={styles.messages}>
+        {messages.map((m, index) => (
+          <Message
+            key={`${m.message_id}-${index}`}
+            message={m}
+            onEdit={handleEditMessage}
+            onDelete={handleDeleteMessage}
+          />
+        ))}
+      </div>
       <div className={styles.message_input_container}>
         <input
           type="text"
