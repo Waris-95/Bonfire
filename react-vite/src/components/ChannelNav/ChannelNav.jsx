@@ -10,7 +10,6 @@ import EditChannelModal from "../EditChannelModal/EditChannelModal";
 import { GoPlus } from "react-icons/go";
 import { FaGear } from "react-icons/fa6";
 
-
 export default function ChannelNav({ channels, setActiveChannel, activeServerId, currentUser, currentServerOwner }){
     const channelElements = useMemo(() => channels.map(channel => (
         <>
@@ -26,7 +25,7 @@ export default function ChannelNav({ channels, setActiveChannel, activeServerId,
         <aside className={styles.channelNav}>
             <div className={styles.channelName}>
                 <FaCode className={styles.channelName__logo}/>
-                <h1 className={styles.channelName__header}>Server Name</h1>
+                <h1 className={styles.channelName__header}>{activeServer?.name || "Loading..."}</h1>
             </div>
             <div>
                 Text Channels

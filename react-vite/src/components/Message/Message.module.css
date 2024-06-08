@@ -19,7 +19,7 @@
     color: #DBDEE1;
     line-height: 130%;
     font-weight: 300;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
 }
 
 .userDetails {
@@ -30,10 +30,21 @@
 
 .userName {
     color: #9B59B6;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .date {
     font-size: 0.65rem;
     color: #949BA4;
+}
+
+.profile_picture {
+    margin-top: 4px;
+    height: 32px;
+    width: 32px;
+    object-fit: cover;
+    border-radius: 100%;
+    min-width: 32px;
+    max-width: 32px;
 }

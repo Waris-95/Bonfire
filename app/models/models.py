@@ -40,7 +40,8 @@ class User(db.Model, UserMixin):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+            'profile_images': [profile_image.to_dict() for profile_image in self.profile_images]
         }
     
 class ProfileImage(db.Model):
@@ -88,7 +89,8 @@ class Server(db.Model):
             'description': self.description,
             'owner_id': self.owner_id,
             'channels': [channel.to_dict() for channel in self.channels],
-            'server_images': [server_image.to_dict() for server_image in self.server_images]
+            'server_images': [server_image.to_dict() for server_image in self.server_images],
+            'users': [user.to_dict() for user in self.users]
         }
 
 class ServerUser(db.Model):
