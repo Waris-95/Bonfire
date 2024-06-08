@@ -63,41 +63,40 @@ function NewServerModal({ server, formType }) {
 
     return (
         <>
+        <div className={styles.modalLayout}>
             <h1>Create a Server</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name
-                    <input
-                        type="text"
-                        value={serverName}
-                        onChange={(e) => setServerName(e.target.value)}
-                        required
-                    />
-                </label>
+            <form onSubmit={handleSubmit} className={styles.createServerForm}>
+                <input
+                    type="text"
+                    className={styles.serverName}
+                    value={serverName}
+                    placeholder={"Name"}
+                    onChange={(e) => setServerName(e.target.value)}
+                    required
+                />
                 {errors.serverName && <p>{errors.serverName}</p>}
-                <label>
-                    Description
-                    <input
-                        type="text"
-                        value={serverDescription}
-                        onChange={(e) => setServerDescription(e.target.value)}
-                    />
-                </label>
+                <textarea
+                    type="text"
+                    className={styles.serverDescription}
+                    value={serverDescription}
+                    placeholder={"Description"}
+                    onChange={(e) => setServerDescription(e.target.value)}
+                />
                 {errors.serverDescription && <p>{errors.serverDescription}</p>}
-                <label>
-                    Server Image
-                    <input
-                        type="text"
-                        value={serverImage}
-                        onChange={(e) => setServerImage(e.target.value)}
-                    />
-                </label>
+                <input
+                    type="text"
+                    className={styles.serverName}
+                    value={serverImage}
+                    placeholder={"Image URL"}
+                    onChange={(e) => setServerImage(e.target.value)}
+                />
                 {errors.serverImage && <p>{errors.serverImage}</p>}
-                <button type="submit">{formType === "Update Server" ? "Update Server" : "Create Server"}</button>
+                <button type="submit" className={styles.createServerButton}>{formType === "Update Server" ? "Update" : "Create"}</button>
             </form>
             <form onSubmit={deleteServer}>
                 <button type="submit" className={formType !== "Update Server" ? styles.hidden : ""}>Delete Server</button> 
             </form>
+        </div>
         </>
     )
 }
