@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addMessageReactionThunk } from '../../redux/message';
+import Reactions from '../Reactions/Reactions';
 import styles from './Message.module.css';
 
 const Message = ({ message, onEdit, onDelete }) => {
+    console.log("WHAT IS MESSAGE???", message)
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(message?.text_field || '');
@@ -67,6 +69,7 @@ const Message = ({ message, onEdit, onDelete }) => {
                     onKeyDown={handleAddReaction}
                     className={styles.reaction_input}
                 />
+                <Reactions />
             </div>
         </div>
     );

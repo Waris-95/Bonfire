@@ -21,6 +21,8 @@ export default function ServerView({ activeServerId, activeServer }) {
     const serverUsers = Object.values(useSelector((state) => state.serverUsers));
     const activeChannel = useMemo(() => channels.filter(channel => channel.id === activeChannelId)[0], [activeChannelId, channels]);
 
+    console.log("WHAT ARE ALL OF THESE MESSAGES???", messages)
+
     useEffect(() => {
         dispatch(fetchChannelsForServerIdThunk(activeServerId));
         dispatch(fetchChannelMessagesThunk(activeChannelId))

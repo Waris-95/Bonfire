@@ -20,14 +20,15 @@ def get_channel_messages(channel_id):
     messages_with_users = (
         db.session.query(ChannelMessage)
             .join(User, ChannelMessage.user_id == User.id)
+            .join(Reaction, ChannelMessage.id == Reaction.channel_message_id)
             .options(joinedload(ChannelMessage.user))
             .filter(ChannelMessage.channel_id == channel_id)
             .all()
     )
     # Convert to dictionary format
-    # print("=============================================================================================================================================================================================")
-    # print(messages_with_users)
-    # print("=============================================================================================================================================================================================")
+    print("=============================================================================================================================================================================================")
+    print(messages_with_users[0].to_dict())
+    print("=============================================================================================================================================================================================")
 
     messages_dict = [
         {
@@ -38,6 +39,7 @@ def get_channel_messages(channel_id):
                 'email': message.user.email,
                 'profile_image': [profile_image.to_dict() for profile_image in message.user.profile_images]
             },
+            'reactions': [reaction.to_dict() for reaction in message.reactions],
             'channel_id': message.channel_id,
             'text_field': message.text_field,
             'created_at': message.created_at,
@@ -45,6 +47,8 @@ def get_channel_messages(channel_id):
         }
         for message in messages_with_users
     ]
+
+    print("MESSAGES DICTIONARY!!!!", messages_dict)
 
     # Return messages as JSON
     return jsonify(messages_dict)
