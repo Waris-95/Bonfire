@@ -26,9 +26,9 @@ def get_channel_messages(channel_id):
             .all()
     )
     # Convert to dictionary format
-    print("=============================================================================================================================================================================================")
-    print(messages_with_users[0].to_dict())
-    print("=============================================================================================================================================================================================")
+    # print("=============================================================================================================================================================================================")
+    # print(messages_with_users[0].to_dict())
+    # print("=============================================================================================================================================================================================")
 
     messages_dict = [
         {
@@ -48,7 +48,7 @@ def get_channel_messages(channel_id):
         for message in messages_with_users
     ]
 
-    print("MESSAGES DICTIONARY!!!!", messages_dict)
+    # print("MESSAGES DICTIONARY!!!!", messages_dict)
 
     # Return messages as JSON
     return jsonify(messages_dict)
@@ -132,6 +132,7 @@ def delete_channel_message(message_id):
 def get_channel_message_reactions(message_id):
     message = ChannelMessage.query.get_or_404(message_id)  # Get the channel message or return 404 if not found
     reactions = Reaction.query.filter_by(channel_message_id=message_id).all()  # Get all reactions on the message
+    print("ALL MESSAGE REACTIONS", reactions)
     return jsonify([reaction.to_dict() for reaction in reactions])  # Return reactions as JSON
 
 # Get all reactions on a chat room message
@@ -147,8 +148,23 @@ def get_chat_room_message_reactions(message_id):
 @login_required
 def add_channel_message_reaction(message_id):
     message = ChannelMessage.query.get_or_404(message_id)
+    print("ADDING REACTION", message.to_dict())
+    reaction_list = [reaction.to_dict() for reaction in message.reactions]
+    print("LOOKING AT A MESSAGE REACTION", reaction_list)
     data = request.get_json()
     emoji = data.get('emoji')
+    print("ADDED EMOJI", emoji)
+
+    for reaction in reaction_list:
+        print("LOOPING THROUGH REACTION LIST", reaction)
+        if emoji == reaction['emoji']:
+            print("EMOJI AND REACTION ARE THE SAME")
+            curr_reaction = Reaction.query.get_or_404(reaction['id'])
+            print("CURRENT REACTION COUNT", curr_reaction.count)
+            curr_reaction.count += 1
+            print("NEW REACTION COUNT", curr_reaction.count)
+            db.session.commit()
+            return jsonify(reaction)
     
     if not emoji:
         return jsonify({'error': 'Emoji is required'}), 400

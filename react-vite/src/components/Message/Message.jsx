@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { addMessageReactionThunk } from '../../redux/message';
 import Reactions from '../Reactions/Reactions';
 import styles from './Message.module.css';
+import OpenModalButton from '../OpenModalButton/OpenModalButton';
 
 const Message = ({ message, onEdit, onDelete }) => {
     console.log("WHAT IS MESSAGE???", message)
@@ -36,6 +37,7 @@ const Message = ({ message, onEdit, onDelete }) => {
 
     return (
         <div className={styles.message}>
+            {console.log("MESSAGE REACTIONS", message.reactions)}
             <img className={styles.profile_picture} src={profileImage} alt="Profile" />
             <div>
                 <div className={styles.userDetails}>
@@ -69,7 +71,10 @@ const Message = ({ message, onEdit, onDelete }) => {
                     onKeyDown={handleAddReaction}
                     className={styles.reaction_input}
                 />
-                <Reactions />
+                <OpenModalButton
+                    buttonText="Add reaction..."
+                    modalComponent={<Reactions message={message}/>}
+                />
             </div>
         </div>
     );
