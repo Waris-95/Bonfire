@@ -36,13 +36,14 @@ function SignupFormPage() {
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
-      navigate("/");
+      // navigate("/");
+      window.location.reload()
     }
   };
 
   return (
     <>
-      <h1>Sign Up</h1>
+      <h1>Sign Up to Start the Conversation</h1>
       {errors.server && <p>{errors.server}</p>}
       <form onSubmit={handleSubmit}>
         <label>
