@@ -15,7 +15,9 @@ const MessageInput = ({ channelId }) => {
     }
   }, [dispatch, channelId]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (e) => {
+    e.preventDefault()
+
     if (channelId && message.trim()) {
       dispatch(createMessageThunk(channelId, { text_field: message }));
       setMessage('');

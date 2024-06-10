@@ -3,7 +3,7 @@
     flex-direction: column;
     height: fit-content;
     position: fixed;
-    bottom: 0.6rem;
+    bottom: 1.2rem;
     right: 11.9rem;
     left: 15.6rem;
 }
@@ -65,3 +65,8 @@
 .reaction_button:hover {
     background-color: #45a049;
 }
+
+.send_button:hover {
+    background-color: #6377bf;
+}
+

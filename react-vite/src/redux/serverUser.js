@@ -1,6 +1,7 @@
-import { getUsersForServerId } from "../utils/api"
+import { getUsersForServerId, getCurrentUser } from "../utils/api"
 
 export const LOAD_USERS = 'messages/LOAD_USERS'
+export const LOAD_CURRENT_USER = 'users/LOAD_CURRENT_USER'
 
 // ================= ACTION CREATORS ================= 
 export const loadUsers = (users) => ({
@@ -8,10 +9,21 @@ export const loadUsers = (users) => ({
     users
 })
 
+export const loadCurrentUser = (user) => ({
+    type: LOAD_CURRENT_USER,
+    user
+})
+
 // ================= THUNKS ================= 
 export const fetchServerUsersThunk = (id) => async (dispatch) => {
     const res = await getUsersForServerId(id);
     dispatch(loadUsers(res));
+}
+
+export const fetchCurrentUser = () => async (dispatch) => {
+    const res = await getCurrentUser();
+    console.log("CURRENT USER RESPONSE", res)
+    dispatch(loadCurrentUser(res))
 }
 
 // ================= REDUCER ================= 
@@ -24,6 +36,19 @@ const serverUserReducer = (state = {}, action) => {
             })
             return usersState;
         }
+
+        default:
+            return state;
+    }
+}
+
+export const currentUserReducer = (state = {}, action) => {
+    switch (action.type) {
+        case LOAD_CURRENT_USER: {
+            console.log("SERVER USERS REDUCER", {...state, [action.user.id]: action.user})
+            return { ...state, [action.user.id]: action.user}
+        }
+
         default:
             return state;
     }
