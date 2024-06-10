@@ -20,10 +20,8 @@ export default function MessageLayout({ messages, channelId }){
 
     return (
         <div className={styles.main}>
-            <div className={styles.messages} ref={containerRef}>
-                {messageElements}
-            </div>
-            <MessageInput channelId={channelId}/>
+            {messageElements}
+            <MessageInput key={channelId} channelId={channelId}/>
         </div>
     )
 }
