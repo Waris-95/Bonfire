@@ -54,17 +54,6 @@ export const getUsersForServerId = async (serverId) => {
         return res;
     }
 
-
-    export const addServer = async (server) => {
-        const res = await fetch('/api/servers/', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(server)
-    })
-        .then(res => res.json())
-        .catch(e => console.error(e))
-        return res;
-    }
     
     export const getChannelMessages = async (channelId) => {
         const res = await fetch(`/api/channels/${channelId}/messages`);
@@ -73,22 +62,6 @@ export const getUsersForServerId = async (serverId) => {
             return Array.isArray(data) ? data : [];
         }
         throw new Error('Failed to fetch messages');
-    };
-    
-    
-    export const createChannelMessage = async (channelId, message) => {
-        const res = await fetch(`/api/channels/${channelId}/messages`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(message),
-        });
-        if (res.ok) {
-            const data = await res.json();
-            return data;
-        }
-        throw new Error('Failed to create message');
     };
     
     export const updateChannelMessage = async (messageId, message) => {
