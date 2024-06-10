@@ -34,13 +34,13 @@ export default function ServerViewLayout(){
             <>
                 <h1>Welcome to Bonfire!</h1>
                 <SignupFormPage />
-                <p>Already have an account? Click 
+                {/* <p>Already have an account? Click 
                     <OpenModalButton 
                         buttonText="here"
                         modalComponent={<LoginFormModal/>}
                     /> 
                     to login.
-                </p>
+                </p> */}
             </>
         )
     } else {
