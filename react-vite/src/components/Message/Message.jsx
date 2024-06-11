@@ -5,35 +5,35 @@ import Reactions from '../Reactions/Reactions';
 import styles from './Message.module.css';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 
-const Message = ({ message, onEdit, onDelete }) => {
-    console.log("WHAT IS MESSAGE???", message)
-    const dispatch = useDispatch();
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedText, setEditedText] = useState(message?.text_field || '');
+// const Message = ({ message, onEdit, onDelete }) => {
+//     console.log("WHAT IS MESSAGE???", message)
+//     const dispatch = useDispatch();
+//     const [isEditing, setIsEditing] = useState(false);
+//     const [editedText, setEditedText] = useState(message?.text_field || '');
 
-    const handleEdit = () => {
-        if (isEditing) {
-            onEdit(message.message_id, editedText);
-        }
-        setIsEditing(!isEditing);
-    };
+//     const handleEdit = () => {
+//         if (isEditing) {
+//             onEdit(message.message_id, editedText);
+//         }
+//         setIsEditing(!isEditing);
+//     };
 
-    const handleDelete = () => {
-        onDelete(message.message_id);
-    };
+//     const handleDelete = () => {
+//         onDelete(message.message_id);
+//     };
 
-    const handleAddReaction = (e) => {
-        if (e.key === 'Enter') {
-            dispatch(addMessageReactionThunk(message.message_id, 'channel_message', e.target.value));
-            e.target.value = '';
-        }
-    };
+//     const handleAddReaction = (e) => {
+//         if (e.key === 'Enter') {
+//             dispatch(addMessageReactionThunk(message.message_id, 'channel_message', e.target.value));
+//             e.target.value = '';
+//         }
+//     };
 
-    const profileImage = message?.user?.profile_images?.[0]?.url || 'default-profile-pic-url';
+//     const profileImage = message?.user?.profile_images?.[0]?.url || 'default-profile-pic-url';
 
-    if (!message) {
-        return null;
-    }
+//     if (!message) {
+//         return null;
+//     }
 
 export default function Message({ text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg"}){
     return (
@@ -81,4 +81,4 @@ export default function Message({ text, date, name, img = "https://t4.ftcdn.net/
     );
 };
 
-export default Message;
+// export default Message;

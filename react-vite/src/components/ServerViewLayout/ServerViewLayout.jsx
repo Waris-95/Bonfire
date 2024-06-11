@@ -21,8 +21,6 @@ export default function ServerViewLayout(){
     const servers = Object.values(useSelector((state) => state.servers));
     const currentUser = Object.values(useSelector((state) => state.currentUser));
     const activeServer = useMemo(() => servers.filter(server => server.id === activeServerId)[0], [activeServerId, servers]);
-    const currentUser = Object.values(useSelector((state) => state.currentUser));
-
     
     useEffect(() => {
         dispatch(fetchAllServersThunk());
