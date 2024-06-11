@@ -46,16 +46,18 @@ const MessageInput = ({ channelId, handleSendMessage }) => {
         ))}
       </div> */}
       <div className={styles.message_input_container}>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className={styles.message_input}
-          placeholder="Type a message..."
-        />
-        <button onClick={(e) => sendMessage(e, message)} className={styles.send_button} disabled={message.length < 1}>
-          Send
-        </button>
+        {/* <form> */}
+            <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className={styles.message_input}
+                placeholder="Type a message..."
+            />
+            <button onClick={(e) => sendMessage(e, message)} className={styles.send_button} disabled={message.length < 1}>
+                Send
+            </button>
+        {/* </form> */}
       </div>
     </div>
   );

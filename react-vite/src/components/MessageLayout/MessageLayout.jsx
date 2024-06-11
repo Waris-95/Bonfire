@@ -13,9 +13,8 @@ import MessageInput from "../MessageInput/MessageInput"
 const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:8000';
 let socket;
 export default function MessageLayout({ defaultMessages, channelId }) {
-    console.log("DEFAULT MSG: ", defaultMessages)
     const dispatch = useDispatch()
-    const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
+    const currentUser = Object.values(useSelector((state) => state.currentUser));
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
@@ -30,26 +29,26 @@ export default function MessageLayout({ defaultMessages, channelId }) {
                 text_field: text,
                 user
             }
-
             setMessages(messages => [...messages, newMessage])
         })
 
         return (() => {
             socket.disconnect()
         })
-    }, []);
+    }, [channelId]);
 
     useEffect(() => {
         // socket.emit('leave', { room: prevRoom })
         socket.emit('join', { room: channelId })
         setMessages(defaultMessages)
-    }, [channelId])
+    }, [channelId, defaultMessages])
 
     const handleSendMessage = (e, text_field) => {
         e.preventDefault()
-        dispatch(createMessageThunk(channelId, text_field, currentUser.id))
-        console.log("CURRENT USER: ", currentUser)
-        socket.emit('chat', { text_field, room: channelId, user: currentUser, date: new Date() });
+        console.log("IN HANDLE MESSAGE")
+        console.log(currentUser[0])
+        dispatch(createMessageThunk(channelId, text_field, currentUser[0]?.id))
+        socket.emit('chat', { text_field, room: channelId, user: currentUser[0], date: new Date() });
     }
 
     const messageElements = useMemo(() => messages?.map((message) => {

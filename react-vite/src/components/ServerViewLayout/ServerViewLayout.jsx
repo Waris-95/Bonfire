@@ -27,7 +27,7 @@ export default function ServerViewLayout(){
         dispatch(fetchCurrentUser())
     }, [dispatch, activeServerId])
 
-    console.log("THE CURRENT USER", currentUser[0])
+    // console.log("THE CURRENT USER", currentUser[0])
 
     if (!currentUser[0]?.id) {
         return (

@@ -160,7 +160,7 @@ export const deleteServer = async (serverId) => {
     return res;
 }
 
-export const createChannelMessage = async (channelId, message) => {
+export const createChannelMessage = async (channelId, message, userId) => {
     const res = await fetch(`/api/channels/${channelId}/messages`, {
         method: 'POST',
         headers: {
