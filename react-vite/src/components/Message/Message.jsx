@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addMessageReactionThunk } from '../../redux/message';
 import Reactions from '../Reactions/Reactions';
 import styles from './Message.module.css';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
+import { updateMessageThunk, deleteMessageThunk, addMessageReactionThunk } from '../../redux/message';
 
 // const Message = ({ message, onEdit, onDelete }) => {
 //     console.log("WHAT IS MESSAGE???", message)
@@ -35,11 +35,44 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton';
 //         return null;
 //     }
 
-export default function Message({ text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg"}){
+export default function Message({ img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg", message, channelId}){
+    const dispatch = useDispatch();
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedText, setEditedText] = useState(message?.text_field || '');
+
+    // const handleEdit = () => {
+    //     if (isEditing) {
+    //         onEdit(message.message_id, editedText);
+    //     }
+    //     setIsEditing(!isEditing);
+    // };
+
+    // const handleDelete = () => {
+    //     onDelete(message.message_id);
+    // };
+
+    // const handleAddReaction = (e) => {
+    //     if (e.key === 'Enter') {
+    //         dispatch(addMessageReactionThunk(message.message_id, 'channel_message', e.target.value));
+    //         e.target.value = '';
+    //     }
+    // };
+
+    const handleEdit = (messageId, newText) => {
+        dispatch(updateMessageThunk(messageId, newText, channelId));
+    };
+
+    const handleDelete = (messageId) => {
+        dispatch(deleteMessageThunk(messageId, channelId));
+    };
+
+    const handleAddReaction = (messageId, reaction) => {
+        dispatch(addMessageReactionThunk(messageId, 'channel_message', reaction));
+    };
+
     return (
         <div className={styles.message}>
-            {console.log("MESSAGE REACTIONS", message.reactions)}
-            <img className={styles.profile_picture} src={profileImage} alt="Profile" />
+            <img className={styles.profile_picture} src={img} alt="Profile" />
             <div>
                 <div className={styles.userDetails}>
                     <h5 className={styles.userName}>{message.user ? message.user.username : 'Unknown User'}</h5>

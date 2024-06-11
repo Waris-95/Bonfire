@@ -176,9 +176,3 @@ export const createChannelMessage = async (channelId, message) => {
     throw new Error('Failed to create message');
 };
 
-export const getCurrentUser = async () => {
-    const res = await fetch(`/api/users/current`)
-        .then(res => res.json())
-        .catch(e => console.error(e))
-    return res;
-}

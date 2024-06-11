@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createMessageThunk, fetchChannelMessagesThunk, updateMessageThunk, deleteMessageThunk, addMessageReactionThunk, handleSendMessage, channelId } from '../../redux/message';
+import { createMessageThunk, fetchChannelMessagesThunk, updateMessageThunk, deleteMessageThunk, addMessageReactionThunk } from '../../redux/message';
 import Message from '../Message/Message';
 import styles from './MessageInput.module.css';
 
-const MessageInput = ({ channelId }) => {
+const MessageInput = ({ channelId, handleSendMessage }) => {
   const dispatch = useDispatch();
   const messages = useSelector(state => Object.values(state.messages[channelId] || {}));
   const [message, setMessage] = useState('');
@@ -34,7 +34,7 @@ const MessageInput = ({ channelId }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.messages}>
+      {/* <div className={styles.messages}>
         {messages.map((m, index) => (
           <Message
             key={`${m.message_id}-${index}`}
@@ -44,7 +44,7 @@ const MessageInput = ({ channelId }) => {
             onAddReaction={handleAddReaction}
           />
         ))}
-      </div>
+      </div> */}
       <div className={styles.message_input_container}>
         <input
           type="text"

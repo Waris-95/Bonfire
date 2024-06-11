@@ -13,6 +13,7 @@ import MessageInput from "../MessageInput/MessageInput"
 const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:8000';
 let socket;
 export default function MessageLayout({ defaultMessages, channelId }) {
+    console.log("DEFAULT MSG: ", defaultMessages)
     const dispatch = useDispatch()
     const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
     const [messages, setMessages] = useState([])
@@ -51,11 +52,11 @@ export default function MessageLayout({ defaultMessages, channelId }) {
         socket.emit('chat', { text_field, room: channelId, user: currentUser, date: new Date() });
     }
 
-    const messageElements = useMemo(() => messages.map((message) => {
+    const messageElements = useMemo(() => messages?.map((message) => {
         const { user } = message;
         const url = user?.profile_images[0]?.url || undefined
-        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} />
-    }), [messages])
+        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} message={message} channelId={channelId}/>
+    }), [messages, channelId])
 
     const containerRef = useRef(null);
 
