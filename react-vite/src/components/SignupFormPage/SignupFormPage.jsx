@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import { thunkSignup } from "../../redux/session";
 import "./SignupForm.css";
+import LoginFormModal from '../LoginFormModal';
+import OpenModalButton from '../OpenModalButton';
 
 function SignupFormPage() {
   const dispatch = useDispatch();
@@ -12,6 +14,7 @@ function SignupFormPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [profileImageUrl, setProfileImageUrl] = useState("");
   const [errors, setErrors] = useState({});
 
   if (sessionUser) return <Navigate to="/" replace={true} />;
@@ -31,13 +34,14 @@ function SignupFormPage() {
         email,
         username,
         password,
+        profile_image_url: profileImageUrl,
       })
     );
 
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
-      window.location.reload();
+      navigate("/");
     }
   };
 
@@ -46,7 +50,8 @@ function SignupFormPage() {
       <video autoPlay muted loop className="background-video">
         <source src="https://bonfire-movie.s3.us-east-2.amazonaws.com/Bonfire+Animation.mp4" type="video/mp4" />
       </video>
-      <div className="signup-container">
+      <div className="content-overlay">
+        <h1 className="welcome-header">Welcome to Bonfire!</h1>
         <h1 className="signup-header">Sign Up to Start the Conversation</h1>
         {errors.server && <p className="error">{errors.server}</p>}
         <form onSubmit={handleSubmit} className="signup-form">
@@ -94,10 +99,26 @@ function SignupFormPage() {
             />
           </label>
           {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+          <label className="signup-label">
+            Profile Image URL
+            <input
+              type="text"
+              value={profileImageUrl}
+              onChange={(e) => setProfileImageUrl(e.target.value)}
+              required
+              className="signup-input"
+            />
+          </label>
+          {errors.profileImageUrl && <p className="error">{errors.profileImageUrl}</p>}
           <button type="submit" className="signup-button">Sign Up</button>
         </form>
         <div className="login-redirect">
-          Already have an account? <a href="/login">Click here</a> to login.
+          Already have an account? Click 
+          <OpenModalButton 
+            buttonText="here"
+            modalComponent={<LoginFormModal />}
+          /> 
+          to login.
         </div>
       </div>
     </div>

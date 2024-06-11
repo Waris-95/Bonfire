@@ -98,3 +98,25 @@
   font-size: 12px;
   margin-bottom: 10px;
 }
+
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-profile {
+  text-align: center;
+  padding: 20px;
+}
+
+.user-profile h2 {
+  margin-top: 10px;
+  color: #fff;
+}
+
+.user-profile p {
+  color: #bbb;
+}
