@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { thunkSignup } from "../../redux/session";
 import "./SignupForm.css";
-import LoginFormModal from '../LoginFormModal';
-import OpenModalButton from '../OpenModalButton';
 
 function SignupFormPage() {
   const dispatch = useDispatch();
@@ -24,8 +22,7 @@ function SignupFormPage() {
 
     if (password !== confirmPassword) {
       return setErrors({
-        confirmPassword:
-          "Confirm Password field must be the same as the Password field",
+        confirmPassword: "Confirm Password field must be the same as the Password field",
       });
     }
 
@@ -34,7 +31,7 @@ function SignupFormPage() {
         email,
         username,
         password,
-        profile_image_url: profileImageUrl,
+        profile_image_url: profileImageUrl || undefined,
       })
     );
 
@@ -52,6 +49,7 @@ function SignupFormPage() {
       </video>
       <div className="content-overlay">
         <h1 className="welcome-header">Welcome to Bonfire!</h1>
+        <br />
         <h1 className="signup-header">Sign Up to Start the Conversation</h1>
         {errors.server && <p className="error">{errors.server}</p>}
         <form onSubmit={handleSubmit} className="signup-form">
@@ -105,7 +103,6 @@ function SignupFormPage() {
               type="text"
               value={profileImageUrl}
               onChange={(e) => setProfileImageUrl(e.target.value)}
-              required
               className="signup-input"
             />
           </label>
@@ -113,12 +110,7 @@ function SignupFormPage() {
           <button type="submit" className="signup-button">Sign Up</button>
         </form>
         <div className="login-redirect">
-          Already have an account? Click 
-          <OpenModalButton 
-            buttonText="here"
-            modalComponent={<LoginFormModal />}
-          /> 
-          to login.
+          Already have an account? Click <Link to="/login">here</Link> to login.
         </div>
       </div>
     </div>
