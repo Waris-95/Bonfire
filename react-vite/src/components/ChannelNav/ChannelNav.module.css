@@ -28,3 +28,7 @@
 .channelOptions {
     padding: 0.8em 0.4em;
 }
+
+.hidden {
+    display: none;
+}

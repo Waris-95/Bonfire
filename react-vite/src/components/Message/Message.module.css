@@ -2,49 +2,82 @@
     padding: 0.8em 1em;
     display: flex;
     gap: 1em;
+    align-items: flex-start;
+    transition: background 0.2s;
 }
 
 .icon {
     align-self: flex-start;
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
 }
 
 .message:hover,
 .message:focus {
-    background: #2c2d32;
+    background: #36393f;
 }
 
 .textBody {
-    color: #DBDEE1;
+    color: #dcddde;
     line-height: 130%;
-    font-weight: 300;
-    font-size: 0.78rem;
+    font-weight: 400;
+    font-size: 0.9rem;
+    margin-top: 2px;
 }
 
 .userDetails {
     display: flex;
     align-items: center;
     gap: 0.5em;
+    font-size: 0.75rem;
 }
 
 .userName {
-    color: #9B59B6;
-    font-size: 0.8rem;
+    color: #7289da;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .date {
-    font-size: 0.65rem;
-    color: #949BA4;
+    font-size: 0.75rem;
+    color: #72767d;
 }
 
 .profile_picture {
-    margin-top: 4px;
-    height: 32px;
-    width: 32px;
+    height: 40px;
+    width: 40px;
     object-fit: cover;
-    border-radius: 100%;
-    min-width: 32px;
-    max-width: 32px;
+    border-radius: 50%;
 }
+
+.edit_button, .delete_button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    background-color: #4f545c;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.edit_button:hover, .delete_button:hover {
+    background-color: #5865f2;
+}
+
+.edit_input {
+    width: calc(100% - 40px);
+    padding: 5px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #40444b;
+    background-color: #2f3136;
+    color: #dcddde;
+    outline: none;
+}
+
+.edit_input:focus {
+    border-color: #5865f2;
+}
+
