@@ -51,12 +51,13 @@ export const removeReaction = (messageId, reactionId) => ({
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
     const res = await getChannelMessages(channelId);
-    console.log(res, 'IM THE RES')
+    console.log('Fetched messages:', res);
     dispatch(loadMessages(res));
 };
 
 export const createMessageThunk = (channelId, message) => async (dispatch) => {
     const newMessage = await createChannelMessage(channelId, message);
+    console.log('New message created:', newMessage);
     dispatch(addMessage(newMessage));
     dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after creating a new message
 };

@@ -15,8 +15,12 @@ const MessageInput = ({ channelId }) => {
     }
   }, [dispatch, channelId]);
 
+  // useEffect(() => {
+  //   console.log('Messages updated:', messages);
+  // }, [messages]);
+
   const handleSendMessage = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (channelId && message.trim()) {
       dispatch(createMessageThunk(channelId, { text_field: message }));
