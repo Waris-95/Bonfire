@@ -1,7 +1,7 @@
 import styles from "./ServerView.module.css"
 
 // Util
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchChannelsForServerIdThunk } from "../../redux/channel"
 import { fetchChannelMessagesThunk } from "../../redux/message"

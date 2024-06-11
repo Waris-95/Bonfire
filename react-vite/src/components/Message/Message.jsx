@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addMessageReactionThunk } from '../../redux/message';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMessageReactionsThunk } from '../../redux/message';
+import { fetchCurrentUser } from '../../redux/serverUser';
 import Reactions from '../Reactions/Reactions';
 import styles from './Message.module.css';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
@@ -10,6 +11,31 @@ const Message = ({ message, onEdit, onDelete }) => {
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(message?.text_field || '');
+    const reactions = Object.values(useSelector((state) => state.reactions))
+    const currentUser = Object.values(useSelector((state) => state.currentUser));
+    console.log("DID THE CURRENT USER MAKE IT TO THE MESSAGE???", currentUser[0])
+    console.log("WHAT DO THESE REACTIONS LOOK LIKE???", reactions)
+
+    useEffect(() => {
+        dispatch(fetchMessageReactionsThunk(message?.message_id))
+        dispatch(fetchCurrentUser())
+
+    }, [dispatch, message?.message_id])
+
+    const userReactions = [];
+    const currUsersReactions = (userId) => {
+        reactions.map(reaction => {
+            console.log("COMPARING USER ID WITH REACTION USER ID", userId, reaction.user_id, userId === reaction.user_id)
+            if (userId === reaction.user_id) {
+                userReactions.push(reaction)
+            }
+
+            console.log("USERS REACTIONS", userReactions)
+            return userReactions;
+        })
+    }
+
+    currUsersReactions(currentUser[0]?.id)
 
     const handleEdit = () => {
         if (isEditing) {
@@ -20,13 +46,6 @@ const Message = ({ message, onEdit, onDelete }) => {
 
     const handleDelete = () => {
         onDelete(message.message_id);
-    };
-
-    const handleAddReaction = (e) => {
-        if (e.key === 'Enter') {
-            dispatch(addMessageReactionThunk(message.message_id, 'channel_message', e.target.value));
-            e.target.value = '';
-        }
     };
 
     const profileImage = message?.user?.profile_images?.[0]?.url || 'default-profile-pic-url';
@@ -61,19 +80,17 @@ const Message = ({ message, onEdit, onDelete }) => {
                     <p className={styles.textBody}>{message.text_field}</p>
                 )}
                 <div className={styles.reactions}>
-                    {message.reactions && message.reactions.map((reaction) => (
+                    {reactions && reactions.map((reaction) => (
                         <span key={reaction.id}>{reaction.emoji} ({reaction.count})</span>
                     ))}
                 </div>
-                <input
-                    type="text"
-                    placeholder="Add reaction..."
-                    onKeyDown={handleAddReaction}
-                    className={styles.reaction_input}
-                />
                 <OpenModalButton
                     buttonText="Add reaction..."
-                    modalComponent={<Reactions message={message}/>}
+                    modalComponent={<Reactions type="Add" message={message}/>}
+                />
+                <OpenModalButton
+                    buttonText="Delete reaction..."
+                    modalComponent={<Reactions type="Remove" reactions={userReactions} />}
                 />
             </div>
         </div>
