@@ -31,5 +31,4 @@ def get_current_user():
     Query for the current user that is logged in
     """
     user = User.query.get(current_user.id)
-    print("CURRENT USER", user.to_dict())
     return user.to_dict()

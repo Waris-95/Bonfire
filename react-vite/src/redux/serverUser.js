@@ -22,7 +22,6 @@ export const fetchServerUsersThunk = (id) => async (dispatch) => {
 
 export const fetchCurrentUser = () => async (dispatch) => {
     const res = await getCurrentUser();
-    console.log("CURRENT USER RESPONSE", res)
     dispatch(loadCurrentUser(res))
 }
 
@@ -45,7 +44,6 @@ const serverUserReducer = (state = {}, action) => {
 export const currentUserReducer = (state = {}, action) => {
     switch (action.type) {
         case LOAD_CURRENT_USER: {
-            console.log("SERVER USERS REDUCER", {...state, [action.user.id]: action.user})
             return { ...state, [action.user.id]: action.user}
         }
 

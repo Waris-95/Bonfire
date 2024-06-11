@@ -55,8 +55,8 @@ export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
     dispatch(loadMessages(res));
 };
 
-export const createMessageThunk = (channelId, message) => async (dispatch) => {
-    const newMessage = await createChannelMessage(channelId, message);
+export const createMessageThunk = (channelId, message, userId) => async (dispatch) => {
+    const newMessage = await createChannelMessage(channelId, message, userId);
     dispatch(addMessage(newMessage));
     dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after creating a new message
 };
