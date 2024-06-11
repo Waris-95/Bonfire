@@ -109,14 +109,16 @@ const messageReducer = (state = initialState, action) => {
             return messagesState;
         }
         case ADD_MESSAGE: {
-            const newState = { ...state };
-            const channelMessages = newState[action.message.channel_id] || [];
-            channelMessages.push({
-                ...action.message,
-                reactions: action.message.reactions || []  // Ensure reactions is initialized
-            });
-            newState[action.message.channel_id] = channelMessages;
-            return newState;
+            // const newState = { ...state };
+            // const channelMessages = newState[action.message.channel_id] || [];
+            // channelMessages.push({
+            //     ...action.message,
+            //     reactions: action.message.reactions || []  // Ensure reactions is initialized
+            // });
+            // newState[action.message.channel_id] = channelMessages;
+            // return newState;
+
+            return { ...state, [action.message.message_id]: action.message};
         }
         case UPDATE_MESSAGE: {
             const newState = { ...state };
