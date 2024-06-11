@@ -17,13 +17,11 @@ export default function ServerView({ activeServerId, activeServer }) {
     const dispatch = useDispatch()
     const [activeChannelId, setActiveChannelId] = useState(1);
     const channels = Object.values(useSelector((state) => state.channels))
-    const messages = useSelector((state) => state.messages);
+    const messages = Object.values(useSelector((state) => state.messages));
     const serverUsers = Object.values(useSelector((state) => state.serverUsers));
-    console.log(messages)
     const currentUser = Object.values(useSelector((state) => state.currentUser));
     const currentServer = useSelector((state) => state.servers[`${activeServerId}`]);
     const activeChannel = useSelector((state) => state.channels[`${activeChannelId}`]);
-
 
     useEffect(() => {
         dispatch(fetchChannelsForServerIdThunk(activeServerId));
@@ -49,7 +47,7 @@ export default function ServerView({ activeServerId, activeServer }) {
                 activeServer={activeServer}
             />
             <HeaderInfo activeServerId={activeServerId}/>
-            <MessageLayout messages={messages} channelId={activeChannel?.id} />
+            <MessageLayout defaultMessages={messages} channelId={activeChannel?.id} />
             <UserList users={serverUsers} />
         </section>
     )
