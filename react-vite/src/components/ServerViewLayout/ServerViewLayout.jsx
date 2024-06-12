@@ -32,15 +32,15 @@ export default function ServerViewLayout(){
     if (!currentUser[0]?.id) {
         return (
             <>
-                <h1>Welcome to Bonfire!</h1>
+                {/* <h1>Welcome to Bonfire!</h1> */}
                 <SignupFormPage />
-                <p>Already have an account? Click 
+                {/* <p>Already have an account? Click 
                     <OpenModalButton 
                         buttonText="here"
                         modalComponent={<LoginFormModal/>}
                     /> 
                     to login.
-                </p>
+                </p> */}
             </>
         )
     } else {
