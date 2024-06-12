@@ -136,9 +136,44 @@ def delete_channel_message(message_id):
 @login_required
 def get_channel_message_reactions(message_id):
     message = ChannelMessage.query.get_or_404(message_id)  # Get the channel message or return 404 if not found
-    reactions = Reaction.query.filter_by(channel_message_id=message_id).all()  # Get all reactions on the message
+    # reactions = Reaction.query.filter_by(channel_message_id=message_id).all()  # Get all reactions on the message
+    # print("ALL MESSAGE REACTIONS", reactions)
+    # return jsonify([reaction.to_dict() for reaction in reactions])  # Return reactions as JSON
+
+    reactions = (
+        db.session.query(Reaction, UserReaction, User)
+        .join(UserReaction, Reaction.id == UserReaction.reaction_id)
+        .join(User, UserReaction.user_id == User.id)
+        .filter(Reaction.channel_message_id == message_id)
+        .all()
+    )
     print("ALL MESSAGE REACTIONS", reactions)
-    return jsonify([reaction.to_dict() for reaction in reactions])  # Return reactions as JSON
+
+    reaction_dicts = []
+    for reaction, user_reaction, user in reactions:
+        reaction_dict = reaction.to_dict()
+        user_dict = user.to_dict()
+        reaction_dict['user'] = user_dict
+        reaction_dicts.append(reaction_dict)
+    
+    print("REACTION DICTIONARY", reaction_dicts)
+
+    result = []
+
+    for reaction in reaction_dicts:
+        react_dict = {
+            "id": reaction['id'],
+            "channel_message_id": reaction['channel_message_id'],
+            "resource_type": reaction['resource_type'],
+            "emoji": reaction['emoji'],
+            "count": reaction['count'],
+            "user_id": reaction['user']['id'] 
+        }
+        result.append(react_dict)
+    
+    print("RESULTS", result)
+
+    return jsonify(result)
 
 # Get all reactions on a chat room message
 @channels_bp.route('/chat_room_messages/<int:message_id>/reactions', methods=['GET'])

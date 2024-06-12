@@ -11,6 +11,7 @@ import channelReducer from "./channel";
 import messageReducer from "./message";
 import serverUserReducer from "./serverUser";
 import { currentUserReducer } from "./serverUser";
+import { reactionsReducer } from "./message";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   channels: channelReducer,
   messages: messageReducer,
   serverUsers: serverUserReducer,
-  currentUser: currentUserReducer
+  currentUser: currentUserReducer,
+  reactions: reactionsReducer
 });
 
 let enhancer;

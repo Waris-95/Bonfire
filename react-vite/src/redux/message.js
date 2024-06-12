@@ -30,9 +30,8 @@ export const deleteMessage = (messageId, channelId) => ({
     channelId
 });
 
-export const loadReactions = (messageId, reactions) => ({
+export const loadReactions = (reactions) => ({
     type: LOAD_REACTIONS,
-    messageId,
     reactions,
 });
 
@@ -80,9 +79,10 @@ export const deleteMessageThunk = (messageId, channelId) => async (dispatch) => 
 };
 
 export const fetchMessageReactionsThunk = (messageId) => async (dispatch) => {
+    console.log("Message Redux CHECKING MESSAGE ID", messageId)
     const reactions = await getMessageReactions(messageId);
     console.log(reactions, 'THIS IS THE REACTIONS')
-    dispatch(loadReactions(messageId, reactions));
+    dispatch(loadReactions({messageId, reactions: reactions}));
 };
 
 export const addMessageReactionThunk = (messageId, resourceType, emoji) => async (dispatch) => {
@@ -143,18 +143,18 @@ const messageReducer = (state = initialState, action) => {
             newState[action.channelId] = channelMessages;
             return newState;
         }
-        case LOAD_REACTIONS: {
-            const newState = { ...state };
-            Object.keys(newState).forEach(channelId => {
-                newState[channelId] = newState[channelId].map(message => 
-                    message.id === action.messageId ? {
-                        ...message,
-                        reactions: action.reactions
-                    } : message
-                );
-            });
-            return newState;
-        }
+        // case LOAD_REACTIONS: {
+        //     const newState = { ...state };
+        //     Object.keys(newState).forEach(channelId => {
+        //         newState[channelId] = newState[channelId].map(message => 
+        //             message.id === action.messageId ? {
+        //                 ...message,
+        //                 reactions: action.reactions
+        //             } : message
+        //         );
+        //     });
+        //     return newState;
+        // }
         case ADD_REACTION: {
             const newState = { ...state };
             Object.keys(newState).forEach(channelId => {
@@ -181,6 +181,25 @@ const messageReducer = (state = initialState, action) => {
             });
             return newState;
         }
+        default:
+            return state;
+    }
+};
+
+export const reactionsReducer = (state = initialState, action) => {
+    switch(action.type) {
+        
+        case LOAD_REACTIONS: {
+            // const reactionsState = {};
+            // action.reactions.forEach((reaction) => {
+            //     reactionsState[reaction.id] = reaction;
+            // })
+            return {
+                ...state,
+                [action.reactions.messageId]: action.reactions.reactions,
+            };
+        }
+
         default:
             return state;
     }

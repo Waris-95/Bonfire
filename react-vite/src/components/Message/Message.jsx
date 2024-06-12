@@ -118,9 +118,28 @@
 
 import styles from "./Message.module.css"
 import { formatDate } from "./utils/utils"
+import OpenModalButton from "../OpenModalButton/OpenModalButton"
+import Reactions from "../Reactions/Reactions"
+import { fetchMessageReactionsThunk } from "../../redux/message"
+import { fetchCurrentUser } from "../../redux/serverUser"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from 'react'
 
-export default function Message({ text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg"}){
+
+export default function Message({ message, text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg"}){
     console.log("Message MESSAGE TEXT, DATE, and NAME:", text, date, name)
+    console.log("Message MESSAGES", message)
+    const dispatch = useDispatch();
+    const reactions = useSelector((state) => state.reactions[message?.message_id])
+    // const currentUser = Object.values(useSelector((state) => state.currentUser))
+    console.log("Message REACTIONS", reactions)
+
+    useEffect(() => {
+        console.log("Message FETCHING MESSAGE REACTIONS THUNK", message?.message_id)
+        dispatch(fetchMessageReactionsThunk(message?.message_id))
+        dispatch(fetchCurrentUser())
+    }, [dispatch, message?.message_id])
+
     return (
         <article className={styles.message}>
             <img className={styles.profile_picture} src={img} />
@@ -131,6 +150,15 @@ export default function Message({ text, date, name, img = "https://t4.ftcdn.net/
                 </div>
                 <p className={styles.textBody}>{text}</p>
             </div>
+            <div className={styles.reactions}>
+                {reactions && reactions.map((reaction) => (
+                    <span key={reaction.id}>{reaction.emoji} ({reaction.count})</span>
+                ))}
+            </div>
+            <OpenModalButton 
+                buttonText="Add reaction..."
+                modalComponent={<Reactions type="Add" message={message}/>}
+            />
         </article>
     )
 }
