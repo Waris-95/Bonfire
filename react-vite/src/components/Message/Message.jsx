@@ -130,9 +130,15 @@ export default function Message({ message, text, date, name, img = "https://t4.f
     console.log("Message MESSAGE TEXT, DATE, and NAME:", text, date, name)
     console.log("Message MESSAGES", message)
     const dispatch = useDispatch();
-    const reactions = useSelector((state) => state.reactions[message?.message_id])
+    let reactions = useSelector((state) => state.reactions[message?.message_id])
     // const currentUser = Object.values(useSelector((state) => state.currentUser))
     console.log("Message REACTIONS", reactions)
+    if (!Array.isArray(reactions) && reactions) {
+        console.log("Message NEW REACTION", reactions)
+        reactions = [reactions]
+        console.log("Message NEW REACTION INSIDE ARRAY", reactions)
+
+    }
 
     useEffect(() => {
         console.log("Message FETCHING MESSAGE REACTIONS THUNK", message?.message_id)

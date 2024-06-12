@@ -204,6 +204,7 @@ def add_channel_message_reaction(message_id):
             curr_reaction.count += 1
             print("NEW REACTION COUNT", curr_reaction.count)
             db.session.commit()
+            print("NEW REACTION JSON", jsonify(reaction))
             return jsonify(reaction)
     
     if not emoji:
