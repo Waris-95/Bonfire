@@ -16,20 +16,22 @@ channels_bp = Blueprint("channels", __name__)
 def get_channel_messages(channel_id):
     # Get the channel or return 404 if not found
     channel = Channel.query.get_or_404(channel_id)
+    print("Channel Backend CHANNEL", channel)
     
     # Query to get all messages in the channel with the associated user
     messages_with_users = (
         db.session.query(ChannelMessage)
-            .join(User, ChannelMessage.user_id == User.id)
-            .join(Reaction, ChannelMessage.id == Reaction.channel_message_id)
-            .options(joinedload(ChannelMessage.user))
+            # .join(User, ChannelMessage.user_id == User.id)
+            # .join(Reaction, ChannelMessage.id == Reaction.channel_message_id)
+            # .options(joinedload(ChannelMessage.user))
             .filter(ChannelMessage.channel_id == channel_id)
             .all()
     )
+    print("Channel Backend MESSAGES TUPLE", messages_with_users)
     # Convert to dictionary format
-    # print("=============================================================================================================================================================================================")
-    # print(messages_with_users[0].to_dict())
-    # print("=============================================================================================================================================================================================")
+    print("=============================================================================================================================================================================================")
+    print("Channel Backend MESSAGES DICTIONARY", messages_with_users[0].to_dict())
+    print("=============================================================================================================================================================================================")
 
     messages_dict = [
         {
@@ -49,7 +51,7 @@ def get_channel_messages(channel_id):
         for message in messages_with_users
     ]
 
-    # print("MESSAGES DICTIONARY!!!!", messages_dict)
+    print("MESSAGES DICTIONARY!!!!", messages_dict)
 
     # Return messages as JSON
     return jsonify(messages_dict)

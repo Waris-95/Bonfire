@@ -94,8 +94,9 @@ let socket;
 export default function MessageLayout({ defaultMessages, channelId }) {
     const dispatch = useDispatch()
     const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState(defaultMessages)
 
+    
     useEffect(() => {
         socket = io(URL);
         socket.on('chat', (data) => {
@@ -107,46 +108,52 @@ export default function MessageLayout({ defaultMessages, channelId }) {
                 message_id: defaultMessages.length + 1,
                 text_field: text,
                 user
-            }
-
-            setMessages(messages => [...messages, newMessage])
-        })
-
-        return (() => {
+                }
+                
+                setMessages(messages => [...messages, newMessage])
+                })
+                
+                return (() => {
             socket.disconnect()
-        })
-    }, []);
-
-    useEffect(() => {
-        // socket.emit('leave', { room: prevRoom })
-        socket.emit('join', { room: channelId })
-        setMessages(defaultMessages)
-    }, [channelId])
-
-    const handleSendMessage = (e, text_field) => {
-        e.preventDefault()
-        dispatch(createMessageThunk(channelId, text_field, currentUser.id))
-        console.log("CURRENT USER: ", currentUser)
-        socket.emit('chat', { text_field, room: channelId, user: currentUser, date: new Date() });
-    }
-
-    const messageElements = useMemo(() => messages.map((message) => {
-        const { user } = message;
-        const url = user?.profile_images[0]?.url || undefined
-        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} />
-    }), [messages])
-
-    const containerRef = useRef(null);
-
-    useEffect(() => {
-        // Scroll to the bottom whenever the messages array changes
-        if (containerRef.current) {
-            containerRef.current.scrollTop = containerRef.current.scrollHeight;
-        }
-    }, [messages]);
-
-
-    return (
+            })
+            }, []);
+            
+            useEffect(() => {
+                // socket.emit('leave', { room: prevRoom })
+                socket.emit('join', { room: channelId })
+                setMessages(defaultMessages)
+                }, [channelId])
+                
+                const handleSendMessage = (e, text_field) => {
+                    e.preventDefault()
+                    console.log("MessageLayout HANDLE SEND MESSAGE", text_field)
+                    dispatch(createMessageThunk(channelId, text_field, currentUser.id))
+                    console.log("CURRENT USER: ", currentUser)
+                    socket.emit('chat', { text_field, room: channelId, user: currentUser, date: new Date() });
+                    }
+                    console.log("MessageLayout MESSAGES BEFORE MAP FUNCTION:", messages)
+                    console.log("MessageLayout DEFAULT MESSAGES", defaultMessages)
+                    
+                    const messageElements = useMemo(() => defaultMessages.map((message) => {
+                        console.log("MessageLayout MESSAGES:", message)
+                        const { user } = message;
+                        console.log("MessageLayout USER:", user)
+                        // const url = user?.profile_images[0]?.url || undefined
+                        const url = user && user.profile_images && user.profile_images.length > 0 ? user.profile_images[0].url : 'default-profile-pic-url';
+                        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} />
+                        }), [defaultMessages])
+                        
+                        const containerRef = useRef(null);
+                        
+                        useEffect(() => {
+                            // Scroll to the bottom whenever the messages array changes
+                            if (containerRef.current) {
+                                containerRef.current.scrollTop = containerRef.current.scrollHeight;
+                                }
+                                }, [messages]);
+                                
+                                
+                                return (
         <div className={styles.main}>
             <div className={styles.messages} ref={containerRef}>
                 {messageElements}

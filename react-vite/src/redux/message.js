@@ -51,12 +51,14 @@ export const removeReaction = (messageId, reactionId) => ({
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
     const res = await getChannelMessages(channelId);
-    console.log(res, 'IM THE RES')
+    console.log("Message Redux FETCH CHANNEL MESSAGES", res)
     dispatch(loadMessages(res));
 };
 
 export const createMessageThunk = (channelId, message, userId) => async (dispatch) => {
+    console.log("Message Redux CREATE MESSAGE THUNK", channelId, message, userId)
     const newMessage = await createChannelMessage(channelId, message, userId);
+    console.log("Message Redux NEW MESSAGE", newMessage)
     dispatch(addMessage(newMessage));
     dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after creating a new message
 };
@@ -104,6 +106,7 @@ const messageReducer = (state = initialState, action) => {
         case LOAD_MESSAGES: {
             const messagesState = {};
             action.messages.forEach((message) => {
+                console.log("Message Redux MESSAGE REDUCER LOOP", message)
                 messagesState[message.message_id] = message;
             })
             return messagesState;
@@ -117,7 +120,7 @@ const messageReducer = (state = initialState, action) => {
             // });
             // newState[action.message.channel_id] = channelMessages;
             // return newState;
-
+            console.log("Message Redux ADD MESSAGE REDUCER", { ...state, [action.message.message_id]: action.message})
             return { ...state, [action.message.message_id]: action.message};
         }
         case UPDATE_MESSAGE: {

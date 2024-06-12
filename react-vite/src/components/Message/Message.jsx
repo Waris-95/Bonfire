@@ -120,6 +120,7 @@ import styles from "./Message.module.css"
 import { formatDate } from "./utils/utils"
 
 export default function Message({ text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg"}){
+    console.log("Message MESSAGE TEXT, DATE, and NAME:", text, date, name)
     return (
         <article className={styles.message}>
             <img className={styles.profile_picture} src={img} />
