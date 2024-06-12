@@ -30,10 +30,10 @@ export const deleteMessage = (messageId, channelId) => ({
     channelId
 });
 
-export const loadReactions = (messageId, reactions) => ({
+export const loadReactions = (reactions, messageId) => (console.log("THIS IS THE REACTIONS", reactions), {
     type: LOAD_REACTIONS,
-    messageId,
     reactions,
+    messageId
 });
 
 export const addReaction = (messageId, reaction) => ({
@@ -78,13 +78,16 @@ export const deleteMessageThunk = (messageId, channelId) => async (dispatch) => 
 };
 
 export const fetchMessageReactionsThunk = (messageId) => async (dispatch) => {
+    console.log("Message Redux CHECKING MESSAGE ID", messageId)
     const reactions = await getMessageReactions(messageId);
     console.log(reactions, 'THIS IS THE REACTIONS')
-    dispatch(loadReactions(messageId, reactions));
+    dispatch(loadReactions(reactions, messageId));
 };
 
 export const addMessageReactionThunk = (messageId, resourceType, emoji) => async (dispatch) => {
+    console.log("Message Redux ADD NEW REACTION", messageId, resourceType, emoji)
     const newReaction = await addMessageReaction(messageId, resourceType, emoji);
+    console.log("Message Redux ADD NEW REACTION", newReaction)
     dispatch(addReaction(messageId, newReaction));
     dispatch(fetchMessageReactionsThunk(messageId));
 };
@@ -94,7 +97,6 @@ export const deleteMessageReactionThunk = (messageId, reactionId) => async (disp
     dispatch(removeReaction(messageId, reactionId));
     dispatch(fetchMessageReactionsThunk(messageId)); // Fetch reactions after deleting a reaction
 };
-
 
 // ================= REDUCER ================= 
 const initialState = {};
@@ -144,44 +146,90 @@ const messageReducer = (state = initialState, action) => {
             newState[action.channelId] = channelMessages;
             return newState;
         }
+        // case LOAD_REACTIONS: {
+        //     const newState = { ...state };
+        //     Object.keys(newState).forEach(channelId => {
+        //         newState[channelId] = newState[channelId].map(message => 
+        //             message.id === action.messageId ? {
+        //                 ...message,
+        //                 reactions: action.reactions
+        //             } : message
+        //         );
+        //     });
+        //     return newState;
+        // }
+        // case ADD_REACTION: {
+            // const newState = { ...state };
+            // console.log("Message redux CHECKING REACTION STATE", newState)
+            // Object.keys(newState).forEach(channelId => {
+            //     console.log("Message redux CHECKING REACTION STATE", channelId)
+            //     newState[channelId] = newState[channelId].map(message => 
+            //         message.id === action.messageId ? {
+            //             ...message,
+            //             reactions: [...(message.reactions || []), action.reaction]
+            //         } : message
+            //     );
+            // });
+            // console.log("Message redux CHECKING REACTION STATE", newState)
+            // return newState;
+            // console.log("Message redux CHECKING REACTION STATE", {...state})
+            // console.log("Message redux CHECKING REACTION STATE", action.reaction)
+            // console.log("Message redux CHECKING REACTION STATE", {...state, [action.reaction.id]: action.reaction})
+            // return {...state, [action.reaction.id]: action.reaction}
+        // }
+        // case DELETE_REACTION: {
+        //     const newState = { ...state };
+        //     Object.keys(newState).forEach(channelId => {
+        //         newState[channelId] = newState[channelId].map(message => 
+        //             message.id === action.messageId ? {
+        //                 ...message,
+        //                 reactions: (message.reactions || []).filter(
+        //                     reaction => reaction.id !== action.reactionId
+        //                 )
+        //             } : message
+        //         );
+        //     });
+        //     return newState;
+        // }
+        default:
+            return state;
+    }
+};
+
+export const reactionsReducer = (state = initialState, action) => {
+    switch(action.type) {
+        
         case LOAD_REACTIONS: {
-            const newState = { ...state };
-            Object.keys(newState).forEach(channelId => {
-                newState[channelId] = newState[channelId].map(message => 
-                    message.id === action.messageId ? {
-                        ...message,
-                        reactions: action.reactions
-                    } : message
-                );
-            });
-            return newState;
+            // const reactionsState = {};
+            // action.reactions.forEach((reaction) => {
+            //     reactionsState[reaction.id] = reaction;
+            // })
+            const reactionsState = {};
+
+            for (const emoji in action.reactions) {
+                if (action.reactions.hasOwnProperty(emoji)) {
+                    reactionsState[emoji] = action.reactions[emoji];
+                }
+            }
+
+            console.log("THIS IS THE REACTIONS", reactionsState)
+            console.log("THIS IS THE REACTIONS", {...state, [action.messageId]: reactionsState})
+            return {...state, [action.messageId]: reactionsState};
         }
+
         case ADD_REACTION: {
-            const newState = { ...state };
-            Object.keys(newState).forEach(channelId => {
-                newState[channelId] = newState[channelId].map(message => 
-                    message.id === action.messageId ? {
-                        ...message,
-                        reactions: [...(message.reactions || []), action.reaction]
-                    } : message
-                );
-            });
-            return newState;
+            console.log("Message redux CHECKING REACTION STATE", {...state})
+            console.log("Message redux CHECKING REACTION STATE", action.reaction)
+            console.log("Message redux CHECKING REACTION STATE", {...state, [action.reaction.id]: action.reaction})
+            return {...state, [action.reaction.id]: action.reaction}
         }
+
         case DELETE_REACTION: {
-            const newState = { ...state };
-            Object.keys(newState).forEach(channelId => {
-                newState[channelId] = newState[channelId].map(message => 
-                    message.id === action.messageId ? {
-                        ...message,
-                        reactions: (message.reactions || []).filter(
-                            reaction => reaction.id !== action.reactionId
-                        )
-                    } : message
-                );
-            });
-            return newState;
+            const newState = {...state}
+            console.log("Reaction Redux", newState)
+            return newState
         }
+
         default:
             return state;
     }
