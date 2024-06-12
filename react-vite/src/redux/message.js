@@ -30,7 +30,7 @@ export const deleteMessage = (messageId, channelId) => ({
     channelId
 });
 
-export const loadReactions = (reactions, messageId) => {
+export const loadReactions = (reactions, messageId) => ({
     type: LOAD_REACTIONS,
     reactions,
     messageId
