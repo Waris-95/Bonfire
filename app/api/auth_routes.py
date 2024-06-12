@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.models import User, db
+from app.models import User, db, ProfileImage
 from app.forms import LoginForm
 from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -53,18 +53,35 @@ def sign_up():
     Creates a new user and logs them in
     """
     form = SignUpForm()
+    print("Received signup data:", request.json)
     form['csrf_token'].data = request.cookies['csrf_token']
+    print("CSRF Token:", form['csrf_token'].data)
+    
     if form.validate_on_submit():
-        user = User(
-            username=form.data['username'],
-            email=form.data['email'],
-            password=form.data['password'],
-            profile_images = form.data['profile_image_url']
-        )
-        db.session.add(user)
-        db.session.commit()
-        login_user(user)
-        return user.to_dict()
+        try:
+            profile_image_url = form.data['profile_image_url']
+            user = User(
+                username=form.data['username'],
+                email=form.data['email'],
+                password=form.data['password']
+            )
+            db.session.add(user)
+            db.session.commit()  # Commit to get the user ID
+            
+            profile_image = ProfileImage(
+                url=profile_image_url,
+                user_id=user.id
+            )
+            db.session.add(profile_image)
+            db.session.commit()
+
+            login_user(user)
+            return user.to_dict()
+        except Exception as e:
+            db.session.rollback()
+            print("Error creating user:", e)
+            return {'errors': {'message': 'Internal Server Error'}}, 500
+    print("Form Errors:", form.errors)
     return form.errors, 401
 
 
