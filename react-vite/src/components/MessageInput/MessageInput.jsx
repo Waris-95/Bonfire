@@ -16,7 +16,6 @@ const MessageInput = ({ channelId, defaultMessages }) => {
 
   useEffect(() => {
     setMessages(defaultMessages);
-    console.log(messages)
   }, [defaultMessages])
 
   useEffect(() => {
@@ -70,7 +69,7 @@ const MessageInput = ({ channelId, defaultMessages }) => {
 //     dispatch(createMessageThunk(channelId, text_field, currentUser.id))
 //     socket.emit('chat', { text_field, room: channelId, user: currentUser, date: new Date() });
 //   }
-
+  console.log("MESSAGES: ", messages)
   return (
     <div className={styles.wrapper}>
       <div className={styles.messages}>
