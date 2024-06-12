@@ -2,19 +2,16 @@ import { useState, useEffect } from 'react';
 import Reactions from '../Reactions/Reactions';
 import styles from './Message.module.css';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
-import { fetchMessageReactionsThunk } from "../../redux/message"
+import { fetchMessageReactionsThunk, updateMessageThunk, deleteMessageThunk } from "../../redux/message"
 import { useDispatch, useSelector } from "react-redux"
 
-const Message = ({ message, onEdit, onDelete, 
-                  text, date, name, 
-                  img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg", 
-                  currentUser}) => {
+const Message = ({ message }) => {
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(message?.text_field || '');
     const currUser = Object.values(useSelector((state) => state.currentUser))[0];
     let reactions = useSelector((state) => state.reactions[message?.message_id])
-    
+
     useEffect(() => {
         dispatch(fetchMessageReactionsThunk(message?.message_id))
         // dispatch(fetchCurrentUser())
@@ -22,13 +19,13 @@ const Message = ({ message, onEdit, onDelete,
 
     const handleEdit = () => {
         if (isEditing) {
-            onEdit(message.message_id, editedText);
+            dispatch(updateMessageThunk(message.id, newText, channelId));
         }
         setIsEditing(!isEditing);
     };
 
     const handleDelete = () => {
-        onDelete(message.message_id);
+        dispatch(deleteMessageThunk(message.id, channelId));
     };
 
     const userReactions = [];
