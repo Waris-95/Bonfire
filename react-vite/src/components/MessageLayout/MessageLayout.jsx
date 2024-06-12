@@ -83,6 +83,7 @@ import { useMemo, useEffect, useState, useRef } from "react"
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import { createMessageThunk } from "../../redux/message";
+// import { fetchCurrentUser } from "../../redux/serverUser";
 
 
 // Components
@@ -94,8 +95,8 @@ let socket;
 export default function MessageLayout({ defaultMessages, channelId }) {
     const dispatch = useDispatch()
     const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
+    console.log("CURR USER", currentUser)
     const [messages, setMessages] = useState(defaultMessages)
-
     
     useEffect(() => {
         socket = io(URL);
@@ -141,7 +142,7 @@ export default function MessageLayout({ defaultMessages, channelId }) {
                         // const url = user?.profile_images[0]?.url || undefined
                         const url = user && user.profile_images && user.profile_images.length > 0 ? user.profile_images[0].url : undefined;
                         return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} message={message} currentUser={currentUser}/>
-                        }), [defaultMessages])
+                        }), [defaultMessages, currentUser])
                         
                         const containerRef = useRef(null);
                         
