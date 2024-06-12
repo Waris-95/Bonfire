@@ -31,10 +31,10 @@ export default function ServerView({ activeServerId, activeServer }) {
         dispatch(fetchCurrentUser())
     }, [dispatch, activeServerId, activeChannelId])
 
-    useEffect(() => {
-        // This is responsible for changing the active channel when the server changes
-        setActiveChannelId(channels[0]?.id)
-    }, [activeServerId, channels])
+    // useEffect(() => {
+    //     // This is responsible for changing the active channel when the server changes
+    //     setActiveChannelId(channels[0]?.id)
+    // }, [activeServerId, channels])
 
 
     return (

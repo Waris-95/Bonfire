@@ -180,10 +180,10 @@ const Message = ({ message, onEdit, onDelete,
                 <div className={styles.userDetails}>
                     <h5 className={styles.userName}>{message.user ? message.user.username : 'Unknown User'}</h5>
                     <p className={styles.date}>{new Date(message.created_at).toLocaleString()}</p>
-                    <button onClick={handleEdit} className={styles.edit_button}>
+                    <button onClick={handleEdit} disabled={message?.user?.id !== currUser?.id}  className={styles.edit_button}>
                         {isEditing ? 'Save' : 'Edit'}
                     </button>
-                    <button onClick={handleDelete} className={styles.delete_button}>
+                    <button onClick={handleDelete} className={styles.delete_button} disabled={message?.user?.id !== currUser?.id}>
                         Delete
                     </button>
                 </div>
