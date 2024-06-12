@@ -51,12 +51,6 @@ export default function MessageLayout({ defaultMessages, channelId }) {
         socket.emit('chat', { text_field, room: channelId, user: currentUser, date: new Date() });
     }
 
-    const messageElements = useMemo(() => defaultMessages.map((message) => {
-        const { user } = message;
-        const url = user && user.profile_images && user.profile_images.length > 0 ? user.profile_images[0].url : undefined;
-        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} message={message} currentUser={currentUser} />
-    }), [defaultMessages, currentUser])
-
     const containerRef = useRef(null);
                         
     useEffect(() => {
@@ -70,7 +64,7 @@ export default function MessageLayout({ defaultMessages, channelId }) {
     return (
         <div className={styles.main}>
             <div className={styles.messages} ref={containerRef}>
-                {messageElements}
+                {/* {messageElements} */}
                 {/* <button onClick={sendChat}>Click</button> */}
             </div>
             <MessageInput channelId={channelId} handleSendMessage={handleSendMessage} />
