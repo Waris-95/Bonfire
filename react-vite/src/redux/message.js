@@ -51,14 +51,12 @@ export const removeReaction = (messageId, reactionId) => ({
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
     const res = await getChannelMessages(channelId);
-    console.log("Message Redux FETCH CHANNEL MESSAGES", res)
+    console.log(res, 'IM THE RES')
     dispatch(loadMessages(res));
 };
 
-export const createMessageThunk = (channelId, message, userId) => async (dispatch) => {
-    console.log("Message Redux CREATE MESSAGE THUNK", channelId, message, userId)
-    const newMessage = await createChannelMessage(channelId, message, userId);
-    console.log("Message Redux NEW MESSAGE", newMessage)
+export const createMessageThunk = (channelId, message) => async (dispatch) => {
+    const newMessage = await createChannelMessage(channelId, message);
     dispatch(addMessage(newMessage));
     dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after creating a new message
 };
@@ -104,24 +102,27 @@ const initialState = {};
 const messageReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_MESSAGES: {
-            const messagesState = {};
+            const newState = {};
             action.messages.forEach((message) => {
-                console.log("Message Redux MESSAGE REDUCER LOOP", message)
-                messagesState[message.message_id] = message;
-            })
-            return messagesState;
+                if (!newState[message.channel_id]) {
+                    newState[message.channel_id] = [];
+                }
+                newState[message.channel_id].push({
+                    ...message,
+                    reactions: message.reactions || []  // Ensure reactions is initialized
+                });
+            });
+            return newState;
         }
         case ADD_MESSAGE: {
-            // const newState = { ...state };
-            // const channelMessages = newState[action.message.channel_id] || [];
-            // channelMessages.push({
-            //     ...action.message,
-            //     reactions: action.message.reactions || []  // Ensure reactions is initialized
-            // });
-            // newState[action.message.channel_id] = channelMessages;
-            // return newState;
-            console.log("Message Redux ADD MESSAGE REDUCER", { ...state, [action.message.message_id]: action.message})
-            return { ...state, [action.message.message_id]: action.message};
+            const newState = { ...state };
+            const channelMessages = newState[action.message.channel_id] || [];
+            channelMessages.push({
+                ...action.message,
+                reactions: action.message.reactions || []  // Ensure reactions is initialized
+            });
+            newState[action.message.channel_id] = channelMessages;
+            return newState;
         }
         case UPDATE_MESSAGE: {
             const newState = { ...state };
