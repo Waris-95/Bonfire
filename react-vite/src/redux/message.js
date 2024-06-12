@@ -30,9 +30,10 @@ export const deleteMessage = (messageId, channelId) => ({
     channelId
 });
 
-export const loadReactions = (reactions) => ({
+export const loadReactions = (reactions, messageId) => (console.log("THIS IS THE REACTIONS", reactions), {
     type: LOAD_REACTIONS,
     reactions,
+    messageId
 });
 
 export const addReaction = (messageId, reaction) => ({
@@ -82,7 +83,7 @@ export const fetchMessageReactionsThunk = (messageId) => async (dispatch) => {
     console.log("Message Redux CHECKING MESSAGE ID", messageId)
     const reactions = await getMessageReactions(messageId);
     console.log(reactions, 'THIS IS THE REACTIONS')
-    dispatch(loadReactions({messageId, reactions: reactions}));
+    dispatch(loadReactions(reactions, messageId));
 };
 
 export const addMessageReactionThunk = (messageId, resourceType, emoji) => async (dispatch) => {
@@ -98,7 +99,6 @@ export const deleteMessageReactionThunk = (messageId, reactionId) => async (disp
     dispatch(removeReaction(messageId, reactionId));
     dispatch(fetchMessageReactionsThunk(messageId)); // Fetch reactions after deleting a reaction
 };
-
 
 // ================= REDUCER ================= 
 const initialState = {};
@@ -176,20 +176,20 @@ const messageReducer = (state = initialState, action) => {
             // console.log("Message redux CHECKING REACTION STATE", {...state, [action.reaction.id]: action.reaction})
             // return {...state, [action.reaction.id]: action.reaction}
         // }
-        case DELETE_REACTION: {
-            const newState = { ...state };
-            Object.keys(newState).forEach(channelId => {
-                newState[channelId] = newState[channelId].map(message => 
-                    message.id === action.messageId ? {
-                        ...message,
-                        reactions: (message.reactions || []).filter(
-                            reaction => reaction.id !== action.reactionId
-                        )
-                    } : message
-                );
-            });
-            return newState;
-        }
+        // case DELETE_REACTION: {
+        //     const newState = { ...state };
+        //     Object.keys(newState).forEach(channelId => {
+        //         newState[channelId] = newState[channelId].map(message => 
+        //             message.id === action.messageId ? {
+        //                 ...message,
+        //                 reactions: (message.reactions || []).filter(
+        //                     reaction => reaction.id !== action.reactionId
+        //                 )
+        //             } : message
+        //         );
+        //     });
+        //     return newState;
+        // }
         default:
             return state;
     }
@@ -203,10 +203,17 @@ export const reactionsReducer = (state = initialState, action) => {
             // action.reactions.forEach((reaction) => {
             //     reactionsState[reaction.id] = reaction;
             // })
-            return {
-                ...state,
-                [action.reactions.messageId]: action.reactions.reactions,
-            };
+            const reactionsState = {};
+
+            for (const emoji in action.reactions) {
+                if (action.reactions.hasOwnProperty(emoji)) {
+                    reactionsState[emoji] = action.reactions[emoji];
+                }
+            }
+
+            console.log("THIS IS THE REACTIONS", reactionsState)
+            console.log("THIS IS THE REACTIONS", {...state, [action.messageId]: reactionsState})
+            return {...state, [action.messageId]: reactionsState};
         }
 
         case ADD_REACTION: {
@@ -214,6 +221,12 @@ export const reactionsReducer = (state = initialState, action) => {
             console.log("Message redux CHECKING REACTION STATE", action.reaction)
             console.log("Message redux CHECKING REACTION STATE", {...state, [action.reaction.id]: action.reaction})
             return {...state, [action.reaction.id]: action.reaction}
+        }
+
+        case DELETE_REACTION: {
+            const newState = {...state}
+            console.log("Reaction Redux", newState)
+            return newState
         }
 
         default:

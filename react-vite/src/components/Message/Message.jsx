@@ -126,25 +126,28 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from 'react'
 
 
-export default function Message({ message, text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg"}){
-    console.log("Message MESSAGE TEXT, DATE, and NAME:", text, date, name)
-    console.log("Message MESSAGES", message)
+export default function Message({ message, text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg", currentUser}){
     const dispatch = useDispatch();
     let reactions = useSelector((state) => state.reactions[message?.message_id])
-    // const currentUser = Object.values(useSelector((state) => state.currentUser))
-    console.log("Message REACTIONS", reactions)
-    if (!Array.isArray(reactions) && reactions) {
-        console.log("Message NEW REACTION", reactions)
-        reactions = [reactions]
-        console.log("Message NEW REACTION INSIDE ARRAY", reactions)
-
-    }
 
     useEffect(() => {
-        console.log("Message FETCHING MESSAGE REACTIONS THUNK", message?.message_id)
         dispatch(fetchMessageReactionsThunk(message?.message_id))
         dispatch(fetchCurrentUser())
     }, [dispatch, message?.message_id])
+
+    const userReactions = [];
+    const currUserReactions = (userId) => {
+        for (let emoji in reactions) {
+            reactions[emoji].forEach(data => {
+                if (data.user_id === userId) {
+                    userReactions.push(data)
+                }
+            })
+        }
+    }
+
+    currUserReactions(currentUser.id)
+
 
     return (
         <article className={styles.message}>
@@ -157,13 +160,21 @@ export default function Message({ message, text, date, name, img = "https://t4.f
                 <p className={styles.textBody}>{text}</p>
             </div>
             <div className={styles.reactions}>
-                {reactions && reactions.map((reaction) => (
-                    <span key={reaction.id}>{reaction.emoji} ({reaction.count})</span>
+                {reactions && Object.entries(reactions).map((reaction, index) => (
+                    <>
+                    {console.log("Message REACTIONS", reaction)}
+                    <span key={index}>{reaction[0]} ({reaction[1].length})</span>
+                    </>
                 ))}
             </div>
             <OpenModalButton 
                 buttonText="Add reaction..."
                 modalComponent={<Reactions type="Add" message={message}/>}
+            />
+            <OpenModalButton 
+                buttonText="Delete reaction..."
+                disableModal={userReactions.length === 0 && true}
+                modalComponent={<Reactions type="Remove" reactions={userReactions} />}
             />
         </article>
     )

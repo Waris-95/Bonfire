@@ -140,7 +140,7 @@ export default function MessageLayout({ defaultMessages, channelId }) {
                         console.log("MessageLayout USER:", user)
                         // const url = user?.profile_images[0]?.url || undefined
                         const url = user && user.profile_images && user.profile_images.length > 0 ? user.profile_images[0].url : undefined;
-                        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} message={message}/>
+                        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} message={message} currentUser={currentUser}/>
                         }), [defaultMessages])
                         
                         const containerRef = useRef(null);

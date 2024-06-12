@@ -175,4 +175,3 @@ export const createChannelMessage = async (channelId, message, userId) => {
     }
     throw new Error('Failed to create message');
 };
-
