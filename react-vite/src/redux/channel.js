@@ -27,14 +27,12 @@ export const fetchChannelsForServerIdThunk = (id) => async (dispatch) => {
 }
 
 export const addNewChannel = (channel, serverId) => async (dispatch) => {
-    console.log("NEW CHANNEL (CHANNEL REDUX):", channel)
     const res = await addChannel(channel, serverId);
     dispatch(loadOneChannel(res))
 }
 
 export const updateOldChannel = (channel) => async (dispatch) => {
     const res = await updateChannel(channel)
-    console.log("UPDATE CHANNEL RESPONSE", res)
     if (res.error) {
         return res
     } else {

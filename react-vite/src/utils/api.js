@@ -36,7 +36,6 @@ export const updateChannel = async (channel) => {
 }
 
 export const deleteChannel = async (channelId) => {
-    console.log("DELETE CHANNEL(REDUX API):", channelId)
     const res = await fetch(`/api/channels/${channelId}`, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'},

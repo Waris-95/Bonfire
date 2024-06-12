@@ -19,8 +19,6 @@ function EditChannelModal({ channel, activeServerId }) {
             updateOldChannel(channel)
         );
 
-        console.log("CHANNEL RESPONSE", channelResponse)
-
         if (channelResponse) {
             setErrors(channelResponse);
         } else {

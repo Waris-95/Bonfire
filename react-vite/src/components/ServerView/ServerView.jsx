@@ -22,7 +22,6 @@ export default function ServerView({ activeServerId, activeServer }) {
     const currentUser = Object.values(useSelector((state) => state.currentUser));
     const currentServer = useSelector((state) => state.servers[`${activeServerId}`]);
     const activeChannel = useSelector((state) => state.channels[`${activeChannelId}`]);
-    console.log("ServerView MESSAGES:", messages)
 
     useEffect(() => {
         dispatch(fetchChannelsForServerIdThunk(activeServerId));
@@ -30,12 +29,6 @@ export default function ServerView({ activeServerId, activeServer }) {
         dispatch(fetchServerUsersThunk(activeServerId))
         dispatch(fetchCurrentUser())
     }, [dispatch, activeServerId, activeChannelId])
-
-    // useEffect(() => {
-    //     // This is responsible for changing the active channel when the server changes
-    //     setActiveChannelId(channels[0]?.id)
-    // }, [activeServerId, channels])
-
 
     return (
         <section className={styles.serverView}>

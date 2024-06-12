@@ -17,7 +17,6 @@ function NewServerModal({ server, formType }) {
         e.preventDefault();
 
         if (formType === "Update Server") {
-            console.log("Updating a Server")
             const serverResponse = await dispatch(
                 updateOldServer({
                     id: server.id,
@@ -35,7 +34,6 @@ function NewServerModal({ server, formType }) {
     
             await dispatch(fetchAllServersThunk());
         } else {
-            console.log("Creating a server")
             const serverResponse = await dispatch(
                 addNewServer({
                     name: serverName,
