@@ -95,16 +95,16 @@ def seed_data():
     ]
 
     reactions = [
-        Reaction(channel_message_id=1, resource_type='channel', emoji='😀', count=5),
-        Reaction(channel_message_id=2, resource_type='channel', emoji='😁', count=3),
-        Reaction(channel_message_id=3, resource_type='channel', emoji='😂', count=4),
-        Reaction(channel_message_id=4, resource_type='channel', emoji='🤣', count=2),
-        Reaction(channel_message_id=5, resource_type='channel', emoji='😃', count=6),
-        Reaction(chat_room_message_id=1, resource_type='chat_room', emoji='😄', count=5),
-        Reaction(chat_room_message_id=2, resource_type='chat_room', emoji='😅', count=3),
-        Reaction(chat_room_message_id=3, resource_type='chat_room', emoji='😆', count=4),
-        Reaction(chat_room_message_id=4, resource_type='chat_room', emoji='😉', count=2),
-        Reaction(chat_room_message_id=5, resource_type='chat_room', emoji='😊', count=6)
+        Reaction(channel_message_id=1, resource_type='channel', emoji='😀', count=1),
+        Reaction(channel_message_id=2, resource_type='channel', emoji='😁', count=1),
+        Reaction(channel_message_id=3, resource_type='channel', emoji='😂', count=1),
+        Reaction(channel_message_id=4, resource_type='channel', emoji='🤣', count=1),
+        Reaction(channel_message_id=5, resource_type='channel', emoji='😃', count=1),
+        Reaction(chat_room_message_id=1, resource_type='chat_room', emoji='😄', count=1),
+        Reaction(chat_room_message_id=2, resource_type='chat_room', emoji='😅', count=1),
+        Reaction(chat_room_message_id=3, resource_type='chat_room', emoji='😆', count=1),
+        Reaction(chat_room_message_id=4, resource_type='chat_room', emoji='😉', count=1),
+        Reaction(chat_room_message_id=5, resource_type='chat_room', emoji='😊', count=1)
     ]
 
     user_reactions = [

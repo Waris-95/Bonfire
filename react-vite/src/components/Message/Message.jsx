@@ -169,7 +169,7 @@ export default function Message({ message, text, date, name, img = "https://t4.f
             </div>
             <OpenModalButton 
                 buttonText="Add reaction..."
-                modalComponent={<Reactions type="Add" message={message}/>}
+                modalComponent={<Reactions type="Add" message={message} reactions={userReactions}/>}
             />
             <OpenModalButton 
                 buttonText="Delete reaction..."

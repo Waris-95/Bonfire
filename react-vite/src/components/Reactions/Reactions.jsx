@@ -3,17 +3,23 @@ import { addMessageReactionThunk, deleteMessageReactionThunk } from "../../redux
 import { useModal } from "../../context/Modal";
 
 const Reactions = ({ message, type, reactions }) => {
-    console.log("Reaction Component checking reactions", reactions)
     const dispatch = useDispatch();
     const emojis = ["😀","😃","😄"]
-    // const addedEmojis = Object.keys(reactions)
     const { closeModal } = useModal();
 
     const addReaction = (emoji) => {
         // e.preventDefault()
-        console.log("EMOJI???", emoji)
-        dispatch(addMessageReactionThunk(message.message_id, 'channel_message', emoji))
-        closeModal()
+        let emojiAdded = false
+        reactions.forEach(reaction => {
+            if (reaction.emoji === emoji) {
+                emojiAdded = true
+                closeModal()
+            }
+        })
+        if (emojiAdded === false) {
+            dispatch(addMessageReactionThunk(message.message_id, 'channel_message', emoji))
+            closeModal()
+        }
 
     }
 
