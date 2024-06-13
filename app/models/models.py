@@ -46,6 +46,10 @@ class User(db.Model, UserMixin):
     
 class ProfileImage(db.Model):
     __tablename__ = 'profile_images'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(2048), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
@@ -59,6 +63,10 @@ class ProfileImage(db.Model):
 
 class ServerImage(db.Model):
     __tablename__ = 'server_images'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(2048), nullable=False)
     server_id = db.Column(db.Integer, db.ForeignKey('servers.id'), nullable=False)
@@ -72,6 +80,10 @@ class ServerImage(db.Model):
 
 class Server(db.Model):
     __tablename__ = 'servers'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(52), nullable=False)
     description = db.Column(db.String(240))
@@ -95,6 +107,10 @@ class Server(db.Model):
 
 class ServerUser(db.Model):
     __tablename__ = 'server_user'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     server_id = db.Column(db.Integer, db.ForeignKey('servers.id'), nullable=False)
@@ -110,6 +126,10 @@ class ServerUser(db.Model):
 
 class Channel(db.Model):
     __tablename__ = 'channels'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(52), nullable=False)
     server_id = db.Column(db.Integer, db.ForeignKey('servers.id'), nullable=False)
@@ -126,6 +146,10 @@ class Channel(db.Model):
 
 class ChannelMessage(db.Model):
     __tablename__ = 'channel_messages'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'), nullable=False)
@@ -147,6 +171,10 @@ class ChannelMessage(db.Model):
 
 class ChatRoomMessage(db.Model):
     __tablename__ = 'chat_room_messages'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     chat_room_id = db.Column(db.Integer, db.ForeignKey('chat_rooms.id'), nullable=False)
@@ -164,6 +192,10 @@ class ChatRoomMessage(db.Model):
 
 class MessageImage(db.Model):
     __tablename__ = 'message_images'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(2048), nullable=False)
     resource_type = db.Column(db.Integer, nullable=False)
@@ -181,6 +213,10 @@ class MessageImage(db.Model):
 
 class Reaction(db.Model):
     __tablename__ = 'reactions'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     channel_message_id = db.Column(db.Integer, db.ForeignKey('channel_messages.id'))
     chat_room_message_id = db.Column(db.Integer, db.ForeignKey('chat_room_messages.id'))
@@ -201,6 +237,10 @@ class Reaction(db.Model):
 
 class UserReaction(db.Model):
     __tablename__ = 'user_reaction'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     reaction_id = db.Column(db.Integer, db.ForeignKey('reactions.id'), nullable=False)
@@ -214,6 +254,10 @@ class UserReaction(db.Model):
 
 class ChatRoom(db.Model):
     __tablename__ = 'chat_rooms'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     users = db.relationship('ChatRoomUser', cascade="all,delete", backref='chat_room', lazy=True)
@@ -226,6 +270,10 @@ class ChatRoom(db.Model):
 
 class ChatRoomUser(db.Model):
     __tablename__ = 'chat_room_users'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     chat_room_id = db.Column(db.Integer, db.ForeignKey('chat_rooms.id'), nullable=False)
