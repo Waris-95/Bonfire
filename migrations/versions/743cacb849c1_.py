@@ -26,6 +26,8 @@ def upgrade():
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=40), nullable=False),
@@ -49,6 +51,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('chat_room_users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -57,6 +61,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('profile_images',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(length=2048), nullable=False),
@@ -64,6 +70,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('servers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=52), nullable=False),
@@ -74,6 +82,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('channels',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=52), nullable=False),
@@ -83,6 +93,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['server_id'], ['servers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('server_images',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(length=2048), nullable=False),
@@ -90,6 +102,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['server_id'], ['servers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('server_user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -100,6 +114,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('channel_messages',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -111,6 +127,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('message_images',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(length=2048), nullable=False),
@@ -121,6 +139,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['chat_room_message_id'], ['chat_room_messages.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('reactions',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('channel_message_id', sa.Integer(), nullable=True),
@@ -132,6 +152,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['chat_room_message_id'], ['chat_room_messages.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('user_reaction',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -140,6 +162,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 
