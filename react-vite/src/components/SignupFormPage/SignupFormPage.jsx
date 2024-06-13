@@ -38,7 +38,8 @@ function SignupFormPage() {
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
-      navigate("/");
+      // navigate("/");
+      location.reload();
     }
   };
 

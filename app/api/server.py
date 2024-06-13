@@ -40,6 +40,10 @@ def create_new_server():
         db.session.add(new_server)
         db.session.commit()
 
+        print("SERVER IMAGE", server_image)
+        if server_image is None:
+            server_image = 'https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg'
+        
         new_server_image = ServerImage(
             url = server_image,
             server_id = new_server.id
@@ -68,16 +72,20 @@ def update_server(server_id):
     if form.validate_on_submit():
         server_name = form.name.data
         server_description = form.description.data
-        server_image = form.server_image.data
+        new_server_image = form.server_image.data
+        print("UPDATE SERVER", server_name, server_description, new_server_image)
 
         server = Server.query.get_or_404(server_id)
+        print("UPDATE SERVER", server.to_dict())
+        server_image = ServerImage.query.get_or_404(server.server_images[0].id)
+        print("UPDATE SERVER", server_image.to_dict())
 
         if server.owner_id != current_user.id:
             return jsonify({"error": "Unauthorized"}), 403
         
         server.name = server_name
         server.description = server_description
-        server.server_image = server_image
+        server_image.url = new_server_image
 
         db.session.commit()
 

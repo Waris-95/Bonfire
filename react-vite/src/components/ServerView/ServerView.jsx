@@ -45,7 +45,8 @@ export default function ServerView({ activeServerId, activeServer, activeChannel
                 currentUser={currentUser}
             />
             <HeaderInfo 
-                activeChannel={activeChannel} 
+                activeChannel={activeChannel}
+                activeServer={activeServer}
             />
             <MessageLayout 
                 defaultMessages={messages} 

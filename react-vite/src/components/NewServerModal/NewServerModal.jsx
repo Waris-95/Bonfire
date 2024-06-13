@@ -8,15 +8,17 @@ function NewServerModal({ server, formType }) {
     const dispatch = useDispatch();
     const [serverName, setServerName] = useState(server?.name);
     const [serverDescription, setServerDescription] = useState(server?.description);
-    const [serverImage, setServerImage] = useState(server?.server_images[0].url);
+    const [serverImage, setServerImage] = useState(server?.server_images[0]?.url);
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
+
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (formType === "Update Server") {
+            console.log("UPDATE SERVER", serverImage)
             const serverResponse = await dispatch(
                 updateOldServer({
                     id: server.id,

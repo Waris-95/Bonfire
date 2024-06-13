@@ -37,7 +37,9 @@ export const addNewServer = (server) => async (dispatch) => {
 }
 
 export const updateOldServer = (server) => async (dispatch) => {
+    console.log("UPDATE SERVER", server)
     const res = await updateServer(server);
+    console.log("UPDATE SERVER", res)
     dispatch(loadOneServer(res))
 }
 
