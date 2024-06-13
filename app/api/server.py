@@ -49,7 +49,6 @@ def create_new_server():
         db.session.commit()
         
         results = db.session.query(Server, ServerImage).join(ServerImage, ServerImage.server_id == Server.id).filter(Server.id == new_server.id).all()
-        print("RESULTS", results)
         server_data = []
         for server, server_image in results:
             server_dict = server.to_dict()
@@ -58,7 +57,6 @@ def create_new_server():
 
         return server_data
     else:
-        print("FORM ERRORS", form.errors)
         return form.errors, 401
 
 #UPDATE A SERVER

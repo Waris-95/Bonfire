@@ -76,8 +76,8 @@ import styles from "./MessageLayout.module.css"
 // Util
 import { useMemo, useEffect, useState, useRef } from "react"
 import { io } from "socket.io-client";
-import { useDispatch, useSelector } from "react-redux";
-import { createMessageThunk, fetchChannelMessagesThunk } from "../../redux/message";
+import { useDispatch } from "react-redux";
+import { createMessageThunk, fetchChannelMessagesThunk, updateMessageThunk, deleteMessageThunk } from "../../redux/message";
 
 
 // Components
@@ -140,19 +140,27 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
         socket.emit('chat', { text_field, room: channelId, user: currentUser, date: new Date() });
     }
 
-    // const handleEditMessage = (messageId, newText) => {
+    // const handleEditMessage = (messageId, newText, channelId) => {
+    //     console.log("EDIT MESSAGE", messageId, newText, channelId)
     //     dispatch(updateMessageThunk(messageId, newText, channelId));
     // }
 
-    // const handleDeleteMessage = (messageId, reaction) => {
+    // const handleDeleteMessage = (messageId) => {
     //     dispatch(deleteMessageThunk(messageId, channelId));
     // }
 
     const messageElements = useMemo(() => messages.map((message) => {
         const { user } = message;
+        const handleEditMessage = (messageId, newText, channelId) => {
+            dispatch(updateMessageThunk(messageId, newText, channelId));
+        }
+    
+        const handleDeleteMessage = (messageId) => {
+            dispatch(deleteMessageThunk(messageId, channelId));
+        }
         const url = user?.profile_images[0]?.url || undefined
-        return <Message key={message.id} message={message} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} currentUser={currentUser} />
-    }), [messages, currentUser])
+        return <Message key={message.id} message={message} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} currentUser={currentUser} onEdit={handleEditMessage} onDelete={handleDeleteMessage} />
+    }), [messages, currentUser, channelId, dispatch])
 
     const containerRef = useRef(null);
 

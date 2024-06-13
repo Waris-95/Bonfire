@@ -57,7 +57,6 @@ def get_channel_messages(channel_id):
     # # Return messages as JSON
     # return jsonify(messages_dict)
     channel = Channel.query.get_or_404(channel_id)
-    print("Channel Backend CHANNEL", channel)
     
     # Query to get all messages in the channel with the associated user and reactions
     messages_with_users = (
@@ -69,8 +68,6 @@ def get_channel_messages(channel_id):
             )
             .all()
     )
-    print("Channel Backend MESSAGES TUPLE", messages_with_users)
-    print("Channel Backend MESSAGES TUPLE", len(messages_with_users))
 
     messages_dict = [
         {
@@ -106,7 +103,6 @@ def get_channel_messages(channel_id):
         for message in messages_with_users
     ]
 
-    print("MESSAGES DICTIONARY!!!!", messages_dict)
 
     # Return messages as JSON
     return jsonify(messages_dict)
@@ -116,13 +112,9 @@ def get_channel_messages(channel_id):
 @channels_bp.route('/<int:channel_id>/messages', methods=['POST'])
 def create_channel_message(channel_id):
     channel = Channel.query.get_or_404(channel_id)  # Get the channel or return 404 if not found
-    print("NEWEST MESSAGE", channel)
     data = request.get_json()  # Get the JSON data from the request
-    print("NEWEST MESSAGE", data)
     text = data.get("text_field")  # Get the text field from the data
-    print("NEWEST MESSAGE", text)
     user_id = data.get("user_id")
-    print("NEWEST MESSAGE", user_id)
 
 
     if not text:
@@ -135,7 +127,6 @@ def create_channel_message(channel_id):
     )
     db.session.add(new_message)  # Add the new message to the session
     db.session.commit()  # Commit the session to save the message
-    print("NEWEST MESSAGE", new_message.to_dict())
 
     return jsonify(new_message.to_dict()), 201
 
@@ -166,7 +157,7 @@ def update_channel_message(message_id):
         message = ChannelMessage.query.get_or_404(message_id)  # Get the message or return 404 if not found
         data = request.get_json()  # Get the JSON data from the request
         message.text_field = data.get('text_field', message.text_field)
-        if text_field is None:
+        if data.get('text_field') is None:
             return jsonify({'error': 'Text field is required'}), 400  # Return error if text field is missing
         db.session.commit()  # Commit the session to save changes
         return jsonify(message.to_dict())  # Return the updated message as JSON
@@ -280,7 +271,6 @@ def get_channel_message_reactions(message_id):
 
         reaction_dict[emoji].append(reaction_data)
     
-    print("Channels Backend Reaction Dict", reaction_dict)
     return jsonify(reaction_dict)
 
 #==================================TESTING===========================================
@@ -301,7 +291,6 @@ def get_channel_message_reaction_by_id(message_id, reaction_id):
         }
     }
 
-    print("Reaction by ID", reaction_data)
     return jsonify(reaction_data)
 
 
@@ -423,7 +412,6 @@ def add_chat_room_message_reaction(message_id):
 @channels_bp.route('/reactions/<int:reaction_id>', methods=['DELETE'])
 @login_required
 def delete_reaction(reaction_id):
-    print("DELETE REACTION BACKEND", reaction_id)
     reaction = Reaction.query.get_or_404(reaction_id)
 
     user_reaction = UserReaction.query.filter_by(user_id=current_user.id, reaction_id=reaction_id).first()
@@ -447,7 +435,6 @@ def delete_reaction(reaction_id):
 @channels_bp.route('/<int:channel_id>', methods=["PUT"])
 @login_required
 def update_channel(channel_id):
-    print("HELLO UPDATE CHANNEL")
     form = NewChannelForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
@@ -455,7 +442,6 @@ def update_channel(channel_id):
         user_id = current_user.id
 
         channel = Channel.query.get_or_404(channel_id)
-        print("PUT CHANNEL(FLASK BACKEND):", channel)
         if channel.owner_id != current_user.id:
             return jsonify({"error": "Unauthorized"}), 403
 

@@ -9,11 +9,9 @@ auth_routes = Blueprint('auth', __name__)
 
 @auth_routes.route('/')
 def authenticate():
-    print("HELLO AUTH ROUTES")
     """
     Authenticates a user.
     """
-    print("TEST")
     if current_user.is_authenticated:
         return current_user.to_dict()
     return {'errors': {'message': 'Unauthorized'}}, 401
@@ -25,11 +23,9 @@ def login():
     Logs a user in
     """
     form = LoginForm()
-    print("HELLO LOGIN POST")
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
     form['csrf_token'].data = request.cookies['csrf_token']
-    print("HELLO LOGIN POST")
     if form.validate_on_submit():
         # Add the user to the session, we are logged in!
         user = User.query.filter(User.email == form.data['email']).first()
@@ -55,7 +51,6 @@ def sign_up():
     form = SignUpForm()
     print("Received signup data:", request.json)
     form['csrf_token'].data = request.cookies['csrf_token']
-    print("CSRF Token:", form['csrf_token'].data)
     
     if form.validate_on_submit():
         try:
@@ -81,7 +76,6 @@ def sign_up():
             db.session.rollback()
             print("Error creating user:", e)
             return {'errors': {'message': 'Internal Server Error'}}, 500
-    print("Form Errors:", form.errors)
     return form.errors, 401
 
 

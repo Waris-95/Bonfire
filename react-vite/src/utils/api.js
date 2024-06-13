@@ -182,7 +182,6 @@ export const deleteServer = async (serverId) => {
 // };
 
 export const createChannelMessage = async (channelId, message, userId) => {
-    console.log("CREATE MESSAGE THUNK", channelId, message, userId)
     const res = await fetch(`/api/channels/${channelId}/messages`, {
         method: 'POST',
         headers: {

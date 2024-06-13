@@ -102,10 +102,23 @@ import styles from "./Message.module.css"
 import { formatDate } from "./utils/utils"
 import OpenModalButton from "../OpenModalButton/OpenModalButton"
 import Reactions from "../Reactions/Reactions"
+import { useState } from "react"
 
-export default function Message({ message, text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg", currentUser}){
-    console.log("GETTING REACTIONS", message)
-    console.log("GETTING REACTIONS currentUser", currentUser)
+export default function Message({ message, text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg", currentUser, onEdit, onDelete}){
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedText, setEditedText] = useState(message?.text_field || '');
+
+
+    const handleEdit = () => {
+        if (isEditing) {
+            onEdit(message.message_id, editedText, message.channel_id);
+        }
+        setIsEditing(!isEditing);
+    };
+
+    const handleDelete = () => {
+        onDelete(message.message_id);
+    };
 
     const reactionsArray = arr => {
         const emojis = {}
@@ -114,34 +127,32 @@ export default function Message({ message, text, date, name, img = "https://t4.f
                 emojis[v.emoji].push({
                     'emoji': v.emoji,
                     'reaction_id': v.reaction_id,
-                    'user_id': v.user_reactions[0].user_id,
+                    'user_id': v.user_reactions[0]?.user_id,
                     'channel_message_id': message.message_id
                 })
             } else {
                 emojis[v.emoji] = [{
                     'emoji': v.emoji,
                     'reaction_id': v.reaction_id,
-                    'user_id': v.user_reactions[0].user_id,
+                    'user_id': v.user_reactions[0]?.user_id,
                     'channel_message_id': message.message_id
                 }]
             }
             
             })
-        console.log("GETTING REACTIONS", emojis)
         return emojis
     }
 
-    const emojis = reactionsArray(message.reactions)
-    console.log("GETTING REACTIONS", emojis)
+    let emojis;
+
+    if (message?.reactions.length > 0) {
+        emojis = reactionsArray(message?.reactions)
+    }
 
     const userReactions = [];
     const currUserReactions = (userId) => {
         for (let emoji in emojis) {
-            console.log("GETTING REACTIONS", emoji)
             emojis[emoji].forEach(data => {
-                console.log("GETTING REACTIONS", data)
-                console.log("GETTING REACTIONS", data.user_id)
-                console.log("GETTING REACTIONS", userId)
                 if (data.user_id === userId) {
                     userReactions.push(data)
                 }
@@ -149,9 +160,7 @@ export default function Message({ message, text, date, name, img = "https://t4.f
         }
     }
 
-    currUserReactions(currentUser[0]?.id)
-    console.log("GETTING REACTIONS", userReactions)
-    
+    currUserReactions(currentUser[0]?.id)    
     return (
         <article className={styles.message}>
             <img className={styles.profile_picture} src={img} />
@@ -160,11 +169,27 @@ export default function Message({ message, text, date, name, img = "https://t4.f
                     <h5 className={styles.userName}>{name}</h5>
                     <p className={styles.date}>{formatDate(date)}</p>
                 </div>
-                <p className={styles.textBody}>{text}</p>
+                <button onClick={handleEdit} disabled={message?.user?.id !== currentUser[0]?.id}  className={styles.edit_button}>
+                        {isEditing ? 'Save' : 'Edit'}
+                    </button>
+                    <button onClick={handleDelete} className={styles.delete_button} disabled={message?.user?.id !== currentUser[0]?.id}>
+                        Delete
+                    </button>
+                
+                {isEditing ? (
+                    <input
+                        type="text"
+                        value={editedText}
+                        onChange={(e) => setEditedText(e.target.value)}
+                        className={styles.edit_input}
+                    />
+                ) : (
+                    <p className={styles.textBody}>{message.text_field}</p>
+                )}
                 <div className={styles.reactions}>
                     {emojis && Object.entries(emojis).map((reaction, index) => (
                     <>
-                        <span key={index}>{reaction[0]} ({reaction[1].length})</span>
+                        <span key={index}>{reaction[0] && reaction[0]} ({reaction[1].length})</span>
                     </>
                     ))}
                 </div>

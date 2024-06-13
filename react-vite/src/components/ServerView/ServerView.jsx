@@ -17,13 +17,11 @@ export default function ServerView({ activeServerId, activeServer, activeChannel
     const dispatch = useDispatch()
     const channels = Object.values(useSelector((state) => state.channels));
     const messages = Object.values(useSelector((state) => state.messages));
-    console.log("GET MESSAGE THUNK", messages)
     const serverUsers = Object.values(useSelector((state) => state.serverUsers));
     const activeChannel = useMemo(() => channels.filter(channel => channel.id === activeChannelId)[0], [activeChannelId, channels]);
     // const currentUser = Object.values(useSelector((state) => state.currentUser));
     // const currentServer = useSelector((state) => state.servers[`${activeServerId}`]);
     // const activeChannel = useSelector((state) => state.channels[`${activeChannelId}`]);
-    console.log("ADDING NEW CHANNEL activeChannel variable", activeChannel)
 
     useEffect(() => {
         dispatch(fetchChannelsForServerIdThunk(activeServerId));

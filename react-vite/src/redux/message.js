@@ -50,9 +50,7 @@ export const removeReaction = (messageId, reactionId) => ({
 
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
-    console.log("GET MESSAGE THUNK", channelId)
     const res = await getChannelMessages(channelId);
-    console.log("GET MESSAGE THUNK", res)
     dispatch(loadMessages(res));
 };
 
@@ -63,16 +61,15 @@ export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
 // };
 
 export const createMessageThunk = (channelId, message, userId) => async (dispatch) => {
-    console.log("CREATE MESSAGE THUNK", channelId, message, userId)
     const newMessage = await createChannelMessage(channelId, message, userId);
-    console.log("CREATE MESSAGE THUNK", newMessage)
     dispatch(addMessage(newMessage));
 }
 
 export const updateMessageThunk = (messageId, newText, channelId) => async (dispatch) => {
     try {
         const updatedMessage = await updateChannelMessage(messageId, { text_field: newText });
-        dispatch(updateMessage(updatedMessage));
+        // dispatch(updateMessage(updatedMessage));
+        dispatch(loadMessages(updatedMessage))
         dispatch(fetchChannelMessagesThunk(channelId));
     } catch (error) {
         console.error('Failed to update message:', error);
@@ -140,18 +137,21 @@ const messageReducer = (state = initialState, action) => {
         case ADD_MESSAGE: {
             return { ...state, [action.message.message_id]: action.message};
         }
-        case UPDATE_MESSAGE: {
-            const newState = { ...state };
-            const channelMessages = newState[action.message.channel_id].map(msg =>
-                msg.id === action.message.id ? {
-                    ...msg,
-                    ...action.message,
-                    reactions: action.message.reactions || msg.reactions || []  // Ensure reactions is initialized
-                } : msg
-            );
-            newState[action.message.channel_id] = channelMessages;
-            return newState;
-        }
+        // case UPDATE_MESSAGE: {
+        //     const newState = { ...state };
+        //     const channelMessages = newState[action.message.channel_id].map(msg =>
+        //         msg.id === action.message.id ? {
+        //             ...msg,
+        //             ...action.message,
+        //             reactions: action.message.reactions || msg.reactions || []  // Ensure reactions is initialized
+        //         } : msg
+        //     );
+        //     newState[action.message.channel_id] = channelMessages;
+        //     return newState;
+        // }
+        // case UPDATE_MESSAGE: {
+        //     return { ...state, [action.message.message_id]: action.message};
+        // }
         case DELETE_MESSAGE: {
             const newState = { ...state };
             const channelMessages = newState[action.channelId].filter(msg =>
