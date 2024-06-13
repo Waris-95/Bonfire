@@ -15,23 +15,62 @@ channels_bp = Blueprint("channels", __name__)
 @login_required
 def get_channel_messages(channel_id):
     # Get the channel or return 404 if not found
+    # channel = Channel.query.get_or_404(channel_id)
+    # print("Channel Backend CHANNEL", channel)
+    
+    # # Query to get all messages in the channel with the associated user
+    # messages_with_users = (
+    #     db.session.query(ChannelMessage)
+    #         # .join(User, ChannelMessage.user_id == User.id)
+    #         # .join(Reaction, ChannelMessage.id == Reaction.channel_message_id)
+    #         # .options(joinedload(ChannelMessage.user))
+    #         .filter(ChannelMessage.channel_id == channel_id)
+    #         .all()
+    # )
+    # print("Channel Backend MESSAGES TUPLE", messages_with_users)
+    # print("Channel Backend MESSAGES TUPLE", len(messages_with_users))
+    # # Convert to dictionary format
+    # # print("=============================================================================================================================================================================================")
+    # # print("Channel Backend MESSAGES DICTIONARY", messages_with_users[0].to_dict())
+    # # print("=============================================================================================================================================================================================")
+
+    # messages_dict = [
+    #     {
+    #         'message_id': message.id,
+    #         'user': {
+    #             'id': message.user.id,
+    #             'username': message.user.username,
+    #             'email': message.user.email,
+    #             'profile_images': [profile_image.to_dict() for profile_image in message.user.profile_images]
+    #         },
+    #         'reactions': [reaction.to_dict() for reaction in message.reactions],
+    #         'channel_id': message.channel_id,
+    #         'text_field': message.text_field,
+    #         'created_at': message.created_at,
+    #         'updated_at': message.updated_at
+    #     }
+    #     for message in messages_with_users
+    # ]
+
+    # print("MESSAGES DICTIONARY!!!!", messages_dict)
+
+    # # Return messages as JSON
+    # return jsonify(messages_dict)
     channel = Channel.query.get_or_404(channel_id)
     print("Channel Backend CHANNEL", channel)
     
-    # Query to get all messages in the channel with the associated user
+    # Query to get all messages in the channel with the associated user and reactions
     messages_with_users = (
         db.session.query(ChannelMessage)
-            # .join(User, ChannelMessage.user_id == User.id)
-            # .join(Reaction, ChannelMessage.id == Reaction.channel_message_id)
-            # .options(joinedload(ChannelMessage.user))
             .filter(ChannelMessage.channel_id == channel_id)
+            .options(
+                joinedload(ChannelMessage.user),
+                joinedload(ChannelMessage.reactions).joinedload(Reaction.user_reactions).joinedload(UserReaction.user)
+            )
             .all()
     )
     print("Channel Backend MESSAGES TUPLE", messages_with_users)
-    # Convert to dictionary format
-    print("=============================================================================================================================================================================================")
-    print("Channel Backend MESSAGES DICTIONARY", messages_with_users[0].to_dict())
-    print("=============================================================================================================================================================================================")
+    print("Channel Backend MESSAGES TUPLE", len(messages_with_users))
 
     messages_dict = [
         {
@@ -42,7 +81,23 @@ def get_channel_messages(channel_id):
                 'email': message.user.email,
                 'profile_images': [profile_image.to_dict() for profile_image in message.user.profile_images]
             },
-            'reactions': [reaction.to_dict() for reaction in message.reactions],
+            'reactions': [
+                {
+                    'reaction_id': reaction.id,
+                    'type': reaction.resource_type,
+                    'emoji': reaction.emoji,
+                    'count': reaction.count,
+                    'user_reactions': [
+                        {
+                            'user_id': user_reaction.user.id,
+                            'username': user_reaction.user.username,
+                            'email': user_reaction.user.email
+                        }
+                        for user_reaction in reaction.user_reactions
+                    ]
+                }
+                for reaction in message.reactions
+            ],
             'channel_id': message.channel_id,
             'text_field': message.text_field,
             'created_at': message.created_at,

@@ -55,7 +55,7 @@ export default function ServerViewLayout(){
                             activeChannelId={activeChannelId}
                             setActiveChannelId={setActiveChannelId}
                             prevChannelId={prevChannelId}
-                            setPRevChannelId={setPrevChannelId}
+                            setPrevChannelId={setPrevChannelId}
                         />
                     </div>
                 </section>

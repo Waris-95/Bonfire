@@ -100,8 +100,58 @@
 // import { FaUserCircle } from "react-icons/fa"
 import styles from "./Message.module.css"
 import { formatDate } from "./utils/utils"
+import OpenModalButton from "../OpenModalButton/OpenModalButton"
+import Reactions from "../Reactions/Reactions"
 
-export default function Message({ text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg"}){
+export default function Message({ message, text, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg", currentUser}){
+    console.log("GETTING REACTIONS", message)
+    console.log("GETTING REACTIONS currentUser", currentUser)
+
+    const reactionsArray = arr => {
+        const emojis = {}
+        arr.forEach(v => {
+            if (v.emoji in emojis) {
+                emojis[v.emoji].push({
+                    'emoji': v.emoji,
+                    'reaction_id': v.reaction_id,
+                    'user_id': v.user_reactions[0].user_id,
+                    'channel_message_id': message.message_id
+                })
+            } else {
+                emojis[v.emoji] = [{
+                    'emoji': v.emoji,
+                    'reaction_id': v.reaction_id,
+                    'user_id': v.user_reactions[0].user_id,
+                    'channel_message_id': message.message_id
+                }]
+            }
+            
+            })
+        console.log("GETTING REACTIONS", emojis)
+        return emojis
+    }
+
+    const emojis = reactionsArray(message.reactions)
+    console.log("GETTING REACTIONS", emojis)
+
+    const userReactions = [];
+    const currUserReactions = (userId) => {
+        for (let emoji in emojis) {
+            console.log("GETTING REACTIONS", emoji)
+            emojis[emoji].forEach(data => {
+                console.log("GETTING REACTIONS", data)
+                console.log("GETTING REACTIONS", data.user_id)
+                console.log("GETTING REACTIONS", userId)
+                if (data.user_id === userId) {
+                    userReactions.push(data)
+                }
+            })
+        }
+    }
+
+    currUserReactions(currentUser[0]?.id)
+    console.log("GETTING REACTIONS", userReactions)
+    
     return (
         <article className={styles.message}>
             <img className={styles.profile_picture} src={img} />
@@ -111,6 +161,22 @@ export default function Message({ text, date, name, img = "https://t4.ftcdn.net/
                     <p className={styles.date}>{formatDate(date)}</p>
                 </div>
                 <p className={styles.textBody}>{text}</p>
+                <div className={styles.reactions}>
+                    {emojis && Object.entries(emojis).map((reaction, index) => (
+                    <>
+                        <span key={index}>{reaction[0]} ({reaction[1].length})</span>
+                    </>
+                    ))}
+                </div>
+                <OpenModalButton 
+                    buttonText="Add reaction..."
+                    modalComponent={<Reactions type="Add" message={message} reactions={userReactions}/>}
+                />
+                <OpenModalButton 
+                    buttonText="Delete reaction..."
+                    disableModal={userReactions.length === 0 && true}
+                    modalComponent={<Reactions type="Remove" reactions={userReactions}/>}
+                />
             </div>
         </article>
     )

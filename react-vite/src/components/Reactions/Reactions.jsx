@@ -10,6 +10,7 @@ const Reactions = ({ message, type, reactions }) => {
     const addReaction = (emoji) => {
         // e.preventDefault()
         let emojiAdded = false
+        console.log("GETTING REACTIONS adding them", emoji)
         reactions.forEach(reaction => {
             if (reaction.emoji === emoji) {
                 emojiAdded = true
@@ -17,6 +18,7 @@ const Reactions = ({ message, type, reactions }) => {
             }
         })
         if (emojiAdded === false) {
+            console.log("GETTING REACTIONS adding them", emoji)
             dispatch(addMessageReactionThunk(message.message_id, 'channel_message', emoji))
             closeModal()
         }
@@ -43,7 +45,7 @@ const Reactions = ({ message, type, reactions }) => {
             <>
                 {reactions?.map((reaction, index) => {
                     return (
-                        <button key={index} onClick={() => deleteReaction(reaction.channel_message_id, reaction.id)}>{reaction.emoji}</button>
+                        <button key={index} onClick={() => deleteReaction(reaction.channel_message_id, reaction.reaction_id)}>{reaction.emoji}</button>
                     )
                 })}
             </>

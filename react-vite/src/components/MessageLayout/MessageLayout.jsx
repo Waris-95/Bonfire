@@ -86,9 +86,9 @@ import MessageInput from "../MessageInput/MessageInput"
 
 const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:8000';
 let socket;
-export default function MessageLayout({ defaultMessages, channelId, prevChannelId }) {
+export default function MessageLayout({ defaultMessages, channelId, prevChannelId, currentUser }) {
     const dispatch = useDispatch()
-    const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
+    // const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
     const [messages, setMessages] = useState([])
     const [messagesSet, setMessagesSet] = useState(false)
 
@@ -151,8 +151,8 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
     const messageElements = useMemo(() => messages.map((message) => {
         const { user } = message;
         const url = user?.profile_images[0]?.url || undefined
-        return <Message key={message.id} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} />
-    }), [messages])
+        return <Message key={message.id} message={message} text={message.text_field} date={message.updated_at} name={message.user?.username} img={url} currentUser={currentUser} />
+    }), [messages, currentUser])
 
     const containerRef = useRef(null);
 
