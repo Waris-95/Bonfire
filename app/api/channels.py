@@ -61,9 +61,13 @@ def get_channel_messages(channel_id):
 @channels_bp.route('/<int:channel_id>/messages', methods=['POST'])
 def create_channel_message(channel_id):
     channel = Channel.query.get_or_404(channel_id)  # Get the channel or return 404 if not found
+    print("NEWEST MESSAGE", channel)
     data = request.get_json()  # Get the JSON data from the request
+    print("NEWEST MESSAGE", data)
     text = data.get("text_field")  # Get the text field from the data
+    print("NEWEST MESSAGE", text)
     user_id = data.get("user_id")
+    print("NEWEST MESSAGE", user_id)
 
 
     if not text:
@@ -76,25 +80,28 @@ def create_channel_message(channel_id):
     )
     db.session.add(new_message)  # Add the new message to the session
     db.session.commit()  # Commit the session to save the message
+    print("NEWEST MESSAGE", new_message.to_dict())
+
+    return jsonify(new_message.to_dict()), 201
 
     # Fetch the user to include in the response
-    user = User.query.get(current_user.id)
+    # user = User.query.get(current_user.id)
 
-    message_dict = {
-        'message_id': new_message.id,
-        'user': {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'profile_image': [profile_image.to_dict() for profile_image in user.profile_images]
-        },
-        'channel_id': new_message.channel_id,
-        'text_field': new_message.text_field,
-        'created_at': new_message.created_at,
-        'updated_at': new_message.updated_at
-    }
+    # message_dict = {
+    #     'message_id': new_message.id,
+    #     'user': {
+    #         'id': user.id,
+    #         'username': user.username,
+    #         'email': user.email,
+    #         'profile_image': [profile_image.to_dict() for profile_image in user.profile_images]
+    #     },
+    #     'channel_id': new_message.channel_id,
+    #     'text_field': new_message.text_field,
+    #     'created_at': new_message.created_at,
+    #     'updated_at': new_message.updated_at
+    # }
 
-    return jsonify(message_dict), 201  # Return the new message as JSON
+    # return jsonify(message_dict), 201  # Return the new message as JSON
 
 # Update a message by its ID
 @channels_bp.route('/channel_messages/<int:message_id>', methods=['PUT'])
@@ -103,14 +110,10 @@ def update_channel_message(message_id):
     try:
         message = ChannelMessage.query.get_or_404(message_id)  # Get the message or return 404 if not found
         data = request.get_json()  # Get the JSON data from the request
-        
-        text_field = data.get('text_field')
+        message.text_field = data.get('text_field', message.text_field)
         if text_field is None:
             return jsonify({'error': 'Text field is required'}), 400  # Return error if text field is missing
-
-        message.text_field = text_field  # Update the text field
         db.session.commit()  # Commit the session to save changes
-
         return jsonify(message.to_dict())  # Return the updated message as JSON
     except Exception as e:
         db.session.rollback()

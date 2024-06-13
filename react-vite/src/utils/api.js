@@ -54,14 +54,21 @@ export const getUsersForServerId = async (serverId) => {
     }
 
     
+    // export const getChannelMessages = async (channelId) => {
+    //     const res = await fetch(`/api/channels/${channelId}/messages`);
+    //     if (res.ok) {
+    //         const data = await res.json();
+    //         return Array.isArray(data) ? data : [];
+    //     }
+    //     throw new Error('Failed to fetch messages');
+    // };
+
     export const getChannelMessages = async (channelId) => {
-        const res = await fetch(`/api/channels/${channelId}/messages`);
-        if (res.ok) {
-            const data = await res.json();
-            return Array.isArray(data) ? data : [];
-        }
-        throw new Error('Failed to fetch messages');
-    };
+        const res = await fetch(`/api/channels/${channelId}/messages`)
+            .then(res => res.json())
+            .catch(e => console.error(e))
+        return res
+    }
     
     export const updateChannelMessage = async (messageId, message) => {
         const res = await fetch(`/api/channels/channel_messages/${messageId}`, {
@@ -159,16 +166,33 @@ export const deleteServer = async (serverId) => {
     return res;
 }
 
-export const createChannelMessage = async (channelId, message) => {
+// export const createChannelMessage = async (channelId, message) => {
+//     const res = await fetch(`/api/channels/${channelId}/messages`, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(message),  // Ensure this is a plain object
+//     });
+//     if (res.ok) {
+//         const data = await res.json();
+//         return data;
+//     }
+//     throw new Error('Failed to create message');
+// };
+
+export const createChannelMessage = async (channelId, message, userId) => {
+    console.log("CREATE MESSAGE THUNK", channelId, message, userId)
     const res = await fetch(`/api/channels/${channelId}/messages`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(message),  // Ensure this is a plain object
+        body: JSON.stringify({text_field: message, user_id: userId}),
     });
     if (res.ok) {
         const data = await res.json();
+        // console.log('API call createChannelMessage response:', data);
         return data;
     }
     throw new Error('Failed to create message');

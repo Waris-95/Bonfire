@@ -50,15 +50,24 @@ export const removeReaction = (messageId, reactionId) => ({
 
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
+    console.log("GET MESSAGE THUNK", channelId)
     const res = await getChannelMessages(channelId);
+    console.log("GET MESSAGE THUNK", res)
     dispatch(loadMessages(res));
 };
 
-export const createMessageThunk = (channelId, message) => async (dispatch) => {
-    const newMessage = await createChannelMessage(channelId, message);
+// export const createMessageThunk = (channelId, message) => async (dispatch) => {
+//     const newMessage = await createChannelMessage(channelId, message);
+//     dispatch(addMessage(newMessage));
+//     dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after creating a new message
+// };
+
+export const createMessageThunk = (channelId, message, userId) => async (dispatch) => {
+    console.log("CREATE MESSAGE THUNK", channelId, message, userId)
+    const newMessage = await createChannelMessage(channelId, message, userId);
+    console.log("CREATE MESSAGE THUNK", newMessage)
     dispatch(addMessage(newMessage));
-    dispatch(fetchChannelMessagesThunk(channelId)); // Fetch the latest messages after creating a new message
-};
+}
 
 export const updateMessageThunk = (messageId, newText, channelId) => async (dispatch) => {
     try {
@@ -98,28 +107,38 @@ const initialState = {};
 
 const messageReducer = (state = initialState, action) => {
     switch (action.type) {
+        // case LOAD_MESSAGES: {
+        //     const newState = {};
+        //     action.messages.forEach((message) => {
+        //         if (!newState[message.channel_id]) {
+        //             newState[message.channel_id] = [];
+        //         }
+        //         newState[message.channel_id].push({
+        //             ...message,
+        //             reactions: message.reactions || []  // Ensure reactions is initialized
+        //         });
+        //     });
+        //     return newState;
+        // }
+        // case ADD_MESSAGE: {
+        //     const newState = { ...state };
+        //     const channelMessages = newState[action.message.channel_id] || [];
+        //     channelMessages.push({
+        //         ...action.message,
+        //         reactions: action.message.reactions || []  // Ensure reactions is initialized
+        //     });
+        //     newState[action.message.channel_id] = channelMessages;
+        //     return newState;
+        // }
         case LOAD_MESSAGES: {
-            const newState = {};
+            const messagesState = {};
             action.messages.forEach((message) => {
-                if (!newState[message.channel_id]) {
-                    newState[message.channel_id] = [];
-                }
-                newState[message.channel_id].push({
-                    ...message,
-                    reactions: message.reactions || []  // Ensure reactions is initialized
-                });
-            });
-            return newState;
+                messagesState[message.message_id] = message;
+            })
+            return messagesState;
         }
         case ADD_MESSAGE: {
-            const newState = { ...state };
-            const channelMessages = newState[action.message.channel_id] || [];
-            channelMessages.push({
-                ...action.message,
-                reactions: action.message.reactions || []  // Ensure reactions is initialized
-            });
-            newState[action.message.channel_id] = channelMessages;
-            return newState;
+            return { ...state, [action.message.message_id]: action.message};
         }
         case UPDATE_MESSAGE: {
             const newState = { ...state };

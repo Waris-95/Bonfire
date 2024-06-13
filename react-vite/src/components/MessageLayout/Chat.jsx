@@ -1,4 +1,4 @@
-
+import { useState, useEffect } from "react";
 const Chat = () => {
     const [chatInput, setChatInput] = useState("");
     const [messages, setMessages] = useState([]);
