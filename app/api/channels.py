@@ -14,21 +14,15 @@ channels_bp = Blueprint("channels", __name__)
 @channels_bp.route('/<int:channel_id>/messages', methods=['GET'])
 @login_required
 def get_channel_messages(channel_id):
-    # Get the channel or return 404 if not found
     channel = Channel.query.get_or_404(channel_id)
     print("Channel Backend CHANNEL", channel)
     
-    # Query to get all messages in the channel with the associated user
     messages_with_users = (
         db.session.query(ChannelMessage)
-            # .join(User, ChannelMessage.user_id == User.id)
-            # .join(Reaction, ChannelMessage.id == Reaction.channel_message_id)
-            # .options(joinedload(ChannelMessage.user))
             .filter(ChannelMessage.channel_id == channel_id)
             .all()
     )
     print("Channel Backend MESSAGES TUPLE", messages_with_users)
-    # Convert to dictionary format
     print("=============================================================================================================================================================================================")
     print("Channel Backend MESSAGES DICTIONARY", messages_with_users[0].to_dict())
     print("=============================================================================================================================================================================================")
@@ -52,79 +46,99 @@ def get_channel_messages(channel_id):
     ]
 
     print("MESSAGES DICTIONARY!!!!", messages_dict)
-
-    # Return messages as JSON
     return jsonify(messages_dict)
+
 
 # Create a new message in a channel
 @login_required
 @channels_bp.route('/<int:channel_id>/messages', methods=['POST'])
 def create_channel_message(channel_id):
-    channel = Channel.query.get_or_404(channel_id)  # Get the channel or return 404 if not found
-    data = request.get_json()  # Get the JSON data from the request
-    text = data.get("text_field")  # Get the text field from the data
-    user_id = data.get("user_id")
+    try:
+        channel = Channel.query.get_or_404(channel_id)
+        data = request.get_json() 
+        text = data.get("text_field") 
+        user_id = data.get("user_id")
 
+        if not text:
+            print(f"Attempt to create a message without text by user {current_user.id}")
+            return jsonify({'error': 'Text field is required'}), 400  
 
-    if not text:
-        return jsonify({'error': 'Text field is required'}), 400  # Return error if text field is missing
+        new_message = ChannelMessage(
+            user_id=current_user.id,
+            channel_id=channel_id,
+            text_field=text
+        )
+        db.session.add(new_message)
+        db.session.commit()
 
-    new_message = ChannelMessage(
-        user_id=current_user.id,  # Use the current user's ID
-        channel_id=channel_id,
-        text_field=text
-    )
-    db.session.add(new_message)  # Add the new message to the session
-    db.session.commit()  # Commit the session to save the message
+        user = User.query.get(current_user.id)
 
-    # Fetch the user to include in the response
-    user = User.query.get(current_user.id)
+        message_dict = {
+            'message_id': new_message.id,
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'profile_image': [profile_image.to_dict() for profile_image in user.profile_images]
+            },
+            'channel_id': new_message.channel_id,
+            'text_field': new_message.text_field,
+            'created_at': new_message.created_at,
+            'updated_at': new_message.updated_at
+        }
 
-    message_dict = {
-        'message_id': new_message.id,
-        'user': {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'profile_image': [profile_image.to_dict() for profile_image in user.profile_images]
-        },
-        'channel_id': new_message.channel_id,
-        'text_field': new_message.text_field,
-        'created_at': new_message.created_at,
-        'updated_at': new_message.updated_at
-    }
+        return jsonify(message_dict), 201
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error creating message: {e}")
+        return jsonify({'error': 'Internal Server Error'}), 500
 
-    return jsonify(message_dict), 201  # Return the new message as JSON
 
 # Update a message by its ID
 @channels_bp.route('/channel_messages/<int:message_id>', methods=['PUT'])
 @login_required
 def update_channel_message(message_id):
     try:
-        message = ChannelMessage.query.get_or_404(message_id)  # Get the message or return 404 if not found
-        data = request.get_json()  # Get the JSON data from the request
+        message = ChannelMessage.query.get_or_404(message_id)
         
+        if message.user_id != current_user.id:
+            print(f"Unauthorized attempt to update message by user {current_user.id}")
+            return jsonify({'error': 'Unauthorized'}), 403
+
+        data = request.get_json() 
         text_field = data.get('text_field')
+        
         if text_field is None:
-            return jsonify({'error': 'Text field is required'}), 400  # Return error if text field is missing
+            return jsonify({'error': 'Text field is required'}), 400 
 
-        message.text_field = text_field  # Update the text field
-        db.session.commit()  # Commit the session to save changes
+        message.text_field = text_field  
+        db.session.commit()
 
-        return jsonify(message.to_dict())  # Return the updated message as JSON
+        return jsonify(message.to_dict()) 
     except Exception as e:
         db.session.rollback()
-        print(f"Error updating message: {e}")  # Log the error
-        return jsonify({'error': 'Internal Server Error'}), 500  # Return a 500 error
+        print(f"Error updating message: {e}")
+        return jsonify({'error': 'Internal Server Error'}), 500
+
 
 # Delete a message by its ID
 @channels_bp.route('/channel_messages/<int:message_id>', methods=['DELETE'])
 @login_required
 def delete_channel_message(message_id):
-    message = ChannelMessage.query.get_or_404(message_id)  # Get the message or return 404 if not found
-    db.session.delete(message)  # Delete the message from the session
-    db.session.commit()  # Commit the session to save changes
-    return jsonify({'message': 'Message deleted'}), 200  # Return success message
+    try:
+        message = ChannelMessage.query.get_or_404(message_id)
+        
+        if message.user_id != current_user.id:
+            print(f"Unauthorized attempt to delete message by user {current_user.id}")
+            return jsonify({'error': 'Unauthorized'}), 403
+
+        db.session.delete(message)
+        db.session.commit()
+        return jsonify({'message': 'Message deleted'}), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error deleting message: {e}")
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 
 """
@@ -303,33 +317,37 @@ def get_chat_room_message_reactions(message_id):
 #==================================TESTING===========================================
 
 def add_channel_message_reaction(message_id):
-    message = ChannelMessage.query.get_or_404(message_id)
-    data = request.get_json()
-    emoji = data.get('emoji')
+    try:
+        message = ChannelMessage.query.get_or_404(message_id)  # Get the message or return 404 if not found
+        data = request.get_json()
+        emoji = data.get('emoji')
 
-    if not emoji:
-        return jsonify({'error': 'Emoji is required'}), 400
+        if not emoji:
+            return jsonify({'error': 'Emoji is required'}), 400
 
-    # Create a new reaction with the provided emoji
-    new_reaction = Reaction(
-        channel_message_id=message_id,
-        resource_type='channel_message',
-        emoji=emoji,
-        count=1
-    )
-    db.session.add(new_reaction)
-    db.session.commit()
+        # Create a new reaction with the provided emoji
+        new_reaction = Reaction(
+            channel_message_id=message_id,
+            resource_type='channel_message',
+            emoji=emoji,
+            count=1
+        )
+        db.session.add(new_reaction)
+        db.session.commit()
 
-    # Associate the new reaction with the current user
-    user_reaction = UserReaction(
-        user_id=current_user.id,
-        reaction_id=new_reaction.id
-    )
-    db.session.add(user_reaction)
-    db.session.commit()
+        # Associate the new reaction with the current user
+        user_reaction = UserReaction(
+            user_id=current_user.id,
+            reaction_id=new_reaction.id
+        )
+        db.session.add(user_reaction)
+        db.session.commit()
 
-    return jsonify(new_reaction.to_dict()), 201
-
+        return jsonify(new_reaction.to_dict()), 201
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error adding reaction: {e}")  # Log the error
+        return jsonify({'error': 'Internal Server Error'}), 500
 #==================================TESTING===========================================
 
 # Add a reaction to a chat room message

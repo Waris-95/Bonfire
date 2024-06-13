@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { fetchChannelsForServerIdThunk, addNewChannel } from "../../redux/channel";
+import styles from "./ChannelModal.module.css";
 
 function ChannelModal({ activeServerId }) {
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ function ChannelModal({ activeServerId }) {
 
         const newChannel = {
             name: channelName
-        }
+        };
 
         const channelResponse = await dispatch(
             addNewChannel(newChannel, activeServerId)
@@ -23,31 +24,31 @@ function ChannelModal({ activeServerId }) {
         if (channelResponse) {
             setErrors(channelResponse);
         } else {
-            closeModal()
+            closeModal();
         }
 
-        await dispatch(fetchChannelsForServerIdThunk(activeServerId))
-
-    }
+        await dispatch(fetchChannelsForServerIdThunk(activeServerId));
+    };
 
     return (
-        <>
-            <h1>Create a Channel</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
+        <div className={styles.modalContainer}>
+            <h1 className={styles.header}>Create a Channel</h1>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <label className={styles.label}>
                     Name
                     <input
                         type="text"
                         value={channelName}
                         onChange={(e) => setChannelName(e.target.value)}
                         required
+                        className={styles.input}
                     />
                 </label>
-                {errors.channelName && <p>{errors.channelName}</p>}
-                <button type="submit">Create Channel</button>
+                {errors.channelName && <p className={styles.error}>{errors.channelName}</p>}
+                <button type="submit" className={styles.button}>Create Channel</button>
             </form>
-        </>
-    )
+        </div>
+    );
 }
 
-export default ChannelModal
+export default ChannelModal;

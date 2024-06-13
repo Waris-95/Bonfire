@@ -38,7 +38,7 @@ function SignupFormPage() {
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
-      navigate("/");
+      navigate("/"); // Navigate after the state is updated
     }
   };
 

@@ -1,5 +1,3 @@
-
-
 .hidden {
     display: none;
 }
@@ -9,46 +7,61 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    background-color: #2f3136;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
 }
 
 .createServerForm {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 25rem;
-    height: 25rem;
+    width: 100%;
 }
 
-.serverName {
-    margin: 10px;
-    background-color: #201c24;
-    border: none;
+.serverName,
+.serverDescription {
+    margin: 10px 0;
+    background-color: #40444b;
+    color: #ffffff;
+    border: 1px solid #202225;
     border-radius: 5px;
-    padding: 3px;
+    padding: 10px;
+    font-size: 1rem;
     outline: none;
 }
 
 .serverDescription {
-    margin: 10px;
     resize: none;
-    background-color: #201c24;
-    border: none;
-    border-radius: 5px;
-    outline: none;
+    height: 100px;
 }
 
 .createServerButton {
-    margin: 10px;
+    margin: 10px 0;
     background-color: #7289da;
+    color: #ffffff;
     border: none;
     border-radius: 5px;
-    padding: 3px;
-    outline: none;
-    width: 30%;
-    height: 10%;
+    padding: 10px;
+    font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .createServerButton:hover {
-    background-color: #6377bf;
+    background-color: #5a6aaf;
+}
+
+.errorMessage {
+    color: #f04747;
+    font-size: 0.875rem;
+    margin-top: -5px;
 }

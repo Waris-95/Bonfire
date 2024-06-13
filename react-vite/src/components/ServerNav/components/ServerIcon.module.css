@@ -1,13 +1,14 @@
 .container {
     border-radius: 50%;
-    transition: border-radius 0.3s, transform 0.3s;
-    width: 48px; /* Slightly larger for better visibility */
+    transition: border-radius 0.3s, transform 0.3s, background-color 0.3s;
+    width: 48px;
     height: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background-color: #36393f; /* Discord-like background color */
+    background-color: #36393f;
+    margin: 4px 0; /* Add some spacing between icons */
 }
 
 .image {
@@ -18,8 +19,9 @@
 
 .container:hover,
 .container:focus {
-    border-radius: 35%;
+    border-radius: 15px; /* Slightly rounded corners on hover */
     cursor: pointer;
-    transform: scale(1.1); /* Slightly scale up on hover */
-    background-color: #7289da; /* Discord-like hover color */
+    transform: scale(1.1); /* Zoom in effect */
+    background-color: #7289da;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a subtle shadow */
 }

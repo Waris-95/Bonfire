@@ -79,14 +79,27 @@ export const getUsersForServerId = async (serverId) => {
     };
     
     export const deleteChannelMessage = async (messageId) => {
-        const res = await fetch(`/api/channels/channel_messages/${messageId}`, {
-            method: 'DELETE',
-        });
-        if (res.ok) {
-            return { messageId };
+        try {
+            const res = await fetch(`/api/channels/channel_messages/${messageId}`, {
+                method: 'DELETE',
+            });
+            
+            if (res.ok) {
+                return { messageId };
+            }
+            
+            const errorData = await res.json();
+            if (res.status === 403) {
+                throw new Error('You are not authorized to delete this message.');
+            }
+            
+            throw new Error(errorData.error || 'Failed to delete message');
+        } catch (error) {
+            console.error('Error deleting message:', error);
+            throw error; // Re-throw the error to handle it in the calling function
         }
-        throw new Error('Failed to delete message');
     };
+    
     
     export const getMessageReactions = async (messageId) => {
         const res = await fetch(`/api/channels/channel_messages/${messageId}/reactions`);

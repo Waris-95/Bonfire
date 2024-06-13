@@ -1,9 +1,9 @@
-import styles from "./ServerIcon.module.css"
+import styles from "./ServerIcon.module.css";
 
-export default function ServerIcon({ image, id, setActiveServerId }){
+export default function ServerIcon({ image, id, setActiveServerId }) {
     return (
         <div className={styles.container} onClick={() => setActiveServerId(id)}>
-            <img className={styles.image} src={image} />
+            <img className={styles.image} src={image} alt={`Server ${id}`} />
         </div>
-    )
+    );
 }

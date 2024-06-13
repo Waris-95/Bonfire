@@ -59,7 +59,6 @@ def sign_up():
     
     if form.validate_on_submit():
         try:
-            profile_image_url = form.data['profile_image_url']
             user = User(
                 username=form.data['username'],
                 email=form.data['email'],
@@ -68,12 +67,14 @@ def sign_up():
             db.session.add(user)
             db.session.commit()  # Commit to get the user ID
             
-            profile_image = ProfileImage(
-                url=profile_image_url,
-                user_id=user.id
-            )
-            db.session.add(profile_image)
-            db.session.commit()
+            profile_image_url = form.data['profile_image_url']
+            if profile_image_url:
+                profile_image = ProfileImage(
+                    url=profile_image_url,
+                    user_id=user.id
+                )
+                db.session.add(profile_image)
+                db.session.commit()
 
             login_user(user)
             return user.to_dict()
