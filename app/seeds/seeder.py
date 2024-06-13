@@ -6,6 +6,7 @@ from app.models import (
 )
 from sqlalchemy.sql import text
 from datetime import datetime
+from flask.cli import AppGroup
 
 # Adds multiple users, servers, channels, and related data
 def seed_data():
@@ -135,7 +136,7 @@ def seed_data():
 # incrementing primary key, CASCADE deletes any dependent entities. With
 # sqlite3 in development you need to instead use DELETE to remove all data and
 # it will reset the primary keys for you as well.
-def undo_users():
+def undo_seeds():
     if environment == "production":
         db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
     else:
