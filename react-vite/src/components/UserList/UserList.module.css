@@ -1,0 +1,19 @@
+.userList {
+    background: #2B2D31;
+    margin-left: auto;
+    width: 11.9rem;
+    padding: 1em 0 1em 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    position: fixed;
+    right: 0;
+    top: 2.5rem;
+    height: 100%;
+}
+
+.userRoleName {
+    color: #8E959E;
+    font-weight: 500;
+    font-size: 0.7rem;
+}
