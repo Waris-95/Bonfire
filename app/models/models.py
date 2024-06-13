@@ -25,6 +25,7 @@ class User(db.Model, UserMixin):
     reactions = db.relationship('UserReaction', backref='user', lazy=True)
     servers = db.relationship('ServerUser', cascade="all,delete", backref='user', lazy=True)
     chat_rooms = db.relationship('ChatRoomUser', cascade="all,delete", backref='user', lazy=True)
+    # owned_servers = db.relationship("Server", cascade="all,delete", backref='user', lazy=True)
 
     @property
     def password(self):
@@ -88,7 +89,8 @@ class Server(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(52), nullable=False)
     description = db.Column(db.String(240))
-    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    # owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    owner_id = db.Column(db.Integer)
     created_at = db.Column(db.DateTime)
     updated_at = db.Column(db.DateTime)
     channels = db.relationship('Channel', cascade="all,delete", backref='server', lazy=True)
@@ -134,7 +136,8 @@ class Channel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(52), nullable=False)
     server_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('servers.id')), nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    # owner_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    owner_id = db.Column(db.Integer)
     messages = db.relationship('ChannelMessage', cascade="all,delete", backref='channel', lazy=True)
 
     def to_dict(self):
