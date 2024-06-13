@@ -4,11 +4,17 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_login import LoginManager
-from .models import db, User
+from .models import db, User, Server
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
+from .api.server import server
 from .seeds import seed_commands
 from .config import Config
+from .api.channels import channels_bp
+from .api.server import server
+# from .socket import socketio
+from flask_socketio import SocketIO, emit, leave_room, join_room
+
 
 app = Flask(__name__, static_folder='../react-vite/dist', static_url_path='/')
 
@@ -26,14 +32,17 @@ def load_user(id):
 app.cli.add_command(seed_commands)
 
 app.config.from_object(Config)
+
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
+app.register_blueprint(channels_bp, url_prefix='/api/channels')
+app.register_blueprint(server, url_prefix="/api/servers")
 db.init_app(app)
 Migrate(app, db)
 
 # Application Security
-CORS(app)
-
+CORS(app,resources={r"/*":{"origins":"*"}})
+socketio = SocketIO(app,cors_allowed_origins="*")
 
 # Since we are deploying with Docker and Flask,
 # we won't be using a buildpack when we deploy to Heroku.
@@ -59,7 +68,6 @@ def inject_csrf_token(response):
             'FLASK_ENV') == 'production' else None,
         httponly=True)
     return response
-
 
 @app.route("/api/docs")
 def api_help():
@@ -89,3 +97,45 @@ def react_root(path):
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
+
+# @socketio.on("connect")
+# def connected():
+#     """event listener when client connects to the server"""
+#     print("client has connected")
+#     emit("connect",{"data":f"id: {request.sid} is connected"})
+
+# @socketio.on('data')
+# def handle_message(data):
+#     """event listener when client types a message"""
+#     print("data from the front end: ",str(data))
+#     emit("data",{'data':data,'id':request.sid}, broadcast=True)
+
+# @socketio.on("disconnect")
+# def disconnected():
+#     """event listener when client disconnects to the server"""
+#     print("user disconnected")
+#     emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
+
+@socketio.on("chat")
+def handle_chat(data):
+    # print("1==========================================================================================================================================================================================================================================================")
+    print(data)
+    # print("1==========================================================================================================================================================================================================================================================")
+    emit('chat', data, broadcast=False, to=data['room'])
+
+@socketio.on('leave')
+def handle_leave(data):
+    # print("2==========================================================================================================================================================================================================================================================")
+    print(data)
+    # print("2==========================================================================================================================================================================================================================================================")
+    leave_room(data['room'])
+
+@socketio.on('join')
+def handle_join(data):
+    # print("3==========================================================================================================================================================================================================================================================")
+    print(data)
+    # print("3==========================================================================================================================================================================================================================================================")
+    join_room(data['room'])
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True, port=8000)

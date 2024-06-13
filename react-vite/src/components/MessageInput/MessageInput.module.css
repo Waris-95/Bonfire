@@ -1,0 +1,88 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: fixed;
+    bottom: 1.2rem;
+    right: 11.9rem;
+    left: 15.6rem;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    overflow-y: scroll;
+    /* justify-content: flex-end; */
+    top: 2.5rem;
+    right: 11.9rem;
+    left: 15.6rem;
+    bottom: 3.6rem;
+}
+
+.messages > :first-child {
+    margin-top: auto;
+}
+
+.message_input_container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #2f3136;
+    width: 100%;
+}
+
+.message_input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #40444b;
+    color: #ffffff;
+    width: 100%;
+}
+
+.send_button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #7289da;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.reaction_container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.reaction_input {
+    padding: 5px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #72767d;
+    background-color: #2f3136;
+    color: #fff;
+}
+
+.reaction_button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.reaction_button:hover {
+    background-color: #45a049;
+}
+
+.send_button:hover {
+    background-color: #6377bf;
+}
+
