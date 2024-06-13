@@ -90,7 +90,6 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
     const dispatch = useDispatch()
     // const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
     const [messages, setMessages] = useState([])
-    const [messagesSet, setMessagesSet] = useState(false)
 
     useEffect(() => {
         setMessages(defaultMessages)
@@ -110,7 +109,10 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
             // }
 
             // setMessages(messages => [...messages, newMessage])
-            dispatch(fetchChannelMessagesThunk(data.room))
+            // dispatch(fetchChannelMessagesThunk(data.room))
+            setTimeout(() => {
+                dispatch(fetchChannelMessagesThunk(data.room));
+            }, 100);
         })
 
         return (() => {
@@ -123,16 +125,6 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
         socket.emit('join', { room: channelId })
         setMessages(defaultMessages)
     }, [channelId, prevChannelId, defaultMessages])
-
-    useEffect(() => {
-        const fetchMessages = () => {
-            dispatch(fetchChannelMessagesThunk(channelId))
-        }
-
-        const intervalId = setInterval(fetchMessages, 1000);
-
-        return () => clearInterval(intervalId);
-    }, [dispatch, channelId])
 
     const handleSendMessage = (e, text_field) => {
         e.preventDefault()

@@ -41,7 +41,7 @@ export default function ServerNav({ servers, setActiveServerId, activeServer, ac
         Promise.all(promises).then(res => {
             setIsValidImage(res)
         })
-    })
+    }, [servers])
 
     const serverElements = useMemo(() => servers.map((server, index) => {
         return (
