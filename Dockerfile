@@ -34,7 +34,6 @@ RUN python -m pip install pipenv
 RUN pipenv install --deploy --system
 
 # Run database migrations and seed the database
-RUN pipenv run flask db init
 RUN pipenv run flask db migrate -m "init"
 RUN flask db upgrade
 RUN flask seed all
