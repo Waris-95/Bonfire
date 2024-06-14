@@ -109,7 +109,7 @@ const messageReducer = (state = initialState, action) => {
         case LOAD_MESSAGES: {
             const messagesState = {};
             action.messages.forEach((message) => {
-                messagesState[message.id] = message;
+                messagesState[message.message_id] = message;
             })
             console.log("FETCHING CHANNEL MESSAGES", messagesState)
             return messagesState;

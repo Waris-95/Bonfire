@@ -20,6 +20,7 @@ export default function ServerView({ activeServerId, activeServer, activeChannel
     const serverUsers = Object.values(useSelector((state) => state.serverUsers));
     const activeChannel = useMemo(() => channels.filter(channel => channel.id === activeChannelId)[0], [activeChannelId, channels]);
     console.log("GET ALL MESSAGES", messages)
+    console.log("GET SERVER USERS", serverUsers)
     // const currentUser = Object.values(useSelector((state) => state.currentUser));
     // const currentServer = useSelector((state) => state.servers[`${activeServerId}`]);
     // const activeChannel = useSelector((state) => state.channels[`${activeChannelId}`]);

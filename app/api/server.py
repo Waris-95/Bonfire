@@ -145,7 +145,7 @@ def create_new_channel(server_id):
 @login_required
 def get_server_users(server_id):
     server = Server.query.get_or_404(server_id)
-    users = server.users  # Assuming you have a relationship defined
+    users = server.users
     user_list = [user.to_dict() for user in users]
     user_ids = [item['user_id'] for item in user_list]
     users = User.query.filter(User.id.in_(user_ids)).all()

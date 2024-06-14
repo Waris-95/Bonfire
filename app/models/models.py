@@ -43,7 +43,9 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'profile_images': [profile_image.to_dict() for profile_image in self.profile_images]
+            'profile_images': [profile_image.to_dict() for profile_image in self.profile_images],
+            'messages': [message.to_dict() for message in self.channel_messages],
+            'servers': [server.to_dict() for server in self.servers]
         }
     
 class ProfileImage(db.Model):

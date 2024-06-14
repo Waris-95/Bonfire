@@ -10,18 +10,16 @@ import { createMessageThunk, fetchChannelMessagesThunk, updateMessageThunk, dele
 import Message from "../Message/Message"
 import MessageInput from "../MessageInput/MessageInput"
 
-const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:8000';
+const URL = process.env.NODE_ENV === 'production' ? 'https://bonfire-oi3n.onrender.com/' : 'http://localhost:8000';
 let socket;
 export default function MessageLayout({ defaultMessages, channelId, prevChannelId, currentUser }) {
     const dispatch = useDispatch()
     // const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
-    const [messages, setMessages] = useState(defaultMessages)
-    console.log("GET ALL MESSAGES messagelayout", defaultMessages)
-    console.log("GET ALL MESSAGES messagelayout", messages)
+    const [messages, setMessages] = useState([])
 
-    // useEffect(() => {
-    //     setMessages(defaultMessages)
-    // }, [defaultMessages])
+    useEffect(() => {
+        setMessages(defaultMessages)
+    }, [defaultMessages])
 
     useEffect(() => {
         socket = io(URL);
@@ -48,16 +46,16 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
         })
     }, [dispatch]);
 
-    // useEffect(() => {
-    //     const fetchMessages = () => {
-    //         dispatch(fetchChannelMessagesThunk(channelId));
-    //     };
+    useEffect(() => {
+        const fetchMessages = () => {
+            dispatch(fetchChannelMessagesThunk(channelId));
+        };
     
-    //     const intervalId = setInterval(fetchMessages, 5000);
+        const intervalId = setInterval(fetchMessages, 1000);
     
-    //     // Cleanup function to clear the interval when the component unmounts
-    //     return () => clearInterval(intervalId);
-    // }, [dispatch, channelId]);
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, [dispatch, channelId]);
 
     useEffect(() => {
         socket.emit('leave', { room: prevChannelId })
@@ -81,7 +79,6 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
     // }
 
     const messageElements = useMemo(() => messages.map((message) => {
-        console.log("GET ALL MESSAGES one message", message)
         const { user } = message;
         const handleEditMessage = (messageId, newText, channelId) => {
             dispatch(updateMessageThunk(messageId, newText, channelId));
