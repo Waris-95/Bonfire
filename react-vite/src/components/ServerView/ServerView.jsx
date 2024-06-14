@@ -16,13 +16,13 @@ import UserList from "../UserList/UserList"
 export default function ServerView({ activeServerId, activeServer, activeChannelId, setActiveChannelId, prevChannelId, setPrevChannelId, currentUser }) {
     const dispatch = useDispatch()
     const channels = Object.values(useSelector((state) => state.channels));
-    const messages = Object.values(useSelector((state) => state.messages));
+    const messages = Object.values(useSelector((state) => state.messages.messages));
     const serverUsers = Object.values(useSelector((state) => state.serverUsers));
     const activeChannel = useMemo(() => channels.filter(channel => channel.id === activeChannelId)[0], [activeChannelId, channels]);
     // const currentUser = Object.values(useSelector((state) => state.currentUser));
     // const currentServer = useSelector((state) => state.servers[`${activeServerId}`]);
     // const activeChannel = useSelector((state) => state.channels[`${activeChannelId}`]);
-
+    console.log("MESSAGES", messages)
     useEffect(() => {
         dispatch(fetchChannelsForServerIdThunk(activeServerId));
         dispatch(fetchChannelMessagesThunk(activeChannelId))

@@ -14,50 +14,7 @@ channels_bp = Blueprint("channels", __name__)
 @channels_bp.route('/<int:channel_id>/messages', methods=['GET'])
 @login_required
 def get_channel_messages(channel_id):
-    # Get the channel or return 404 if not found
-    # channel = Channel.query.get_or_404(channel_id)
-    # print("Channel Backend CHANNEL", channel)
-    
-    # # Query to get all messages in the channel with the associated user
-    # messages_with_users = (
-    #     db.session.query(ChannelMessage)
-    #         # .join(User, ChannelMessage.user_id == User.id)
-    #         # .join(Reaction, ChannelMessage.id == Reaction.channel_message_id)
-    #         # .options(joinedload(ChannelMessage.user))
-    #         .filter(ChannelMessage.channel_id == channel_id)
-    #         .all()
-    # )
-    # print("Channel Backend MESSAGES TUPLE", messages_with_users)
-    # print("Channel Backend MESSAGES TUPLE", len(messages_with_users))
-    # # Convert to dictionary format
-    # # print("=============================================================================================================================================================================================")
-    # # print("Channel Backend MESSAGES DICTIONARY", messages_with_users[0].to_dict())
-    # # print("=============================================================================================================================================================================================")
-
-    # messages_dict = [
-    #     {
-    #         'message_id': message.id,
-    #         'user': {
-    #             'id': message.user.id,
-    #             'username': message.user.username,
-    #             'email': message.user.email,
-    #             'profile_images': [profile_image.to_dict() for profile_image in message.user.profile_images]
-    #         },
-    #         'reactions': [reaction.to_dict() for reaction in message.reactions],
-    #         'channel_id': message.channel_id,
-    #         'text_field': message.text_field,
-    #         'created_at': message.created_at,
-    #         'updated_at': message.updated_at
-    #     }
-    #     for message in messages_with_users
-    # ]
-
-    # print("MESSAGES DICTIONARY!!!!", messages_dict)
-
-    # # Return messages as JSON
-    # return jsonify(messages_dict)
     channel = Channel.query.get_or_404(channel_id)
-    
     # Query to get all messages in the channel with the associated user and reactions
     messages_with_users = (
         db.session.query(ChannelMessage)
@@ -130,25 +87,6 @@ def create_channel_message(channel_id):
 
     return jsonify(new_message.to_dict()), 201
 
-    # Fetch the user to include in the response
-    # user = User.query.get(current_user.id)
-
-    # message_dict = {
-    #     'message_id': new_message.id,
-    #     'user': {
-    #         'id': user.id,
-    #         'username': user.username,
-    #         'email': user.email,
-    #         'profile_image': [profile_image.to_dict() for profile_image in user.profile_images]
-    #     },
-    #     'channel_id': new_message.channel_id,
-    #     'text_field': new_message.text_field,
-    #     'created_at': new_message.created_at,
-    #     'updated_at': new_message.updated_at
-    # }
-
-    # return jsonify(message_dict), 201  # Return the new message as JSON
-
 # Update a message by its ID
 @channels_bp.route('/channel_messages/<int:message_id>', methods=['PUT'])
 @login_required
@@ -183,48 +121,6 @@ def delete_channel_message(message_id):
 # Get all reactions on a channel message
 @channels_bp.route('/channel_messages/<int:message_id>/reactions', methods=['GET'])
 @login_required
-# def get_channel_message_reactions(message_id):
-#     message = ChannelMessage.query.get_or_404(message_id)  # Get the channel message or return 404 if not found
-#     # reactions = Reaction.query.filter_by(channel_message_id=message_id).all()  # Get all reactions on the message
-#     # print("ALL MESSAGE REACTIONS", reactions)
-#     # return jsonify([reaction.to_dict() for reaction in reactions])  # Return reactions as JSON
-
-#     reactions = (
-#         db.session.query(Reaction, UserReaction, User)
-#         .join(UserReaction, Reaction.id == UserReaction.reaction_id)
-#         .join(User, UserReaction.user_id == User.id)
-#         .filter(Reaction.channel_message_id == message_id)
-#         .all()
-#     )
-#     print("ALL MESSAGE REACTIONS", reactions)
-
-#     reaction_dicts = []
-#     for reaction, user_reaction, user in reactions:
-#         reaction_dict = reaction.to_dict()
-#         user_dict = user.to_dict()
-#         reaction_dict['user'] = user_dict
-#         reaction_dicts.append(reaction_dict)
-    
-#     print("REACTION DICTIONARY", reaction_dicts)
-
-#     result = []
-
-#     for reaction in reaction_dicts:
-#         react_dict = {
-#             "id": reaction['id'],
-#             "channel_message_id": reaction['channel_message_id'],
-#             "resource_type": reaction['resource_type'],
-#             "emoji": reaction['emoji'],
-#             "count": reaction['count'],
-#             "user_id": reaction['user']['id'] 
-#         }
-#         result.append(react_dict)
-    
-#     print("RESULTS", result)
-
-#     return jsonify(result)
-
-#==================================TESTING===========================================
 def get_channel_message_reactions(message_id):
     message = ChannelMessage.query.get_or_404(message_id)  # Get the channel message or return 404 if not found
 
@@ -237,24 +133,6 @@ def get_channel_message_reactions(message_id):
     )
 
     reaction_dict = {}
-    
-    # for reaction, user_reaction, user in reactions:
-    #     emoji = reaction.emoji
-    #     if emoji not in reaction_dict:
-    #         reaction_dict[emoji] = {
-    #             "id": [reaction.id],
-    #             "channel_message_id": reaction.channel_message_id,
-    #             "resource_type": reaction.resource_type,
-    #             "emoji": reaction.emoji,
-    #             "count": reaction.count,
-    #             "user_ids": [user.id]
-    #         }
-    #     else:
-    #         reaction_dict[emoji]["id"].append(reaction.id)
-    #         reaction_dict[emoji]["count"] += reaction.count
-    #         reaction_dict[emoji]["user_ids"].append(user.id)
-    
-    # combined_reactions = list(reaction_dict.values())
 
     for reaction, user_reaction, user in reactions:
         emoji = reaction.emoji
@@ -305,49 +183,6 @@ def get_chat_room_message_reactions(message_id):
 # # Add a reaction to a channel message
 @channels_bp.route('/channel_messages/<int:message_id>/reactions', methods=['POST'])
 @login_required
-# def add_channel_message_reaction(message_id):
-#     message = ChannelMessage.query.get_or_404(message_id)
-#     print("ADDING REACTION", message.to_dict())
-#     reaction_list = [reaction.to_dict() for reaction in message.reactions]
-#     print("LOOKING AT A MESSAGE REACTION", reaction_list)
-#     data = request.get_json()
-#     emoji = data.get('emoji')
-#     print("ADDED EMOJI", emoji)
-
-#     for reaction in reaction_list:
-#         print("LOOPING THROUGH REACTION LIST", reaction)
-#         if emoji == reaction['emoji']:
-#             print("EMOJI AND REACTION ARE THE SAME")
-#             curr_reaction = Reaction.query.get_or_404(reaction['id'])
-#             print("CURRENT REACTION COUNT", curr_reaction.count)
-#             curr_reaction.count += 1
-#             print("NEW REACTION COUNT", curr_reaction.count)
-#             db.session.commit()
-#             print("NEW REACTION JSON", jsonify(reaction))
-#             return jsonify(reaction)
-    
-#     if not emoji:
-#         return jsonify({'error': 'Emoji is required'}), 400
-    
-#     new_reaction = Reaction(
-#         channel_message_id=message_id,
-#         resource_type='channel_message',
-#         emoji=emoji,
-#         count=1
-#     )
-#     db.session.add(new_reaction)
-#     db.session.commit()
-    
-#     user_reaction = UserReaction(
-#         user_id=current_user.id,
-#         reaction_id=new_reaction.id
-#     )
-#     db.session.add(user_reaction)
-#     db.session.commit()
-    
-#     return jsonify(new_reaction.to_dict()), 201
-
-#==================================TESTING===========================================
 
 def add_channel_message_reaction(message_id):
     message = ChannelMessage.query.get_or_404(message_id)
