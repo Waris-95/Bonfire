@@ -110,7 +110,7 @@ def upgrade():
     op.create_table('message_images',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(length=2048), nullable=False),
-    sa.Column('resource_type', sa.Integer(), nullable=False),
+    sa.Column('resource_type', sa.String(), nullable=False),
     sa.Column('channel_message_id', sa.Integer(), nullable=True),
     sa.Column('chat_room_message_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['channel_message_id'], ['channel_messages.id'], ),
