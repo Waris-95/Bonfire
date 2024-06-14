@@ -1,8 +1,8 @@
-"""Adding
+"""add
 
-Revision ID: 2f79243345ec
+Revision ID: 6e3e42d6cf59
 Revises: 
-Create Date: 2024-06-12 19:51:57.004980
+Create Date: 2024-06-13 20:29:25.251742
 
 """
 from alembic import op
@@ -13,7 +13,7 @@ SCHEMA = os.environ.get("SCHEMA")
 
 
 # revision identifiers, used by Alembic.
-revision = '2f79243345ec'
+revision = '6e3e42d6cf59'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,15 @@ def upgrade():
     op.create_table('chat_rooms',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('servers',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=52), nullable=False),
+    sa.Column('description', sa.String(length=240), nullable=True),
+    sa.Column('owner_id', sa.Integer(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -37,6 +46,14 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
+    )
+    op.create_table('channels',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=52), nullable=False),
+    sa.Column('server_id', sa.Integer(), nullable=False),
+    sa.Column('owner_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['server_id'], ['servers.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('chat_room_messages',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -60,25 +77,6 @@ def upgrade():
     sa.Column('url', sa.String(length=2048), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('servers',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=52), nullable=False),
-    sa.Column('description', sa.String(length=240), nullable=True),
-    sa.Column('owner_id', sa.Integer(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('channels',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=52), nullable=False),
-    sa.Column('server_id', sa.Integer(), nullable=False),
-    sa.Column('owner_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['server_id'], ['servers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('server_images',
@@ -149,11 +147,11 @@ def downgrade():
     op.drop_table('channel_messages')
     op.drop_table('server_user')
     op.drop_table('server_images')
-    op.drop_table('channels')
-    op.drop_table('servers')
     op.drop_table('profile_images')
     op.drop_table('chat_room_users')
     op.drop_table('chat_room_messages')
+    op.drop_table('channels')
     op.drop_table('users')
+    op.drop_table('servers')
     op.drop_table('chat_rooms')
     # ### end Alembic commands ###
