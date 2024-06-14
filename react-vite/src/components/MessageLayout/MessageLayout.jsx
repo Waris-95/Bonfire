@@ -125,7 +125,7 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
             dispatch(fetchChannelMessagesThunk(channelId));
         };
     
-        const intervalId = setInterval(fetchMessages, 100);
+        const intervalId = setInterval(fetchMessages, 5000);
     
         // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(intervalId);
