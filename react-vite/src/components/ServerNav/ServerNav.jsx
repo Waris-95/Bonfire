@@ -43,7 +43,7 @@ export default function ServerNav({ servers, setActiveServerId, activeChannelId,
     //     })
     // }, [servers])
 
-    const serverElements = useMemo(() => servers.map((server) => {
+    const serverElements = useMemo(() => servers?.map((server) => {
         // return (
         //     <ServerIcon key={server.id} image={isValidImage[index] ? server?.server_images[0]?.url : IMAGE_PLACEHOLDER} id={server.id} setActiveServerId={setActiveServerId} activeChannelId={activeChannelId} setPrevChannelId={setPrevChannelId} />
         // )

@@ -4,6 +4,7 @@ import styles from "./ServerViewLayout.module.css"
 import { useState, useEffect, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchAllServersThunk } from "../../redux/server"
+import { fetchChannelsForServerIdThunk } from "../../redux/channel"
 import { fetchCurrentUser } from "../../redux/serverUser"
 import SignupFormPage from "../SignupFormPage/SignupFormPage"
 // import LoginFormModal from "../LoginFormModal/LoginFormModal"
@@ -31,6 +32,7 @@ export default function ServerViewLayout(){
     
     useEffect(() => {
         dispatch(fetchAllServersThunk());
+        dispatch(fetchChannelsForServerIdThunk(activeServerId))
         dispatch(fetchCurrentUser())
     }, [dispatch, activeServerId])
 
