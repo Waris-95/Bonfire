@@ -91,9 +91,9 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
     // const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
     const [messages, setMessages] = useState([])
 
-    useEffect(() => {
-        setMessages(defaultMessages)
-    }, [defaultMessages])
+    // useEffect(() => {
+    //     setMessages(defaultMessages)
+    // }, [defaultMessages])
 
     useEffect(() => {
         socket = io(URL);
@@ -120,16 +120,16 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
         })
     }, [dispatch]);
 
-    useEffect(() => {
-        const fetchMessages = () => {
-            dispatch(fetchChannelMessagesThunk(channelId));
-        };
+    // useEffect(() => {
+    //     const fetchMessages = () => {
+    //         dispatch(fetchChannelMessagesThunk(channelId));
+    //     };
     
-        const intervalId = setInterval(fetchMessages, 5000);
+    //     const intervalId = setInterval(fetchMessages, 5000);
     
-        // Cleanup function to clear the interval when the component unmounts
-        return () => clearInterval(intervalId);
-    }, [dispatch, channelId]);
+    //     // Cleanup function to clear the interval when the component unmounts
+    //     return () => clearInterval(intervalId);
+    // }, [dispatch, channelId]);
 
     useEffect(() => {
         socket.emit('leave', { room: prevChannelId })
