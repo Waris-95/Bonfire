@@ -29,6 +29,9 @@ def seed_data():
         ProfileImage(url='https://i.pinimg.com/736x/eb/ae/0e/ebae0e4403a3c8d5ed8dcce05000f744.jpg', user_id=5)
     ]
 
+    db.session.add_all(profile_images)
+    db.session.commit()
+
     servers = [
         Server(name='Server1', description='First server', owner_id=1, created_at=datetime.now(), updated_at=datetime.now()),
         Server(name='Server2', description='Second server', owner_id=2, created_at=datetime.now(), updated_at=datetime.now()),
@@ -36,6 +39,9 @@ def seed_data():
         Server(name='Server4', description='Fourth server', owner_id=4, created_at=datetime.now(), updated_at=datetime.now()),
         Server(name='Server5', description='Fifth server', owner_id=5, created_at=datetime.now(), updated_at=datetime.now())
     ]
+
+    db.session.add_all(servers)
+    db.session.commit()
 
     server_images = [
         ServerImage(url='http://example.com/server1.jpg', server_id=1),
@@ -45,6 +51,9 @@ def seed_data():
         ServerImage(url='http://example.com/server5.jpg', server_id=5)
     ]
 
+    db.session.add_all(server_images)
+    db.session.commit()
+
     server_users = [
         ServerUser(user_id=1, server_id=1, created_at=datetime.now(), updated_at=datetime.now()),
         ServerUser(user_id=2, server_id=2, created_at=datetime.now(), updated_at=datetime.now()),
@@ -52,7 +61,10 @@ def seed_data():
         ServerUser(user_id=4, server_id=4, created_at=datetime.now(), updated_at=datetime.now()),
         ServerUser(user_id=5, server_id=5, created_at=datetime.now(), updated_at=datetime.now())
     ]
-    
+
+    db.session.add_all(server_users)
+    db.session.commit()
+
     chat_rooms = [
         ChatRoom(name="super awesome chat"),
         ChatRoom(name="super average chat"),
@@ -60,6 +72,9 @@ def seed_data():
         ChatRoom(name="super fun chat"),
         ChatRoom(name="super boring chat")
     ]
+
+    db.session.add_all(chat_rooms)
+    db.session.commit()
 
     channels = [
         Channel(name='Channel1', server_id=1, owner_id=1),
@@ -69,6 +84,9 @@ def seed_data():
         Channel(name='Channel5', server_id=5, owner_id=5)
     ]
 
+    db.session.add_all(channels)
+    db.session.commit()
+
     channel_messages = [
         ChannelMessage(user_id=1, channel_id=1, text_field='Hello, world!'),
         ChannelMessage(user_id=2, channel_id=2, text_field='Hi there!'),
@@ -77,6 +95,9 @@ def seed_data():
         ChannelMessage(user_id=5, channel_id=5, text_field='Good night!')
     ]
 
+    db.session.add_all(channel_messages)
+    db.session.commit()
+
     chat_room_messages = [
         ChatRoomMessage(user_id=1, chat_room_id=1, text_field='Hello, universe!'),
         ChatRoomMessage(user_id=2, chat_room_id=2, text_field='Hi there!'),
@@ -84,6 +105,9 @@ def seed_data():
         ChatRoomMessage(user_id=4, chat_room_id=4, text_field='How\'s it going!'),
         ChatRoomMessage(user_id=5, chat_room_id=5, text_field='Hey!')
     ]
+
+    db.session.add_all(chat_room_messages)
+    db.session.commit()
 
     message_images = [
         MessageImage(url='http://example.com/message1.jpg', resource_type='channel', channel_message_id=1),
@@ -98,6 +122,9 @@ def seed_data():
         MessageImage(url='http://example.com/message10.jpg', resource_type='chat_room', chat_room_message_id=5)
     ]
 
+    db.session.add_all(message_images)
+    db.session.commit()
+
     reactions = [
         Reaction(channel_message_id=1, resource_type='channel', emoji='😀', count=1),
         Reaction(channel_message_id=2, resource_type='channel', emoji='😁', count=1),
@@ -111,6 +138,9 @@ def seed_data():
         Reaction(chat_room_message_id=5, resource_type='chat_room', emoji='😊', count=1)
     ]
 
+    db.session.add_all(reactions)
+    db.session.commit()
+
     user_reactions = [
         UserReaction(user_id=1, reaction_id=1),
         UserReaction(user_id=2, reaction_id=2),
@@ -118,6 +148,9 @@ def seed_data():
         UserReaction(user_id=4, reaction_id=4),
         UserReaction(user_id=5, reaction_id=5)
     ]
+
+    db.session.add_all(user_reactions)
+    db.session.commit()
 
     chat_room_users = [
         ChatRoomUser(user_id=1, chat_room_id=1),
@@ -127,10 +160,7 @@ def seed_data():
         ChatRoomUser(user_id=5, chat_room_id=5)
     ]
 
-    db.session.add_all(profile_images + servers + server_images + server_users + chat_rooms +
-                       channels + channel_messages + chat_room_messages + message_images + 
-                       reactions + user_reactions + chat_room_users)
-
+    db.session.add_all(chat_room_users)
     db.session.commit()
 
 # Uses a raw SQL query to TRUNCATE or DELETE the users table. SQLAlchemy doesn't
