@@ -64,6 +64,7 @@ export const getUsersForServerId = async (serverId) => {
     // };
 
     export const getChannelMessages = async (channelId) => {
+        console.log("FETCHING CHANNEL MESSAGES 2", channelId)
         const res = await fetch(`/api/channels/${channelId}/messages`)
             .then(res => res.json())
             .catch(e => console.error(e))

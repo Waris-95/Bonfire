@@ -50,9 +50,9 @@ export const removeReaction = (messageId, reactionId) => ({
 
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
-    console.log("FETCHING CHANNEL MESSAGES", channelId)
+    console.log("FETCHING CHANNEL MESSAGES 1", channelId)
     const res = await getChannelMessages(channelId);
-    console.log("FETCHING CHANNEL MESSAGES", res)
+    console.log("FETCHING CHANNEL MESSAGES 3", res)
     dispatch(loadMessages(res));
 };
 
@@ -111,7 +111,7 @@ const messageReducer = (state = initialState, action) => {
             action.messages.forEach((message) => {
                 messagesState[message.message_id] = message;
             })
-            console.log("FETCHING CHANNEL MESSAGES", messagesState)
+            console.log("FETCHING CHANNEL MESSAGES 4", messagesState)
             return messagesState;
         }
         case ADD_MESSAGE: {
