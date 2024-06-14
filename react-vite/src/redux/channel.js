@@ -22,7 +22,10 @@ export const removeChannel = (channelId) => ({
 
 // ================= THUNKS ================= 
 export const fetchChannelsForServerIdThunk = (id) => async (dispatch) => {
+    console.log("FETCHING CHANNELS FOR SERVER ID 1", id)
     const res = await getChannelsForServerId(id);
+    console.log("FETCHING CHANNELS FOR SERVER ID 3", res)
+
     dispatch(loadChannels(res));
 }
 
@@ -57,6 +60,7 @@ const channelReducer = (state = {}, action) => {
             action.channels.forEach((channel) => {
                 channelsState[channel.id] = channel;
             })
+            console.log("FETCHING CHANNELS FOR SERVER ID 4", channelsState)
             return channelsState;
         }
 

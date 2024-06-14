@@ -1,5 +1,6 @@
 
 export const getAllServers = async () => {
+    console.log("FETCH ALL SERVERS 2")
     const res = await fetch(`/api/servers/`)
     .then(res => res.json())
         .catch(e => console.error(e))
@@ -7,6 +8,7 @@ export const getAllServers = async () => {
 }
 
 export const getChannelsForServerId = async (serverId) => {
+    console.log("FETCHING CHANNELS FOR SERVER ID 2", serverId)
     const res = await fetch(`/api/servers/${serverId}/channels`)
     .then(res => res.json())
         .catch(e => console.error(e))

@@ -27,7 +27,9 @@ export const clearServerDetails = () => ({
 
 // ================= THUNKS ================= 
 export const fetchAllServersThunk = () => async (dispatch) => {
+    console.log("FETCH ALL SERVERS 1")
     const res = await getAllServers();
+    console.log("FETCH ALL SERVERS 1", res)
     dispatch(loadServers(res))
 }
 
@@ -56,6 +58,7 @@ const serverReducer = (state = {}, action) => {
             action.servers.forEach((server) => {
                 serversState[server.id] = server;
             })
+            console.log("FETCH ALL SERVERS 4", serversState)
             return serversState;
         }
 
