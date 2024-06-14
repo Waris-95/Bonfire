@@ -18,6 +18,9 @@ def seed_data():
         User(username='user5', email='user5@example.com', hashed_password='hashed_password_5', role='user', created_at=datetime.now(), updated_at=datetime.now())
     ]
 
+    db.session.add_all(users)
+    db.session.commit()
+
     profile_images = [
         ProfileImage(url='https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x4.jpg', user_id=1),
         ProfileImage(url='https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg', user_id=2),
@@ -124,7 +127,7 @@ def seed_data():
         ChatRoomUser(user_id=5, chat_room_id=5)
     ]
 
-    db.session.add_all(users + profile_images + servers + server_images + server_users + chat_rooms +
+    db.session.add_all(profile_images + servers + server_images + server_users + chat_rooms +
                        channels + channel_messages + chat_room_messages + message_images + 
                        reactions + user_reactions + chat_room_users)
 
