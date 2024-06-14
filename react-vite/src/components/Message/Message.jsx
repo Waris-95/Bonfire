@@ -28,14 +28,14 @@ export default function Message({ message, date, name, img = "https://t4.ftcdn.n
                 emojis[v.emoji].push({
                     'emoji': v.emoji,
                     'reaction_id': v.reaction_id,
-                    'user_id': v.user_reactions[0]?.user_id,
+                    // 'user_id': v.user_reactions[0]?.user_id,
                     'channel_message_id': message.message_id
                 })
             } else {
                 emojis[v.emoji] = [{
                     'emoji': v.emoji,
                     'reaction_id': v.reaction_id,
-                    'user_id': v.user_reactions[0]?.user_id,
+                    // 'user_id': v.user_reactions[0]?.user_id,
                     'channel_message_id': message.message_id
                 }]
             }

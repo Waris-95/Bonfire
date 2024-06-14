@@ -15,7 +15,9 @@ let socket;
 export default function MessageLayout({ defaultMessages, channelId, prevChannelId, currentUser }) {
     const dispatch = useDispatch()
     // const currentUser = Object.values(useSelector((state) => state.currentUser))[0];
-    const [messages, setMessages] = useState([])
+    // const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState(defaultMessages)
+    console.log("GETTING MESSAGES", messages)
 
     useEffect(() => {
         setMessages(defaultMessages)
