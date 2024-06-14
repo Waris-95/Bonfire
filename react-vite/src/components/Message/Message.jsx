@@ -8,6 +8,7 @@ import { useState } from "react"
 export default function Message({ message, date, name, img = "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg", currentUser, onEdit, onDelete}){
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(message?.text_field || '');
+    console.log("GETTING ONE MESSAGE", message)
 
 
     const handleEdit = () => {
@@ -28,14 +29,14 @@ export default function Message({ message, date, name, img = "https://t4.ftcdn.n
                 emojis[v.emoji].push({
                     'emoji': v.emoji,
                     'reaction_id': v.reaction_id,
-                    'user_id': v.user_reactions[0]?.user_id,
+                    // 'user_id': v.user_reactions[0]?.user_id,
                     'channel_message_id': message.message_id
                 })
             } else {
                 emojis[v.emoji] = [{
                     'emoji': v.emoji,
                     'reaction_id': v.reaction_id,
-                    'user_id': v.user_reactions[0]?.user_id,
+                    // 'user_id': v.user_reactions[0]?.user_id,
                     'channel_message_id': message.message_id
                 }]
             }

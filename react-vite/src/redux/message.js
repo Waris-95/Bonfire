@@ -50,7 +50,9 @@ export const removeReaction = (messageId, reactionId) => ({
 
 // ================= THUNKS ================= 
 export const fetchChannelMessagesThunk = (channelId) => async (dispatch) => {
+    console.log("FETCHING CHANNEL MESSAGES", channelId)
     const res = await getChannelMessages(channelId);
+    console.log("FETCHING CHANNEL MESSAGES", res)
     dispatch(loadMessages(res));
 };
 
@@ -104,34 +106,12 @@ const initialState = {};
 
 const messageReducer = (state = initialState, action) => {
     switch (action.type) {
-        // case LOAD_MESSAGES: {
-        //     const newState = {};
-        //     action.messages.forEach((message) => {
-        //         if (!newState[message.channel_id]) {
-        //             newState[message.channel_id] = [];
-        //         }
-        //         newState[message.channel_id].push({
-        //             ...message,
-        //             reactions: message.reactions || []  // Ensure reactions is initialized
-        //         });
-        //     });
-        //     return newState;
-        // }
-        // case ADD_MESSAGE: {
-        //     const newState = { ...state };
-        //     const channelMessages = newState[action.message.channel_id] || [];
-        //     channelMessages.push({
-        //         ...action.message,
-        //         reactions: action.message.reactions || []  // Ensure reactions is initialized
-        //     });
-        //     newState[action.message.channel_id] = channelMessages;
-        //     return newState;
-        // }
         case LOAD_MESSAGES: {
             const messagesState = {};
             action.messages.forEach((message) => {
-                messagesState[message.message_id] = message;
+                messagesState[message.id] = message;
             })
+            console.log("FETCHING CHANNEL MESSAGES", messagesState)
             return messagesState;
         }
         case ADD_MESSAGE: {
