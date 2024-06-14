@@ -15,21 +15,26 @@ import UserList from "../UserList/UserList"
 
 export default function ServerView({ activeServerId, activeServer, activeChannelId, setActiveChannelId, prevChannelId, setPrevChannelId, currentUser }) {
     const dispatch = useDispatch()
-    const channels = Object.values(useSelector((state) => state.channels));
+    // const channels = Object.values(useSelector((state) => state.channels));
     const messages = Object.values(useSelector((state) => state.messages));
     const serverUsers = Object.values(useSelector((state) => state.serverUsers));
-    const activeChannel = useMemo(() => channels.filter(channel => channel.id === activeChannelId)[0], [activeChannelId, channels]);
+    const activeChannel = useMemo(() => activeServer?.channels.filter(channel => channel.id === activeChannelId)[0], [activeChannelId, activeServer?.channels]);
     console.log("GET ALL MESSAGES", messages)
     console.log("GET SERVER USERS", serverUsers)
+    console.log("ACTIVE SERVER", activeServer)
+    console.log("ACTIVE SERVER ID", activeServerId)
+    console.log("ACTIVE CHANNEL", activeChannel)
+    console.log("ACTIVE CHANNEL MESSAGES", activeChannel?.channel_messages)
+    // console.log("ACTIVE SERVER MESSAGES", activeServer?)
     // const currentUser = Object.values(useSelector((state) => state.currentUser));
     // const currentServer = useSelector((state) => state.servers[`${activeServerId}`]);
     // const activeChannel = useSelector((state) => state.channels[`${activeChannelId}`]);
 
-    useEffect(() => {
-        dispatch(fetchChannelsForServerIdThunk(activeServerId));
-        dispatch(fetchChannelMessagesThunk(activeChannelId))
-        dispatch(fetchServerUsersThunk(activeServerId))
-    }, [dispatch, activeServerId, activeChannelId])
+    // useEffect(() => {
+    //     dispatch(fetchChannelsForServerIdThunk(activeServerId));
+    //     dispatch(fetchChannelMessagesThunk(activeChannelId))
+    //     dispatch(fetchServerUsersThunk(activeServerId))
+    // }, [dispatch, activeServerId, activeChannelId])
 
     // useEffect(() => {
     //     // This is responsible for changing the active channel when the server changes
@@ -39,7 +44,8 @@ export default function ServerView({ activeServerId, activeServer, activeChannel
     return (
         <section className={styles.serverView}>
             <ChannelNav 
-                channels={channels} 
+                // channels={channels}
+                channels={activeServer?.channels} 
                 activeChannel={activeChannel} 
                 setActiveChannel={setActiveChannelId} 
                 setPrevChannel={setPrevChannelId} 
@@ -51,7 +57,7 @@ export default function ServerView({ activeServerId, activeServer, activeChannel
                 activeServer={activeServer}
             />
             <MessageLayout 
-                defaultMessages={messages} 
+                defaultMessages={activeChannel?.channel_messages}
                 channelId={activeChannelId} 
                 prevChannelId={prevChannelId}
                 currentUser={currentUser}

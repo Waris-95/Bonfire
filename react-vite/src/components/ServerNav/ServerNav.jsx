@@ -10,19 +10,19 @@ import ServerIcon from "./components/ServerIcon";
 import { AiFillFire } from "react-icons/ai";
 import { CiCirclePlus } from "react-icons/ci";
 
-const IMAGE_PLACEHOLDER = "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg"
+// const IMAGE_PLACEHOLDER = "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg"
 
 export default function ServerNav({ servers, setActiveServerId, activeChannelId, setPrevChannelId }){
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     // const [isValidImage, setIsValidImage] = useState([])
 
-    useEffect(() => {
-        dispatch(fetchAllServersThunk());
+    // useEffect(() => {
+    //     dispatch(fetchAllServersThunk());
 
-        return () => {
-            dispatch(clearServerDetails());
-        }
-    }, [dispatch]);
+    //     return () => {
+    //         dispatch(clearServerDetails());
+    //     }
+    // }, [dispatch]);
 
     // useEffect(() => {
     //     const promises = servers.map(server => {

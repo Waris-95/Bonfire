@@ -147,7 +147,8 @@ class Channel(db.Model):
             'id': self.id,
             'name': self.name,
             'server_id': self.server_id,
-            'owner_id': self.owner_id
+            'owner_id': self.owner_id,
+            'channel_messages': [message.to_dict() for message in self.messages]
         }
 
 class ChannelMessage(db.Model):

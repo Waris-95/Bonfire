@@ -29,7 +29,7 @@ export const clearServerDetails = () => ({
 export const fetchAllServersThunk = () => async (dispatch) => {
     console.log("FETCH ALL SERVERS 1")
     const res = await getAllServers();
-    console.log("FETCH ALL SERVERS 1", res)
+    console.log("FETCH ALL SERVERS 3", res)
     dispatch(loadServers(res))
 }
 

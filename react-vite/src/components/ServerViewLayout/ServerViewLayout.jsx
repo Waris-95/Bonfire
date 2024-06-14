@@ -23,6 +23,11 @@ export default function ServerViewLayout(){
     const servers = Object.values(useSelector((state) => state.servers));
     const activeServer = useMemo(() => servers.filter(server => server.id === activeServerId)[0], [activeServerId, servers]);
     const currentUser = Object.values(useSelector((state) => state.currentUser));
+    console.log("DATA ALL SERVERS", servers)
+    console.log("DATA SERVER CHANNELS", servers[0]?.channels)
+    console.log("DATA SERVER USERS", servers[0]?.users)
+    console.log("DATA SERVER CHANNEL MESSAGES", servers[0]?.channels[0]?.channel_messages)
+    console.log("DATA SERVER CHANNEL MESSAGES", servers[0]?.channels[0]?.channel_messages[0])
     
     useEffect(() => {
         dispatch(fetchAllServersThunk());
@@ -48,7 +53,7 @@ export default function ServerViewLayout(){
                 />
                 <section className={styles.main}>
                     <div className={styles.channel_view}>
-                        <ServerView 
+                        <ServerView
                             activeServerId={activeServerId}
                             activeServer={activeServer}
                             currentUser={currentUser}

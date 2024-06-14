@@ -10,6 +10,7 @@ server = Blueprint("servers", __name__, url_prefix="")
 @login_required
 def get_all_servers():
     servers = Server.query.all()
+    print("ALL SERVERS", [server.to_dict() for server in servers])
     return [server.to_dict() for server in servers]
 
 #GET A SERVER BY IT'S ID

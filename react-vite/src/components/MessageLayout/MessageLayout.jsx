@@ -80,7 +80,7 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
     //     dispatch(deleteMessageThunk(messageId, channelId));
     // }
 
-    const messageElements = useMemo(() => messages.map((message) => {
+    const messageElements = useMemo(() => messages?.map((message) => {
         const { user } = message;
         const handleEditMessage = (messageId, newText, channelId) => {
             dispatch(updateMessageThunk(messageId, newText, channelId));
