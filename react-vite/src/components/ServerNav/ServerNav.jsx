@@ -14,7 +14,7 @@ const IMAGE_PLACEHOLDER = "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t
 
 export default function ServerNav({ servers, setActiveServerId, activeChannelId, setPrevChannelId }){
     const dispatch = useDispatch();
-    const [isValidImage, setIsValidImage] = useState([])
+    // const [isValidImage, setIsValidImage] = useState([])
 
     useEffect(() => {
         dispatch(fetchAllServersThunk());
@@ -24,30 +24,33 @@ export default function ServerNav({ servers, setActiveServerId, activeChannelId,
         }
     }, [dispatch]);
 
-    useEffect(() => {
-        const promises = servers.map(server => {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = function() {
-                    resolve(true);
-                };
-                img.onerror = function() {
-                    resolve(false);
-                };
-                img.src = server.server_images[0]?.url
-            });
-        })
+    // useEffect(() => {
+    //     const promises = servers.map(server => {
+    //         return new Promise((resolve) => {
+    //             const img = new Image();
+    //             img.onload = function() {
+    //                 resolve(true);
+    //             };
+    //             img.onerror = function() {
+    //                 resolve(false);
+    //             };
+    //             img.src = server.server_images[0]?.url
+    //         });
+    //     })
 
-        Promise.all(promises).then(res => {
-            setIsValidImage(res)
-        })
-    }, [servers])
+    //     Promise.all(promises).then(res => {
+    //         setIsValidImage(res)
+    //     })
+    // }, [servers])
 
-    const serverElements = useMemo(() => servers.map((server, index) => {
+    const serverElements = useMemo(() => servers.map((server) => {
+        // return (
+        //     <ServerIcon key={server.id} image={isValidImage[index] ? server?.server_images[0]?.url : IMAGE_PLACEHOLDER} id={server.id} setActiveServerId={setActiveServerId} activeChannelId={activeChannelId} setPrevChannelId={setPrevChannelId} />
+        // )
         return (
-            <ServerIcon key={server.id} image={isValidImage[index] ? server?.server_images[0]?.url : IMAGE_PLACEHOLDER} id={server.id} setActiveServerId={setActiveServerId} activeChannelId={activeChannelId} setPrevChannelId={setPrevChannelId} />
+            <ServerIcon key={server.id} id={server.id} setActiveServerId={setActiveServerId} activeChannelId={activeChannelId} setPrevChannelId={setPrevChannelId} />
         )
-    }), [servers, setActiveServerId, isValidImage, activeChannelId, setPrevChannelId])
+    }), [servers, setActiveServerId, activeChannelId, setPrevChannelId])
 
     return (
         <aside className={styles.serverNav}>

@@ -64,7 +64,7 @@ export default function Message({ message, date, name, img = "https://t4.ftcdn.n
     currUserReactions(currentUser[0]?.id)    
     return (
         <article className={styles.message}>
-            <img className={styles.profile_picture} src={img} />
+            {/* <img className={styles.profile_picture} src={img} /> */}
             <div>
                 <div className={styles.userDetails}>
                     <h5 className={styles.userName}>{name}</h5>
