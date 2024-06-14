@@ -3,11 +3,12 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { fetchChannelsForServerIdThunk, addNewChannel } from "../../redux/channel";
 
-function ChannelModal({ activeServerId }) {
+function ChannelModal({ activeServerId, serverChannels }) {
     const dispatch = useDispatch();
     const [channelName, setChannelName] = useState("");
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
+    console.log("CHECKING SERVER CHANNELS", serverChannels)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,13 +21,16 @@ function ChannelModal({ activeServerId }) {
             addNewChannel(newChannel, activeServerId)
         );
 
+        console.log("CHANNEL RESPONSE", channelResponse)
+
         if (channelResponse) {
             setErrors(channelResponse);
         } else {
+            // setServerChannels([...serverChannels, channelResponse])
+            await dispatch(fetchChannelsForServerIdThunk(activeServerId))
             closeModal()
         }
 
-        await dispatch(fetchChannelsForServerIdThunk(activeServerId))
 
     }
 
