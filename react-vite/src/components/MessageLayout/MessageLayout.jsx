@@ -109,16 +109,27 @@ export default function MessageLayout({ defaultMessages, channelId, prevChannelI
             // }
 
             // setMessages(messages => [...messages, newMessage])
-            // dispatch(fetchChannelMessagesThunk(data.room))
-            setTimeout(() => {
-                dispatch(fetchChannelMessagesThunk(data.room));
-            }, 100);
+            dispatch(fetchChannelMessagesThunk(data.room))
+            // setTimeout(() => {
+            //     dispatch(fetchChannelMessagesThunk(data.room));
+            // }, 100);
         })
 
         return (() => {
             socket.disconnect()
         })
     }, [dispatch]);
+
+    useEffect(() => {
+        const fetchMessages = () => {
+            dispatch(fetchChannelMessagesThunk(channelId));
+        };
+    
+        const intervalId = setInterval(fetchMessages, 2000);
+    
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, [dispatch, channelId]);
 
     useEffect(() => {
         socket.emit('leave', { room: prevChannelId })
