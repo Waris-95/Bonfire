@@ -26,8 +26,6 @@ function ChannelModal({ activeServerId, serverChannels }) {
         if (channelResponse) {
             setErrors(channelResponse);
         } else {
-            // setServerChannels([...serverChannels, channelResponse])
-            await dispatch(fetchChannelsForServerIdThunk(activeServerId))
             closeModal()
         }
 
