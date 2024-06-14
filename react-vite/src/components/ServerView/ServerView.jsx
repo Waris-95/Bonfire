@@ -1,7 +1,7 @@
 import styles from "./ServerView.module.css"
 
 // Util
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchChannelsForServerIdThunk } from "../../redux/channel"
 import { fetchChannelMessagesThunk } from "../../redux/message"
@@ -57,20 +57,4 @@ export default function ServerView({ activeServerId, activeServer, activeChannel
             <UserList users={serverUsers} />
         </section>
     )
-
-    // return (
-    //     <section className={styles.serverView}>
-    //         <ChannelNav 
-    //             channels={channels} 
-    //             setActiveChannel={setActiveChannelId} 
-    //             activeServerId={activeServerId}
-    //             currentUser={currentUser}
-    //             currentServerOwner={currentServer?.owner_id}
-    //             activeServer={activeServer}
-    //         />
-    //         <HeaderInfo activeServerId={activeServerId}/>
-    //         <MessageLayout defaultMessages={messages} channelId={activeChannel?.id} />
-    //         <UserList users={serverUsers} />
-    //     </section>
-    // )
 }

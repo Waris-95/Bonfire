@@ -1,5 +1,4 @@
 import styles from "./HeaderInfo.module.css"
-import { useSelector } from 'react-redux';
 import { FaCode } from "react-icons/fa"
 import { FaGear } from "react-icons/fa6";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
