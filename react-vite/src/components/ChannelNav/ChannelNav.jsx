@@ -74,7 +74,7 @@ export default function ChannelNav({ channels, activeChannel, setActiveChannel, 
 
     useEffect(() => {
         setChannelState(channels)
-        fetchChannelsForServerIdThunk(activeServer?.id)
+        // fetchChannelsForServerIdThunk(activeServer?.id)
     }, [channels, activeServer?.id])
 
     return (

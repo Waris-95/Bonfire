@@ -21,12 +21,23 @@ export const removeChannel = (channelId) => ({
 })
 
 // ================= THUNKS ================= 
+// export const fetchChannelsForServerIdThunk = (id) => async (dispatch) => {
+//     console.log("FETCHING CHANNELS FOR SERVER ID 1", id)
+//     const res = await getChannelsForServerId(id);
+//     console.log("FETCHING CHANNELS FOR SERVER ID 3", res)
+
+//     dispatch(loadChannels(res));
+// }
+
 export const fetchChannelsForServerIdThunk = (id) => async (dispatch) => {
     console.log("FETCHING CHANNELS FOR SERVER ID 1", id)
-    const res = await getChannelsForServerId(id);
-    console.log("FETCHING CHANNELS FOR SERVER ID 3", res)
-
-    dispatch(loadChannels(res));
+    const res = await fetch(`/api/servers/${id}/channels`);
+    
+    if (res.ok) {
+        const channels = await res.json()
+        console.log("FETCHING CHANNELS FOR SERVER ID 2", channels)
+        dispatch(loadChannels(channels))
+    }
 }
 
 export const addNewChannel = (channel, serverId) => async (dispatch) => {
@@ -60,7 +71,7 @@ const channelReducer = (state = {}, action) => {
             action.channels.forEach((channel) => {
                 channelsState[channel.id] = channel;
             })
-            console.log("FETCHING CHANNELS FOR SERVER ID 4", channelsState)
+            console.log("FETCHING CHANNELS FOR SERVER ID 3", channelsState)
             return channelsState;
         }
 

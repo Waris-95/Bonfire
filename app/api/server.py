@@ -131,13 +131,8 @@ def create_new_channel(server_id):
         db.session.add(new_channel)
         db.session.commit()
 
-        results = db.session.query(Channel).filter(Channel.id == new_channel.id)
-        channel_data = []
-        for channel in results:
-            channel_dict = channel.to_dict()
-            channel_data.append(channel_dict)
-            
-        return channel_data[0]
+        print("NEW CHANNEL", jsonify(new_channel.to_dict()))    
+        return jsonify(new_channel.to_dict())
     else:
         return form.errors, 401
     
