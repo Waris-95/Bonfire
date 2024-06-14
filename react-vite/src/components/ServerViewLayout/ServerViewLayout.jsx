@@ -32,9 +32,9 @@ export default function ServerViewLayout(){
     
     useEffect(() => {
         dispatch(fetchAllServersThunk());
-        // dispatch(fetchChannelsForServerIdThunk(activeServerId))
+        dispatch(fetchChannelsForServerIdThunk(activeServerId))
         dispatch(fetchCurrentUser())
-    }, [dispatch])
+    }, [dispatch, activeServerId])
 
 
     if (!currentUser[0]?.id) {

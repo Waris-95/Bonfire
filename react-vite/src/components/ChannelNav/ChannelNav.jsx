@@ -57,8 +57,10 @@ import { FaGear } from "react-icons/fa6";
 
 export default function ChannelNav({ channels, activeChannel, setActiveChannel, setPrevChannel, activeServer, currentUser }){
     const channelsRedux = Object.values(useSelector((state) => state.channels))
+    const [channelState, setChannelState] = useState(channels)
+    console.log("CHANNELS INITIAL", channels)
     console.log("CHANNELS REDUX", channelsRedux)
-    const [serverChannels, setServerChannels] = useState(channels);
+    console.log("CHANNELS STATE", channelState)
 
     const channelElements = useMemo(() => channelsRedux?.map(channel => (
         <>
@@ -71,8 +73,9 @@ export default function ChannelNav({ channels, activeChannel, setActiveChannel, 
     )), [channelsRedux, activeChannel, setActiveChannel, setPrevChannel, currentUser, activeServer?.id, activeServer?.owner_id])
 
     useEffect(() => {
-        setServerChannels(serverChannels)
-    }, [serverChannels])
+        setChannelState(channels)
+        fetchChannelsForServerIdThunk(activeServer?.id)
+    }, [channels, activeServer?.id])
 
     return (
         <aside className={styles.channelNav}>
@@ -86,7 +89,6 @@ export default function ChannelNav({ channels, activeChannel, setActiveChannel, 
                     buttonText={<GoPlus />}
                     modalComponent={<ChannelModal
                                         serverChannels={channelsRedux}
-                                        setServerChannels={setServerChannels}
                                         activeServerId={activeServer?.id}/>}
                                     />
             </div>
