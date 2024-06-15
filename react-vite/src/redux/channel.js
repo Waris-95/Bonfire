@@ -1,4 +1,5 @@
 import { getChannelsForServerId, addChannel, updateChannel, deleteChannel } from "../utils/api"
+import { createSelector } from 'reselect';
 
 export const LOAD_CHANNELS = 'channels/LOAD_CHANNELS'
 export const LOAD_ONE_CHANNEL = 'channels/LOAD_ONE_CHANNEL'
@@ -62,6 +63,16 @@ export const deleteAChannel = (channelId) => async (dispatch) => {
         dispatch(removeChannel(res))
     }
 }
+
+//=================SELECTORS=================
+
+export const getChannelsArr = createSelector(
+    (state) => state.channels,
+    (channel) => {
+        console.log("CHANNELS SELECTOR", channel)
+        return Object.values(channel)
+    }
+);
 
 // ================= REDUCER ================= 
 const channelReducer = (state = {}, action) => {

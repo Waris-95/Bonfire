@@ -5,6 +5,13 @@ from app.forms import NewServerForm, NewChannelForm
 
 server = Blueprint("servers", __name__, url_prefix="")
 
+#INITIAL LOAD
+@server.route("/init")
+@login_required
+def init_load():
+    servers = Server.query.all()
+    return [server.to_dict() for server in servers]
+
 #GET ALL SERVERS
 @server.route("/")
 @login_required

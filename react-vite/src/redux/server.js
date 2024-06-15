@@ -50,6 +50,14 @@ export const deleteAServer = (serverId) => async dispatch => {
     dispatch(removeServer(res))
 }
 
+// export const startUpThunk = () => async (dispatch) => {
+//     const res = await fetch("/api/servers/init");
+//     if (res.ok) {
+//         const data = await res.json();
+//         console.log("INITIAL LOAD DATA", data)
+//     }
+// }
+
 // ================= REDUCER ================= 
 const serverReducer = (state = {}, action) => {
     switch (action.type) {

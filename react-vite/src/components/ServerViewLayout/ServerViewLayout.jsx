@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchAllServersThunk } from "../../redux/server"
 import { fetchChannelsForServerIdThunk } from "../../redux/channel"
+import { fetchChannelMessagesThunk } from "../../redux/message"
 import { fetchCurrentUser } from "../../redux/serverUser"
 import SignupFormPage from "../SignupFormPage/SignupFormPage"
 // import LoginFormModal from "../LoginFormModal/LoginFormModal"
@@ -33,8 +34,9 @@ export default function ServerViewLayout(){
     useEffect(() => {
         dispatch(fetchAllServersThunk());
         dispatch(fetchChannelsForServerIdThunk(activeServerId))
+        dispatch(fetchChannelMessagesThunk(activeChannelId))
         dispatch(fetchCurrentUser())
-    }, [dispatch, activeServerId])
+    }, [dispatch, activeServerId, activeChannelId])
 
 
     if (!currentUser[0]?.id) {
