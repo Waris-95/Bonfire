@@ -141,6 +141,8 @@ class ChannelMessage(db.Model):
             'user_id': self.user_id,
             'channel_id': self.channel_id,
             'text_field': self.text_field,
+            'message_images': [message_image.to_dict() for message_image in self.message_images],
+            'reactions': [reaction.to_dict() for reaction in self.reactions]
         }
 
 class ChatRoomMessage(db.Model):

@@ -25,7 +25,6 @@ export const fetchCurrentUser = () => async (dispatch) => {
     dispatch(loadCurrentUser(res))
 }
 
-
 // ================= REDUCER ================= 
 const serverUserReducer = (state = {}, action) => {
     switch (action.type) {
