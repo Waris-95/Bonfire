@@ -1,8 +1,22 @@
-# Flask React Project
+# Bonfire
 
-This is the starter for the Flask React project.
+Bonfire is a lite version clone of Discord, where a user can create servers, channels and send messages. 
+
+# Technoligies Used
+* Javascript
+* Python
+* Render
+* PostGres
+* CSS3
+* Redux
+* HTML5
+* Socket.io
+* Docker
+
 
 ## Getting started
+
+To run this project locally you can run the following commands
 
 1. Clone this repository (only this branch).
 
