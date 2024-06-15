@@ -126,6 +126,7 @@ class ServerUser(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
+            'username': self.username,
             'server_id': self.server_id
         }
 

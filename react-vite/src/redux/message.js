@@ -118,21 +118,6 @@ const messageReducer = (state = initialState, action) => {
         case ADD_MESSAGE: {
             return { ...state, [action.message.message_id]: action.message};
         }
-        // case UPDATE_MESSAGE: {
-        //     const newState = { ...state };
-        //     const channelMessages = newState[action.message.channel_id].map(msg =>
-        //         msg.id === action.message.id ? {
-        //             ...msg,
-        //             ...action.message,
-        //             reactions: action.message.reactions || msg.reactions || []  // Ensure reactions is initialized
-        //         } : msg
-        //     );
-        //     newState[action.message.channel_id] = channelMessages;
-        //     return newState;
-        // }
-        // case UPDATE_MESSAGE: {
-        //     return { ...state, [action.message.message_id]: action.message};
-        // }
         case DELETE_MESSAGE: {
             const newState = { ...state };
             const channelMessages = newState[action.channelId].filter(msg =>
