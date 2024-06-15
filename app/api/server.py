@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import Server, db, Channel, ServerImage, User
+from app.models import Server, db, Channel, ServerImage, User, ServerUser
 from app.forms import NewServerForm, NewChannelForm
+from sqlalchemy.orm import joinedload
 
 server = Blueprint("servers", __name__, url_prefix="")
 
@@ -9,7 +10,14 @@ server = Blueprint("servers", __name__, url_prefix="")
 @server.route("/")
 @login_required
 def get_all_servers():
-    servers = Server.query.all()
+    servers = (
+        db.session.query(Server)
+            .options(
+                joinedload(Server.users).joinedload(ServerUser.user)
+            )
+            .all()
+    )
+    
     return [server.to_dict() for server in servers]
 
 #GET A SERVER BY IT'S ID
