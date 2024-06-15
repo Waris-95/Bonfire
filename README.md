@@ -7,8 +7,7 @@ Welcome to Bonfire, a lightweight version of Discord. This project allows users 
 
 
 # WikiLinks
-## WIKE HERE
-
+## [Wiki](https://github.com/Waris-95/Bonfire/wiki/🔥--Welcome-to-Bonfire!)
 
 # Technologies Used
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
